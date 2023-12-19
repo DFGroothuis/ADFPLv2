@@ -17,15 +17,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "MaterialCDS",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"sink1": {
-								"DateTime": {
-									"value": "@utcnow()",
-									"type": "Expression"
-								}
-							}
-						}
+						"type": "DataFlowReference"
 					},
 					"staging": {
 						"linkedService": {
