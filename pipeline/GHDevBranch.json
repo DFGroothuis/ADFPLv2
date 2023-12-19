@@ -16,15 +16,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "ParquetSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "ParquetReadSettings"
-						}
+						"type": "SapTableSource",
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "ParquetSink",
@@ -47,8 +40,11 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Parquet1",
-						"type": "DatasetReference"
+						"referenceName": "sapTableLocal",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "MARA"
+						}
 					}
 				],
 				"outputs": [
