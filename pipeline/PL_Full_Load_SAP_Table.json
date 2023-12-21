@@ -1,9 +1,9 @@
 {
-	"name": "GHDevBranch",
+	"name": "PL_Full_Load_SAP_Table",
 	"properties": {
 		"activities": [
 			{
-				"name": "Activiteitsblok",
+				"name": "Copy Full Table",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -17,12 +17,14 @@
 				"typeProperties": {
 					"source": {
 						"type": "SapTableSource",
+						"rfcTableOptions": "",
+						"customRfcReadTableFunctionModule": "",
 						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "ParquetSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "ParquetWriteSettings"
@@ -43,18 +45,35 @@
 						"referenceName": "ds_sap_table",
 						"type": "DatasetReference",
 						"parameters": {
-							"table_name": "MARA"
+							"table_name": {
+								"value": "@pipeline().parameters.table_name",
+								"type": "Expression"
+							}
 						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_adls_parquet_002",
-						"type": "DatasetReference"
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().parameters.table_name",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
 		],
+		"parameters": {
+			"table_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Template"
+		},
 		"annotations": []
 	}
 }

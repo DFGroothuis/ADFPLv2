@@ -1,5 +1,5 @@
 {
-	"name": "SapOdpResource1",
+	"name": "ds_sap_odp",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SAP_ODP",

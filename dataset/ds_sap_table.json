@@ -1,5 +1,5 @@
 {
-	"name": "sapTableLocal",
+	"name": "ds_sap_table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SapTableLocal",

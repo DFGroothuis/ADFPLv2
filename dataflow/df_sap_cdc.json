@@ -1,12 +1,12 @@
 {
-	"name": "MaterialCDS",
+	"name": "df_sap_cdc",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "SapOdpResource1",
+						"referenceName": "ds_sap_odp",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Parquet2",
+						"referenceName": "ds_adls_parquet_002",
 						"type": "DatasetReference"
 					},
 					"name": "sink1",
@@ -37,11 +37,10 @@
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     preCommands: [],",
+				"     postCommands: []) ~> sink1"
 			]
 		}
 	}

@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MaterialCDS",
+						"referenceName": "df_sap_cdc",
 						"type": "DataFlowReference"
 					},
 					"staging": {
