@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Activiteitsblok_aangepast_via_VSCODE",
+				"name": "Activiteitsblok_nieuweversie",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
