@@ -18,6 +18,12 @@
 					"dataflow": {
 						"referenceName": "df_sap_cdc",
 						"type": "DataFlowReference",
+						"parameters": {
+							"KeyFields": {
+								"value": "@pipeline().parameters.KeyFields",
+								"type": "Expression"
+							}
+						},
 						"datasetParameters": {
 							"sink1": {
 								"EnvStorage": {
@@ -50,6 +56,13 @@
 								}
 							}
 						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "staging"
 					},
 					"compute": {
 						"coreCount": 8,
