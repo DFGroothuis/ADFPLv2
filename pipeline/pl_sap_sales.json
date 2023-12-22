@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@variables('tables')",
+						"value": "@pipeline().parameters.table",
 						"type": "Expression"
 					},
 					"activities": [
@@ -67,6 +67,30 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"EnvStorage": {
+											"value": "@pipeline().globalParameters.environment",
+											"type": "Expression"
+										},
+										"Zone": {
+											"value": "@pipeline().parameters.Zone",
+											"type": "Expression"
+										},
+										"DataSource": {
+											"value": "SAP",
+											"type": "Expression"
+										},
+										"EnvRegSys": {
+											"value": "@pipeline().parameters.EnvRegSys",
+											"type": "Expression"
+										},
+										"Domain": {
+											"value": "@pipeline().parameters.Domain",
+											"type": "Expression"
+										},
+										"Object": {
+											"value": "@variables('Object')",
+											"type": "Expression"
+										},
+										"Table": {
 											"value": "@item()",
 											"type": "Expression"
 										}
@@ -78,9 +102,9 @@
 				}
 			}
 		],
-		"variables": {
-			"tables": {
-				"type": "Array",
+		"parameters": {
+			"table": {
+				"type": "array",
 				"defaultValue": [
 					"VBAK",
 					"VBAP",
@@ -91,6 +115,23 @@
 					"VBBE",
 					"VBUK"
 				]
+			},
+			"Zone": {
+				"type": "string"
+			},
+			"DataSource": {
+				"type": "string"
+			},
+			"EnvRegSys": {
+				"type": "string"
+			},
+			"Domain": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"Object": {
+				"type": "String"
 			}
 		},
 		"annotations": [],

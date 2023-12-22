@@ -12,10 +12,7 @@
 						"referenceName": "PL_Full_Load_SAP_Table",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"table_name": "MARA"
-					}
+					"waitOnCompletion": true
 				}
 			}
 		],

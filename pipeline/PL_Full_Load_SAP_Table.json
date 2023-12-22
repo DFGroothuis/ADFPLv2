@@ -46,7 +46,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"table_name": {
-								"value": "@pipeline().parameters.table_name",
+								"value": "@pipeline().parameters.table",
 								"type": "Expression"
 							}
 						}
@@ -58,7 +58,31 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
-								"value": "@pipeline().parameters.table_name",
+								"value": "@pipeline().parameters.EnvStorage",
+								"type": "Expression"
+							},
+							"Zone": {
+								"value": "@pipeline().parameters.Zone",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
+							"EnvRegSys": {
+								"value": "@pipeline().parameters.EnvRegSys",
+								"type": "Expression"
+							},
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.table",
 								"type": "Expression"
 							}
 						}
@@ -67,7 +91,25 @@
 			}
 		],
 		"parameters": {
-			"table_name": {
+			"Zone": {
+				"type": "string"
+			},
+			"EnvStorage": {
+				"type": "string"
+			},
+			"DataSource": {
+				"type": "string"
+			},
+			"EnvRegSys": {
+				"type": "string"
+			},
+			"Domain": {
+				"type": "string"
+			},
+			"Object": {
+				"type": "string"
+			},
+			"table": {
 				"type": "string"
 			}
 		},

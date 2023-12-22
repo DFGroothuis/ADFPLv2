@@ -24,7 +24,7 @@
 			"Object": {
 				"type": "string"
 			},
-			"Table": {
+			"CDS": {
 				"type": "string"
 			}
 		},
@@ -34,11 +34,11 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat(dataset().table,'_',utcnow(), '.parquet')",
+					"value": "@concat(dataset().CDS,'_',utcnow(), '.parquet')",
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().Table)",
+					"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().CDS)",
 					"type": "Expression"
 				},
 				"container": {

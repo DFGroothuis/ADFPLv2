@@ -1,0 +1,97 @@
+{
+	"name": "PL_CDC_SAP_CDS",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute DataFlow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_sap_cdc",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sink1": {
+								"EnvStorage": {
+									"value": "@pipeline().parameters.EnvStorage",
+									"type": "Expression"
+								},
+								"Zone": {
+									"value": "@pipeline().parameters.Zone",
+									"type": "Expression"
+								},
+								"DataSource": {
+									"value": "@pipeline().parameters.DataSource",
+									"type": "Expression"
+								},
+								"EnvRegSys": {
+									"value": "@pipeline().parameters.EnvRegSys",
+									"type": "Expression"
+								},
+								"Domain": {
+									"value": "@pipeline().parameters.Domain",
+									"type": "Expression"
+								},
+								"Object": {
+									"value": "@pipeline().parameters.Object",
+									"type": "Expression"
+								},
+								"CDS": {
+									"value": "@pipeline().parameters.CDS",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"continuationSettings": {
+						"customizedCheckpointKey": "9e64901c-bb64-4acb-90c7-8227ae9d46e9"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"EnvStorage": {
+				"type": "string"
+			},
+			"Zone": {
+				"type": "string",
+				"defaultValue": "aseD"
+			},
+			"DataSource": {
+				"type": "string"
+			},
+			"EnvRegSys": {
+				"type": "string"
+			},
+			"Domain": {
+				"type": "string"
+			},
+			"Object": {
+				"type": "string"
+			},
+			"CDS": {
+				"type": "string"
+			},
+			"KeyFields": {
+				"type": "array"
+			}
+		},
+		"folder": {
+			"name": "Template"
+		},
+		"annotations": []
+	}
+}
