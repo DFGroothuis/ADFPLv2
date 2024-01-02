@@ -1,0 +1,225 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "GxpDF-ADF"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureDataLakeStorageLocal_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageLocal'"
+		},
+		"SAP_ODP_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SAP_ODP'"
+		},
+		"SapTable1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SapTable1'"
+		},
+		"SapTableLocal_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SapTableLocal'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageLocal_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
+		},
+		"SAP_ODP_properties_typeProperties_clientId": {
+			"type": "string",
+			"defaultValue": "200"
+		},
+		"SAP_ODP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "NL35167"
+		},
+		"SAP_ODP_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "bfeslsd.solco.global.nttdata.com"
+		},
+		"SAP_ODP_properties_typeProperties_systemNumber": {
+			"type": "string",
+			"defaultValue": "00"
+		},
+		"SapTable1_properties_typeProperties_clientId": {
+			"type": "string",
+			"defaultValue": "200"
+		},
+		"SapTable1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "NL22511"
+		},
+		"SapTable1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "10.134.4.62"
+		},
+		"SapTable1_properties_typeProperties_systemNumber": {
+			"type": "string",
+			"defaultValue": "00"
+		},
+		"SapTableLocal_properties_typeProperties_clientId": {
+			"type": "string",
+			"defaultValue": "200"
+		},
+		"SapTableLocal_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "NL35167"
+		},
+		"SapTableLocal_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "bfeslsd.solco.global.nttdata.com"
+		},
+		"SapTableLocal_properties_typeProperties_systemNumber": {
+			"type": "string",
+			"defaultValue": "00"
+		},
+		"AzureDataLakeStorage526_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/b4e51074-d735-40c8-ae01-f374217d2c40/resourceGroups/Storage-rg/providers/Microsoft.Storage/storageAccounts/gxpdfdatalake"
+		},
+		"AzureDataLakeStorage526_properties_groupId": {
+			"type": "string",
+			"defaultValue": "dfs"
+		},
+		"AzureDataLakeStorage526_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"gxpdfdatalake.dfs.core.windows.net"
+			]
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "GxpDF-ADF_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"SAP_ODP_password": {
+						"value": "[parameters('SAP_ODP_password')]"
+					},
+					"SapTable1_password": {
+						"value": "[parameters('SapTable1_password')]"
+					},
+					"SapTableLocal_password": {
+						"value": "[parameters('SapTableLocal_password')]"
+					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"AzureDataLakeStorageLocal_accountKey": {
+						"value": "[parameters('AzureDataLakeStorageLocal_accountKey')]"
+					},
+					"SAP_ODP_properties_typeProperties_clientId": {
+						"value": "[parameters('SAP_ODP_properties_typeProperties_clientId')]"
+					},
+					"SAP_ODP_properties_typeProperties_userName": {
+						"value": "[parameters('SAP_ODP_properties_typeProperties_userName')]"
+					},
+					"SAP_ODP_properties_typeProperties_server": {
+						"value": "[parameters('SAP_ODP_properties_typeProperties_server')]"
+					},
+					"SAP_ODP_properties_typeProperties_systemNumber": {
+						"value": "[parameters('SAP_ODP_properties_typeProperties_systemNumber')]"
+					},
+					"SapTable1_properties_typeProperties_clientId": {
+						"value": "[parameters('SapTable1_properties_typeProperties_clientId')]"
+					},
+					"SapTable1_properties_typeProperties_userName": {
+						"value": "[parameters('SapTable1_properties_typeProperties_userName')]"
+					},
+					"SapTable1_properties_typeProperties_server": {
+						"value": "[parameters('SapTable1_properties_typeProperties_server')]"
+					},
+					"SapTable1_properties_typeProperties_systemNumber": {
+						"value": "[parameters('SapTable1_properties_typeProperties_systemNumber')]"
+					},
+					"SapTableLocal_properties_typeProperties_clientId": {
+						"value": "[parameters('SapTableLocal_properties_typeProperties_clientId')]"
+					},
+					"SapTableLocal_properties_typeProperties_userName": {
+						"value": "[parameters('SapTableLocal_properties_typeProperties_userName')]"
+					},
+					"SapTableLocal_properties_typeProperties_server": {
+						"value": "[parameters('SapTableLocal_properties_typeProperties_server')]"
+					},
+					"SapTableLocal_properties_typeProperties_systemNumber": {
+						"value": "[parameters('SapTableLocal_properties_typeProperties_systemNumber')]"
+					},
+					"AzureDataLakeStorage526_properties_privateLinkResourceId": {
+						"value": "[parameters('AzureDataLakeStorage526_properties_privateLinkResourceId')]"
+					},
+					"AzureDataLakeStorage526_properties_groupId": {
+						"value": "[parameters('AzureDataLakeStorage526_properties_groupId')]"
+					},
+					"AzureDataLakeStorage526_properties_fqdns": {
+						"value": "[parameters('AzureDataLakeStorage526_properties_fqdns')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					},
+					"AzureDataLakeStorageLocal_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorageLocal_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "GxpDF-ADF_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'GxpDF-ADF_ArmTemplate_0')]"
+			]
+		}
+	]
+}

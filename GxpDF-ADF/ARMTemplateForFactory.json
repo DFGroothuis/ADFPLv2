@@ -1,0 +1,1029 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "GxpDF-ADF"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureDataLakeStorageLocal_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageLocal'"
+		},
+		"SAP_ODP_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SAP_ODP'"
+		},
+		"SapTable1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SapTable1'"
+		},
+		"SapTableLocal_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SapTableLocal'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageLocal_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
+		},
+		"SAP_ODP_properties_typeProperties_clientId": {
+			"type": "string",
+			"defaultValue": "200"
+		},
+		"SAP_ODP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "NL35167"
+		},
+		"SAP_ODP_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "bfeslsd.solco.global.nttdata.com"
+		},
+		"SAP_ODP_properties_typeProperties_systemNumber": {
+			"type": "string",
+			"defaultValue": "00"
+		},
+		"SapTable1_properties_typeProperties_clientId": {
+			"type": "string",
+			"defaultValue": "200"
+		},
+		"SapTable1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "NL22511"
+		},
+		"SapTable1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "10.134.4.62"
+		},
+		"SapTable1_properties_typeProperties_systemNumber": {
+			"type": "string",
+			"defaultValue": "00"
+		},
+		"SapTableLocal_properties_typeProperties_clientId": {
+			"type": "string",
+			"defaultValue": "200"
+		},
+		"SapTableLocal_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "NL35167"
+		},
+		"SapTableLocal_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "bfeslsd.solco.global.nttdata.com"
+		},
+		"SapTableLocal_properties_typeProperties_systemNumber": {
+			"type": "string",
+			"defaultValue": "00"
+		},
+		"AzureDataLakeStorage526_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/b4e51074-d735-40c8-ae01-f374217d2c40/resourceGroups/Storage-rg/providers/Microsoft.Storage/storageAccounts/gxpdfdatalake"
+		},
+		"AzureDataLakeStorage526_properties_groupId": {
+			"type": "string",
+			"defaultValue": "dfs"
+		},
+		"AzureDataLakeStorage526_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"gxpdfdatalake.dfs.core.windows.net"
+			]
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/MaterialDataFlow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CDC_SAP_CDS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-12-18T10:37:29Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_CDC_SAP_CDS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_CDS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute DataFlow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_sap_cdc",
+								"type": "DataFlowReference",
+								"parameters": {
+									"KeyFields": {
+										"value": "@pipeline().parameters.KeyFields",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {
+										"EnvStorage": {
+											"value": "@pipeline().parameters.EnvStorage",
+											"type": "Expression"
+										},
+										"Zone": {
+											"value": "@pipeline().parameters.Zone",
+											"type": "Expression"
+										},
+										"DataSource": {
+											"value": "@pipeline().parameters.DataSource",
+											"type": "Expression"
+										},
+										"EnvRegSys": {
+											"value": "@pipeline().parameters.EnvRegSys",
+											"type": "Expression"
+										},
+										"Domain": {
+											"value": "@pipeline().parameters.Domain",
+											"type": "Expression"
+										},
+										"Object": {
+											"value": "@pipeline().parameters.Object",
+											"type": "Expression"
+										},
+										"CDS": {
+											"value": "@pipeline().parameters.CDS",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "staging"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"continuationSettings": {
+								"customizedCheckpointKey": "9e64901c-bb64-4acb-90c7-8227ae9d46e9"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"EnvStorage": {
+						"type": "string"
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"CDS": {
+						"type": "string"
+					},
+					"KeyFields": {
+						"type": "array"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_sap_cdc')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Full_Load_SAP_Table')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Full Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": "",
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sap_table",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_adls_parquet_001",
+								"type": "DatasetReference",
+								"parameters": {
+									"EnvStorage": {
+										"value": "@pipeline().parameters.EnvStorage",
+										"type": "Expression"
+									},
+									"Zone": {
+										"value": "@pipeline().parameters.Zone",
+										"type": "Expression"
+									},
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
+									"EnvRegSys": {
+										"value": "@pipeline().parameters.EnvRegSys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
+									"Table": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Zone": {
+						"type": "string"
+					},
+					"EnvStorage": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
+				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_001')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_mm')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Full Table Load",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_Full_Load_SAP_Table",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"Zone": "Staging",
+								"EnvStorage": "DEV",
+								"DataSource": "SAP",
+								"EnvRegSys": "DEVNL110",
+								"Domain": "MaterialManagement",
+								"Object": "Material",
+								"table": "MARA"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_sales')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy Sales",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SapTableSource",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_sap_table",
+											"type": "DatasetReference",
+											"parameters": {
+												"table_name": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_adls_parquet_001",
+											"type": "DatasetReference",
+											"parameters": {
+												"EnvStorage": {
+													"value": "@pipeline().globalParameters.environment",
+													"type": "Expression"
+												},
+												"Zone": {
+													"value": "@pipeline().parameters.Zone",
+													"type": "Expression"
+												},
+												"DataSource": {
+													"value": "SAP",
+													"type": "Expression"
+												},
+												"EnvRegSys": {
+													"value": "@pipeline().parameters.EnvRegSys",
+													"type": "Expression"
+												},
+												"Domain": {
+													"value": "@pipeline().parameters.Domain",
+													"type": "Expression"
+												},
+												"Object": {
+													"value": "@variables('Object')",
+													"type": "Expression"
+												},
+												"Table": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"table": {
+						"type": "array",
+						"defaultValue": [
+							"VBAK",
+							"VBAP",
+							"VBFA",
+							"VBEP",
+							"VBKD",
+							"VBPA",
+							"VBBE",
+							"VBUK"
+						]
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"Object": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-12-15T19:11:11Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
+				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_001')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_001')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"EnvStorage": {
+						"type": "String"
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"Table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().table,'_',utcnow(), '.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().Table)",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().EnvStorage",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_002')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"EnvStorage": {
+						"type": "String"
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"CDS": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat(dataset().CDS,'_',utcnow(), '.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().CDS)",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().EnvStorage",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sap_odp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SAP_ODP",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"test_subscriber": "IPRODUCT",
+						"test_param": "0"
+					}
+				},
+				"annotations": [],
+				"type": "SapOdpResource",
+				"schema": [],
+				"typeProperties": {
+					"context": "ABAP_CDS",
+					"objectName": "IPRODUCT$P"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SAP_ODP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sap_table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SapTableLocal",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SapTableLocal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageLocal')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorageLocal_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorageLocal_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_ODP')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"test_subscriber": {
+						"type": "string"
+					},
+					"test_param": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SapOdp",
+				"typeProperties": {
+					"clientId": "[parameters('SAP_ODP_properties_typeProperties_clientId')]",
+					"language": "EN",
+					"sncMode": false,
+					"userName": "[parameters('SAP_ODP_properties_typeProperties_userName')]",
+					"subscriberName": "IPRODUCT",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SAP_ODP_password')]"
+					},
+					"server": "[parameters('SAP_ODP_properties_typeProperties_server')]",
+					"systemNumber": "[parameters('SAP_ODP_properties_typeProperties_systemNumber')]"
+				},
+				"connectVia": {
+					"referenceName": "IRLocal",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/IRLocal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SapTable1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SapTable",
+				"typeProperties": {
+					"clientId": "[parameters('SapTable1_properties_typeProperties_clientId')]",
+					"language": "EN",
+					"sncMode": false,
+					"userName": "[parameters('SapTable1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SapTable1_password')]"
+					},
+					"server": "[parameters('SapTable1_properties_typeProperties_server')]",
+					"systemNumber": "[parameters('SapTable1_properties_typeProperties_systemNumber')]"
+				},
+				"connectVia": {
+					"referenceName": "ir-ih73vfvvtagr4",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/ir-ih73vfvvtagr4')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SapTableLocal')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SapTable",
+				"typeProperties": {
+					"clientId": "[parameters('SapTableLocal_properties_typeProperties_clientId')]",
+					"language": "EN",
+					"sncMode": false,
+					"userName": "[parameters('SapTableLocal_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SapTableLocal_password')]"
+					},
+					"server": "[parameters('SapTableLocal_properties_typeProperties_server')]",
+					"systemNumber": "[parameters('SapTableLocal_properties_typeProperties_systemNumber')]"
+				},
+				"connectVia": {
+					"referenceName": "IRLocal",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/IRLocal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IRLocal')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "West Europe",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 10,
+							"cleanup": false,
+							"customProperties": []
+						},
+						"pipelineExternalComputeScaleProperties": {
+							"timeToLive": 60,
+							"numberOfPipelineNodes": 1,
+							"numberOfExternalNodes": 1
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ir-ih73vfvvtagr4')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"description": "Self-hosted Integration runtime created using ARM template",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_sap_cdc')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_sap_odp",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_adls_parquet_002",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureDataLakeStorageLocal",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"parameters{",
+						"     KeyFields as string[]",
+						"}",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     staged: true,",
+						"     readMode: 'fullAndIncrementalLoad',",
+						"     keys: ($KeyFields),",
+						"     format: 'sapObject',",
+						"     fixDecimalPrecision: true) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     truncate: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     preCommands: [],",
+						"     postCommands: []) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_odp')]",
+				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_002')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageLocal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
+			"apiVersion": "2018-06-01",
+			"properties": {},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/AzureDataLakeStorage526')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('AzureDataLakeStorage526_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('AzureDataLakeStorage526_properties_groupId')]",
+				"fqdns": "[parameters('AzureDataLakeStorage526_properties_fqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		}
+	]
+}

@@ -1,0 +1,80 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "GxpDF-ADF"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorageLocal_accountKey": {
+			"value": ""
+		},
+		"SAP_ODP_password": {
+			"value": ""
+		},
+		"SapTable1_password": {
+			"value": ""
+		},
+		"SapTableLocal_password": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://gxpdfdatalake.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageLocal_properties_typeProperties_url": {
+			"value": "https://gxpdfdatalake.dfs.core.windows.net/"
+		},
+		"SAP_ODP_properties_typeProperties_clientId": {
+			"value": "200"
+		},
+		"SAP_ODP_properties_typeProperties_userName": {
+			"value": "NL35167"
+		},
+		"SAP_ODP_properties_typeProperties_server": {
+			"value": "bfeslsd.solco.global.nttdata.com"
+		},
+		"SAP_ODP_properties_typeProperties_systemNumber": {
+			"value": "00"
+		},
+		"SapTable1_properties_typeProperties_clientId": {
+			"value": "200"
+		},
+		"SapTable1_properties_typeProperties_userName": {
+			"value": "NL22511"
+		},
+		"SapTable1_properties_typeProperties_server": {
+			"value": "10.134.4.62"
+		},
+		"SapTable1_properties_typeProperties_systemNumber": {
+			"value": "00"
+		},
+		"SapTableLocal_properties_typeProperties_clientId": {
+			"value": "200"
+		},
+		"SapTableLocal_properties_typeProperties_userName": {
+			"value": "NL35167"
+		},
+		"SapTableLocal_properties_typeProperties_server": {
+			"value": "bfeslsd.solco.global.nttdata.com"
+		},
+		"SapTableLocal_properties_typeProperties_systemNumber": {
+			"value": "00"
+		},
+		"AzureDataLakeStorage526_properties_privateLinkResourceId": {
+			"value": "/subscriptions/b4e51074-d735-40c8-ae01-f374217d2c40/resourceGroups/Storage-rg/providers/Microsoft.Storage/storageAccounts/gxpdfdatalake"
+		},
+		"AzureDataLakeStorage526_properties_groupId": {
+			"value": "dfs"
+		},
+		"AzureDataLakeStorage526_properties_fqdns": {
+			"value": [
+				"gxpdfdatalake.dfs.core.windows.net"
+			]
+		}
+	}
+}
