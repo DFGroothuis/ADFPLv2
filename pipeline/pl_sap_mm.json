@@ -3,28 +3,54 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Full Table Load",
-				"type": "ExecutePipeline",
+				"name": "ForEach1",
+				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_Full_Load_SAP_Table",
-						"type": "PipelineReference"
+					"items": {
+						"value": "@variables('table')",
+						"type": "Expression"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"Zone": "Staging",
-						"EnvStorage": "dev",
-						"DataSource": "SAP",
-						"EnvRegSys": "DEVNL110",
-						"Domain": "MaterialManagement",
-						"Object": "Material",
-						"table": "MARA"
-					}
+					"activities": [
+						{
+							"name": "Execute Full Table Load",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_Full_Load_SAP_Table",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Zone": "Staging",
+									"EnvStorage": "dev",
+									"DataSource": "SAP",
+									"EnvRegSys": "DEVNL110",
+									"Domain": "MaterialManagement",
+									"Object": "Material",
+									"table": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
 				}
 			}
 		],
+		"variables": {
+			"table": {
+				"type": "Array",
+				"defaultValue": [
+					"MARA",
+					"MAKT"
+				]
+			}
+		},
 		"annotations": []
 	}
 }
