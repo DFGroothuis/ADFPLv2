@@ -55,18 +55,6 @@
 					"VBBE",
 					"VBUK"
 				]
-			},
-			"Zone": {
-				"type": "string"
-			},
-			"DataSource": {
-				"type": "string"
-			},
-			"EnvRegSys": {
-				"type": "string"
-			},
-			"Domain": {
-				"type": "string"
 			}
 		},
 		"variables": {
