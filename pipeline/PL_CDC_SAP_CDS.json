@@ -80,8 +80,7 @@
 				"type": "string"
 			},
 			"Zone": {
-				"type": "string",
-				"defaultValue": "aseD"
+				"type": "string"
 			},
 			"DataSource": {
 				"type": "string"

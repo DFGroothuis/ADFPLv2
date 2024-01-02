@@ -12,7 +12,16 @@
 						"referenceName": "PL_Full_Load_SAP_Table",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"EnvStorage": "DEV",
+						"DataSource": "SAP",
+						"EnvRegSys": "DEVNL110",
+						"Domain": "MaterialManagement",
+						"Object": "Material",
+						"table": "MARA"
+					}
 				}
 			}
 		],
