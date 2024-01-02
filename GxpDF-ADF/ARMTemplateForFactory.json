@@ -468,89 +468,29 @@
 							},
 							"activities": [
 								{
-									"name": "Copy Sales",
-									"type": "Copy",
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
 									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
 									"userProperties": [],
 									"typeProperties": {
-										"source": {
-											"type": "SapTableSource",
-											"partitionOption": "None"
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table",
+											"type": "PipelineReference"
 										},
-										"sink": {
-											"type": "ParquetSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "ParquetWriteSettings"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": "dev",
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL110",
+											"Domain": "Sales and Distribution",
+											"Object": "Sales Order",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
 											}
 										}
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_sap_table",
-											"type": "DatasetReference",
-											"parameters": {
-												"table_name": {
-													"value": "@item()",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "ds_adls_parquet_001",
-											"type": "DatasetReference",
-											"parameters": {
-												"EnvStorage": {
-													"value": "@pipeline().globalParameters.environment",
-													"type": "Expression"
-												},
-												"Zone": {
-													"value": "@pipeline().parameters.Zone",
-													"type": "Expression"
-												},
-												"DataSource": {
-													"value": "SAP",
-													"type": "Expression"
-												},
-												"EnvRegSys": {
-													"value": "@pipeline().parameters.EnvRegSys",
-													"type": "Expression"
-												},
-												"Domain": {
-													"value": "@pipeline().parameters.Domain",
-													"type": "Expression"
-												},
-												"Object": {
-													"value": "@variables('Object')",
-													"type": "Expression"
-												},
-												"Table": {
-													"value": "@item()",
-													"type": "Expression"
-												}
-											}
-										}
-									]
+									}
 								}
 							]
 						}
@@ -595,8 +535,7 @@
 				"lastPublishTime": "2023-12-15T19:11:11Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
-				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_001')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
 			]
 		},
 		{
