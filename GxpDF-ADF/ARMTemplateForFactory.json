@@ -405,7 +405,7 @@
 							"waitOnCompletion": true,
 							"parameters": {
 								"Zone": "Staging",
-								"EnvStorage": "DEV",
+								"EnvStorage": "dev",
 								"DataSource": "SAP",
 								"EnvRegSys": "DEVNL110",
 								"Domain": "MaterialManagement",
