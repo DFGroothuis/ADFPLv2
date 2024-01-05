@@ -1,0 +1,30 @@
+{
+	"name": "pl_mara_changes",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CDC_SAP_Table",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"EnvStorage": "dev",
+						"DataSource": "SAP",
+						"EnvRegSys": "DEVNL110",
+						"Domain": "Material",
+						"Object": "MaterialManagement",
+						"table": "MARA"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
