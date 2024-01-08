@@ -18,10 +18,7 @@
 							"value": "@pipeline().globalParameters.environment",
 							"type": "Expression"
 						},
-						"Zone": {
-							"value": "Staging",
-							"type": "Expression"
-						},
+						"Zone": "Staging",
 						"DataSource": "SAP",
 						"EnvRegSys": "DEVNL200",
 						"Domain": "MaterialManagement",
