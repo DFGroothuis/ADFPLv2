@@ -5,11 +5,10 @@
 			"referenceName": "SAP_ODP",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"test_subscriber": {
+				"subscriber": {
 					"value": "@dataset().CDS",
 					"type": "Expression"
-				},
-				"test_param": "0"
+				}
 			}
 		},
 		"parameters": {
