@@ -15,16 +15,16 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Zone": "Staging",
-						"EnvStorage": "dev",
-						"DataSource": "SAP",
-						"EnvRegSys": "DEVNL110",
-						"Domain": "Material",
-						"Object": "MaterialManagement",
-						"table": "MARA",
-						"filter": {
-							"value": "@concat('LAEDA GE ''', utcNow('yyyyMMdd'), '''')",
+						"EnvStorage": {
+							"value": "@pipeline().globalParameters.environment",
 							"type": "Expression"
-						}
+						},
+						"DataSource": "SAP",
+						"EnvRegSys": "DEVNL200",
+						"Domain": "MaterialManagement",
+						"Object": "Material",
+						"table": "MARA",
+						"ChangeDateColumn": "LAEDA"
 					}
 				}
 			}
