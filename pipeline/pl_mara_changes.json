@@ -22,7 +22,7 @@
 						"Object": "MaterialManagement",
 						"table": "MARA",
 						"filter": {
-							"value": "@concat('LAEDA EQ ', formatDateTime(utcnow(), 'YYYYMMDD'))",
+							"value": "@concat('LAEDA GE ''', utcNow('yyyyMMdd'), '''')",
 							"type": "Expression"
 						}
 					}

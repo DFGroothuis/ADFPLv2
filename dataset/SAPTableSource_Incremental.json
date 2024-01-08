@@ -1,0 +1,23 @@
+{
+	"name": "SAPTableSource_Incremental",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SapTableLocal",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SapTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SapTableResource",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().SapTableName",
+				"type": "Expression"
+			}
+		}
+	}
+}
