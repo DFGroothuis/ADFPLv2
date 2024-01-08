@@ -1,5 +1,5 @@
 {
-	"name": "IncrementalCopyFromSAPTable",
+	"name": "TemplateADF_IncrementalTable",
 	"properties": {
 		"activities": [
 			{
@@ -179,6 +179,9 @@
 			"SapTableDateColumn": {
 				"type": "string"
 			}
+		},
+		"folder": {
+			"name": "Template"
 		},
 		"annotations": []
 	}

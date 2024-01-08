@@ -1,0 +1,74 @@
+{
+	"name": "SAP2DeltaTemplateDataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "SAP_ODP",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SAPSource"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DeltaSink"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"parameters{",
+				"     sapContext as string (\"context\"),",
+				"     sapObjectName as string (\"obj\"),",
+				"     sapKeyColumns as string[] ([\"key1\",\"key2\"]),",
+				"     deltaContainer as string (\"container\"),",
+				"     deltaFolder as string (\"folder\"),",
+				"     deltaPartition as string (\"partition\"),",
+				"     deltaKeyColumns as string[] ([\"key3\",\"key4\"]),",
+				"     sapPartitions as string (\"[[\\{\\\"fieldName\\\": \\\"ID\\\",\\\"sign\\\": \\\"I\\\", \\\"option\\\": \\\"BT\\\",\\\"low\\\": \\\"1\\\",\\\"high\\\": \\\"4\\\"}]]\"),",
+				"     sapRunMode as string (\"fullAndIncrementalLoad\")",
+				"}",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     store: 'SapOdp',",
+				"     format: 'sapObject',",
+				"     staged: true,",
+				"     context: ($sapContext),",
+				"     objectName: ($sapObjectName),",
+				"     readMode: ($sapRunMode),",
+				"     keys: ($sapKeyColumns),",
+				"     partitionPredicates: ($sapPartitions),",
+				"     partitionBy('external', 1)) ~> SAPSource",
+				"SAPSource sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: ($deltaContainer),",
+				"     folderPath: ($deltaFolder),",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: true,",
+				"     insertable: true,",
+				"     updateable: true,",
+				"     upsertable: true,",
+				"     keys:($deltaKeyColumns),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('key',",
+				"          0,",
+				"          byName($deltaPartition)",
+				"     )) ~> DeltaSink"
+			]
+		}
+	}
+}
