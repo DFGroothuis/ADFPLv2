@@ -20,7 +20,7 @@
 			"subscriberName": "IPRODUCT",
 			"server": "bfeslsd.solco.global.nttdata.com",
 			"systemNumber": "00",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjYjhkMDlmZS0yYjZkLTQxZGEtYmVlMi05MzRiZjMzMzM4YTYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI3NTlhNTE5Zi05ZjM1LTQ5ZWQtOTAwNy0wN2M3MjdlZGQ5MmIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "IRLocal",
