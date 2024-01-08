@@ -12,7 +12,23 @@
 						"referenceName": "PL_CDC_SAP_CDS",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"EnvStorage": {
+							"value": "@pipeline().globalParameters.environment",
+							"type": "Expression"
+						},
+						"Zone": {
+							"value": "Staging",
+							"type": "Expression"
+						},
+						"DataSource": "SAP",
+						"EnvRegSys": "DEVNL200",
+						"Domain": "MaterialManagement",
+						"Object": "Material",
+						"CDS": "IPRODUCT",
+						"KeyFields": "PRODUCT"
+					}
 				}
 			}
 		],

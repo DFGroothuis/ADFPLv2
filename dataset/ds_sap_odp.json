@@ -5,8 +5,16 @@
 			"referenceName": "SAP_ODP",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"test_subscriber": "IPRODUCT",
+				"test_subscriber": {
+					"value": "@dataset().CDS",
+					"type": "Expression"
+				},
 				"test_param": "0"
+			}
+		},
+		"parameters": {
+			"CDS": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -14,7 +22,10 @@
 		"schema": [],
 		"typeProperties": {
 			"context": "ABAP_CDS",
-			"objectName": "IPRODUCT$P"
+			"objectName": {
+				"value": "@concat(dataset().CDS, '$P')",
+				"type": "Expression"
+			}
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

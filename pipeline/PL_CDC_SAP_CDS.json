@@ -25,6 +25,12 @@
 							}
 						},
 						"datasetParameters": {
+							"source1": {
+								"CDS": {
+									"value": "@pipeline().parameters.CDS",
+									"type": "Expression"
+								}
+							},
 							"sink1": {
 								"EnvStorage": {
 									"value": "@pipeline().parameters.EnvStorage",
@@ -53,6 +59,16 @@
 								"CDS": {
 									"value": "@pipeline().parameters.CDS",
 									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceParameters": {
+							"source1": {
+								"schemaLinkedService": {
+									"CDS": {
+										"value": "@pipeline().parameters.CDS",
+										"type": "Expression"
+									}
 								}
 							}
 						}
