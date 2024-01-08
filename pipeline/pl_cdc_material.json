@@ -24,7 +24,7 @@
 						"Domain": "MaterialManagement",
 						"Object": "Material",
 						"CDS": "IPRODUCT",
-						"KeyFields": "PRODUCT"
+						"KeyFields": "[\"PRODUCT\"]"
 					}
 				}
 			}
