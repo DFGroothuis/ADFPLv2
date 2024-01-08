@@ -71,7 +71,13 @@
 							"outputs": [
 								{
 									"referenceName": "ds_DelText_Blob",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"table_filename": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
