@@ -5,12 +5,6 @@
 		"parameters": {
 			"subscriber": {
 				"type": "string"
-			},
-			"test_subscriber": {
-				"type": "string"
-			},
-			"test_param": {
-				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -23,7 +17,7 @@
 			"subscriberName": "@{linkedService().subscriber}",
 			"server": "bfeslsd.solco.global.nttdata.com",
 			"systemNumber": "00",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhMDA3YjU2Ni0wMjk4LTQxMzgtOWQ1OC1kNmNhYTRjZDAxNjIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhY2M0OTIxNi0yMjE2LTQzODctYmY2Mi1iZjllZDhjYjJkMWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "IRLocal",
