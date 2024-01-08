@@ -61,16 +61,6 @@
 									"type": "Expression"
 								}
 							}
-						},
-						"linkedServiceParameters": {
-							"source1": {
-								"schemaLinkedService": {
-									"CDS": {
-										"value": "@pipeline().parameters.CDS",
-										"type": "Expression"
-									}
-								}
-							}
 						}
 					},
 					"staging": {
@@ -78,7 +68,7 @@
 							"referenceName": "AzureBlobStorage1",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "staging"
+						"folderPath": "dev/Staging/cdc"
 					},
 					"compute": {
 						"coreCount": 8,
