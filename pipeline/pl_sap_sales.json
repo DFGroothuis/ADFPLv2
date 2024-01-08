@@ -26,11 +26,14 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"Zone": "Staging",
-									"EnvStorage": "dev",
+									"EnvStorage": {
+										"value": "@pipeline().globalParameters.environment",
+										"type": "Expression"
+									},
 									"DataSource": "SAP",
-									"EnvRegSys": "DEVNL110",
-									"Domain": "Sales and Distribution",
-									"Object": "Sales Order",
+									"EnvRegSys": "DEVNL200",
+									"Domain": "SalesAndDistribution",
+									"Object": "SalesOrder",
 									"table": {
 										"value": "@item()",
 										"type": "Expression"

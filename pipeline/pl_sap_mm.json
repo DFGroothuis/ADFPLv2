@@ -26,9 +26,12 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"Zone": "Staging",
-									"EnvStorage": "dev",
+									"EnvStorage": {
+										"value": "@pipeline().globalParameters.environment",
+										"type": "Expression"
+									},
 									"DataSource": "SAP",
-									"EnvRegSys": "DEVNL110",
+									"EnvRegSys": "DEVNL200",
 									"Domain": "MaterialManagement",
 									"Object": "Material",
 									"table": {
