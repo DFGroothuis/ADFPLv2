@@ -19,7 +19,7 @@
 					"value": "@dataset().table_filename",
 					"type": "Expression"
 				},
-				"folderPath": "sap-meta",
+				"folderPath": "sap-meta/sap-table",
 				"container": "dev"
 			},
 			"columnDelimiter": ";",
