@@ -89,8 +89,16 @@
 			"table": {
 				"type": "array",
 				"defaultValue": [
+					"VBAK",
 					"VBAP",
-					"VBAK"
+					"VBFA",
+					"VBEP",
+					"VBKD",
+					"VBPA",
+					"VBBE",
+					"VBUK",
+					"MARA",
+					"MAKT"
 				]
 			}
 		},

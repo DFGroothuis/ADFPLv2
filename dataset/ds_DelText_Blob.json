@@ -20,7 +20,7 @@
 					"type": "Expression"
 				},
 				"folderPath": "sap-meta",
-				"container": "meta"
+				"container": "dev"
 			},
 			"columnDelimiter": ";",
 			"escapeChar": "\\",
