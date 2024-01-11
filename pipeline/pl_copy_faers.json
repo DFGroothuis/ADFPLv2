@@ -21,7 +21,7 @@
 						"requestInterval": "00.00:00:00.010",
 						"requestMethod": "GET",
 						"paginationRules": {
-							"supportRFC5988": "false"
+							"supportRFC5988": "true"
 						}
 					},
 					"sink": {
