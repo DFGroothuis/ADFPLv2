@@ -25,12 +25,12 @@
 						}
 					},
 					"sink": {
-						"type": "ParquetSink",
+						"type": "JsonSink",
 						"storeSettings": {
 							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
-							"type": "ParquetWriteSettings"
+							"type": "JsonWriteSettings"
 						}
 					},
 					"enableStaging": false,
@@ -42,7 +42,7 @@
 									"path": "$['meta']['disclaimer']"
 								},
 								"sink": {
-									"name": "disclaimer"
+									"path": "$['meta']['disclaimer']"
 								}
 							},
 							{
@@ -50,7 +50,7 @@
 									"path": "$['meta']['terms']"
 								},
 								"sink": {
-									"name": "terms"
+									"path": "$['meta']['terms']"
 								}
 							},
 							{
@@ -58,7 +58,7 @@
 									"path": "$['meta']['license']"
 								},
 								"sink": {
-									"name": "license"
+									"path": "$['meta']['license']"
 								}
 							},
 							{
@@ -66,7 +66,7 @@
 									"path": "$['meta']['last_updated']"
 								},
 								"sink": {
-									"name": "last_updated"
+									"path": "$['meta']['last_updated']"
 								}
 							},
 							{
@@ -74,7 +74,7 @@
 									"path": "$['meta']['results']['skip']"
 								},
 								"sink": {
-									"name": "skip"
+									"path": "$['meta']['results']['skip']"
 								}
 							},
 							{
@@ -82,7 +82,7 @@
 									"path": "$['meta']['results']['limit']"
 								},
 								"sink": {
-									"name": "limit"
+									"path": "$['meta']['results']['limit']"
 								}
 							},
 							{
@@ -90,319 +90,319 @@
 									"path": "$['meta']['results']['total']"
 								},
 								"sink": {
-									"name": "total"
+									"path": "$['meta']['results']['total']"
 								}
 							},
 							{
 								"source": {
+									"path": "['safetyreportversion']"
+								},
+								"sink": {
 									"path": "$['results'][0]['safetyreportversion']"
-								},
-								"sink": {
-									"name": "safetyreportversion"
 								}
 							},
 							{
 								"source": {
+									"path": "['safetyreportid']"
+								},
+								"sink": {
 									"path": "$['results'][0]['safetyreportid']"
-								},
-								"sink": {
-									"name": "safetyreportid"
 								}
 							},
 							{
 								"source": {
+									"path": "['primarysourcecountry']"
+								},
+								"sink": {
 									"path": "$['results'][0]['primarysourcecountry']"
-								},
-								"sink": {
-									"name": "primarysourcecountry"
 								}
 							},
 							{
 								"source": {
+									"path": "['transmissiondateformat']"
+								},
+								"sink": {
 									"path": "$['results'][0]['transmissiondateformat']"
-								},
-								"sink": {
-									"name": "transmissiondateformat"
 								}
 							},
 							{
 								"source": {
+									"path": "['transmissiondate']"
+								},
+								"sink": {
 									"path": "$['results'][0]['transmissiondate']"
-								},
-								"sink": {
-									"name": "transmissiondate"
 								}
 							},
 							{
 								"source": {
+									"path": "['reporttype']"
+								},
+								"sink": {
 									"path": "$['results'][0]['reporttype']"
-								},
-								"sink": {
-									"name": "reporttype"
 								}
 							},
 							{
 								"source": {
+									"path": "['serious']"
+								},
+								"sink": {
 									"path": "$['results'][0]['serious']"
-								},
-								"sink": {
-									"name": "serious"
 								}
 							},
 							{
 								"source": {
+									"path": "['seriousnessdisabling']"
+								},
+								"sink": {
 									"path": "$['results'][0]['seriousnessdisabling']"
-								},
-								"sink": {
-									"name": "seriousnessdisabling"
 								}
 							},
 							{
 								"source": {
+									"path": "['receivedateformat']"
+								},
+								"sink": {
 									"path": "$['results'][0]['receivedateformat']"
-								},
-								"sink": {
-									"name": "receivedateformat"
 								}
 							},
 							{
 								"source": {
+									"path": "['receivedate']"
+								},
+								"sink": {
 									"path": "$['results'][0]['receivedate']"
-								},
-								"sink": {
-									"name": "receivedate"
 								}
 							},
 							{
 								"source": {
+									"path": "['receiptdateformat']"
+								},
+								"sink": {
 									"path": "$['results'][0]['receiptdateformat']"
-								},
-								"sink": {
-									"name": "receiptdateformat"
 								}
 							},
 							{
 								"source": {
+									"path": "['receiptdate']"
+								},
+								"sink": {
 									"path": "$['results'][0]['receiptdate']"
-								},
-								"sink": {
-									"name": "receiptdate"
 								}
 							},
 							{
 								"source": {
+									"path": "['fulfillexpeditecriteria']"
+								},
+								"sink": {
 									"path": "$['results'][0]['fulfillexpeditecriteria']"
-								},
-								"sink": {
-									"name": "fulfillexpeditecriteria"
 								}
 							},
 							{
 								"source": {
+									"path": "['companynumb']"
+								},
+								"sink": {
 									"path": "$['results'][0]['companynumb']"
-								},
-								"sink": {
-									"name": "companynumb"
 								}
 							},
 							{
 								"source": {
+									"path": "['duplicate']"
+								},
+								"sink": {
 									"path": "$['results'][0]['duplicate']"
-								},
-								"sink": {
-									"name": "duplicate"
 								}
 							},
 							{
 								"source": {
+									"path": "['reportduplicate']['duplicatesource']"
+								},
+								"sink": {
 									"path": "$['results'][0]['reportduplicate']['duplicatesource']"
-								},
-								"sink": {
-									"name": "duplicatesource"
 								}
 							},
 							{
 								"source": {
+									"path": "['reportduplicate']['duplicatenumb']"
+								},
+								"sink": {
 									"path": "$['results'][0]['reportduplicate']['duplicatenumb']"
-								},
-								"sink": {
-									"name": "duplicatenumb"
 								}
 							},
 							{
 								"source": {
+									"path": "['primarysource']['reportercountry']"
+								},
+								"sink": {
 									"path": "$['results'][0]['primarysource']['reportercountry']"
-								},
-								"sink": {
-									"name": "reportercountry"
 								}
 							},
 							{
 								"source": {
+									"path": "['primarysource']['qualification']"
+								},
+								"sink": {
 									"path": "$['results'][0]['primarysource']['qualification']"
-								},
-								"sink": {
-									"name": "qualification"
 								}
 							},
 							{
 								"source": {
+									"path": "['sender']['sendertype']"
+								},
+								"sink": {
 									"path": "$['results'][0]['sender']['sendertype']"
-								},
-								"sink": {
-									"name": "sendertype"
 								}
 							},
 							{
 								"source": {
+									"path": "['sender']['senderorganization']"
+								},
+								"sink": {
 									"path": "$['results'][0]['sender']['senderorganization']"
-								},
-								"sink": {
-									"name": "senderorganization"
 								}
 							},
 							{
 								"source": {
+									"path": "['receiver']['receivertype']"
+								},
+								"sink": {
 									"path": "$['results'][0]['receiver']['receivertype']"
-								},
-								"sink": {
-									"name": "receivertype"
 								}
 							},
 							{
 								"source": {
+									"path": "['receiver']['receiverorganization']"
+								},
+								"sink": {
 									"path": "$['results'][0]['receiver']['receiverorganization']"
-								},
-								"sink": {
-									"name": "receiverorganization"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['patientonsetage']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['patientonsetage']"
-								},
-								"sink": {
-									"name": "patientonsetage"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['patientonsetageunit']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['patientonsetageunit']"
-								},
-								"sink": {
-									"name": "patientonsetageunit"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['patientsex']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['patientsex']"
-								},
-								"sink": {
-									"name": "patientsex"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['reaction'][0]['reactionmeddraversionpt']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['reaction'][0]['reactionmeddraversionpt']"
-								},
-								"sink": {
-									"name": "reactionmeddraversionpt"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['reaction'][0]['reactionmeddrapt']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['reaction'][0]['reactionmeddrapt']"
-								},
-								"sink": {
-									"name": "reactionmeddrapt"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugcharacterization']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugcharacterization']"
-								},
-								"sink": {
-									"name": "drugcharacterization"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['medicinalproduct']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['medicinalproduct']"
-								},
-								"sink": {
-									"name": "medicinalproduct"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugbatchnumb']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugbatchnumb']"
-								},
-								"sink": {
-									"name": "drugbatchnumb"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugauthorizationnumb']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugauthorizationnumb']"
-								},
-								"sink": {
-									"name": "drugauthorizationnumb"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugstructuredosagenumb']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugstructuredosagenumb']"
-								},
-								"sink": {
-									"name": "drugstructuredosagenumb"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugstructuredosageunit']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugstructuredosageunit']"
-								},
-								"sink": {
-									"name": "drugstructuredosageunit"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugdosagetext']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugdosagetext']"
-								},
-								"sink": {
-									"name": "drugdosagetext"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugadministrationroute']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugadministrationroute']"
-								},
-								"sink": {
-									"name": "drugadministrationroute"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugindication']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugindication']"
-								},
-								"sink": {
-									"name": "drugindication"
 								}
 							},
 							{
 								"source": {
+									"path": "['patient']['drug'][0]['drugstartdateformat']"
+								},
+								"sink": {
 									"path": "$['results'][0]['patient']['drug'][0]['drugstartdateformat']"
-								},
-								"sink": {
-									"name": "drugstartdateformat"
 								}
 							},
 							{
 								"source": {
-									"path": "$['results'][0]['patient']['drug'][0]['drugstartdate']"
+									"path": "['patient']['drug'][0]['drugstartdate']"
 								},
 								"sink": {
-									"name": "drugstartdate"
+									"path": "$['results'][0]['patient']['drug'][0]['drugstartdate']"
 								}
 							}
 						],
@@ -417,7 +417,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_adls_parquet_faers",
+						"referenceName": "ds_json_blob_faers",
 						"type": "DatasetReference"
 					}
 				]

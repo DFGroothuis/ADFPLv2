@@ -9,7 +9,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "?search=reactionmeddrapt=\"headache\"",
+				"value": "search=medicinalproduct=CINRYZE+AND+(receivedate=[20200101+TO+20240111])",
 				"type": "Expression"
 			}
 		},

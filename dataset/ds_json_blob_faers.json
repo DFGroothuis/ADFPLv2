@@ -1,0 +1,19 @@
+{
+	"name": "ds_json_blob_faers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "Staging/FAERS/AdverseEvents",
+				"container": "dev"
+			}
+		},
+		"schema": {}
+	}
+}
