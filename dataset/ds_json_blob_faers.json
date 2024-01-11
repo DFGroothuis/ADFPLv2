@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "faers.json",
 				"folderPath": "Staging/FAERS/AdverseEvents",
 				"container": "dev"
 			}
