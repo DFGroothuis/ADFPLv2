@@ -21,6 +21,7 @@
 						"requestInterval": "00.00:00:00.010",
 						"requestMethod": "GET",
 						"paginationRules": {
+							"EndCondition:$.results": "NonExist",
 							"supportRFC5988": "true"
 						}
 					},
