@@ -9,7 +9,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "?search=medicinalproduct=CINRYZE+AND+(receivedate=[20200101+TO+20240111])",
+				"value": "?search=medicinalproduct=CINRYZE+AND+(receivedate=[20200101+TO+20240111])&limit=450",
 				"type": "Expression"
 			}
 		},

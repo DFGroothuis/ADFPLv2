@@ -21,7 +21,7 @@
 						"requestInterval": "00.00:00:00.010",
 						"requestMethod": "GET",
 						"paginationRules": {
-							"MaxRequestNumber": "10"
+							"AbsoluteUrl": ""
 						}
 					},
 					"sink": {
