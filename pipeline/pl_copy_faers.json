@@ -21,7 +21,7 @@
 						"requestInterval": "00.00:00:00.010",
 						"requestMethod": "GET",
 						"paginationRules": {
-							"MaxRequestNumber": "10"
+							"MaxRequestNumber": "440"
 						}
 					},
 					"sink": {
@@ -33,7 +33,333 @@
 							"type": "JsonWriteSettings"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['meta']['disclaimer']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['terms']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['license']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['last_updated']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['results']['skip']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['results']['limit']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['results']['total']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['safetyreportversion']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['safetyreportid']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['primarysourcecountry']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['occurcountry']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['transmissiondateformat']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['transmissiondate']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['reporttype']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['serious']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['seriousnessdeath']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['seriousnesslifethreatening']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['seriousnesshospitalization']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['seriousnessdisabling']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['seriousnesscongenitalanomali']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['seriousnessother']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receivedateformat']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receivedate']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiptdateformat']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiptdate']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['fulfillexpeditecriteria']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['companynumb']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['primarysource']['reportercountry']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['primarysource']['qualification']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['sender']['sendertype']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['sender']['senderorganization']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiver']['receivertype']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiver']['receiverorganization']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['patientweight']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['patientsex']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['reaction'][0]['reactionmeddraversionpt']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['reaction'][0]['reactionmeddrapt']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['reaction'][0]['reactionoutcome']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugcharacterization']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['medicinalproduct']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugauthorizationnumb']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugdosagetext']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugdosageform']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugadministrationroute']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugindication']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugstartdateformat']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugstartdate']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['actiondrug']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugadditional']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['activesubstance']['activesubstancename']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['application_number'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['brand_name'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['generic_name'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['manufacturer_name'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['product_ndc'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['product_type'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['route'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['substance_name'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['rxcui'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['spl_id'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['spl_set_id'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['package_ndc'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['openfda']['unii'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['summary']['narrativeincludeclinical']"
+								}
+							}
+						],
+						"collectionReference": ""
+					}
 				},
 				"inputs": [
 					{
