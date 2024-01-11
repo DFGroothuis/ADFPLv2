@@ -1,0 +1,12 @@
+{
+	"name": "ls_rest_faers",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://api.fda.gov/drug/event.json",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
