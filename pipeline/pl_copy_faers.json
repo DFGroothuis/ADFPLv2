@@ -33,7 +33,381 @@
 							"type": "ParquetWriteSettings"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['meta']['disclaimer']"
+								},
+								"sink": {
+									"name": "disclaimer"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['terms']"
+								},
+								"sink": {
+									"name": "terms"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['license']"
+								},
+								"sink": {
+									"name": "license"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['last_updated']"
+								},
+								"sink": {
+									"name": "last_updated"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['results']['skip']"
+								},
+								"sink": {
+									"name": "skip"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['results']['limit']"
+								},
+								"sink": {
+									"name": "limit"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['results']['total']"
+								},
+								"sink": {
+									"name": "total"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['safetyreportversion']"
+								},
+								"sink": {
+									"name": "safetyreportversion"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['safetyreportid']"
+								},
+								"sink": {
+									"name": "safetyreportid"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['primarysourcecountry']"
+								},
+								"sink": {
+									"name": "primarysourcecountry"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['transmissiondateformat']"
+								},
+								"sink": {
+									"name": "transmissiondateformat"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['transmissiondate']"
+								},
+								"sink": {
+									"name": "transmissiondate"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['reporttype']"
+								},
+								"sink": {
+									"name": "reporttype"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['serious']"
+								},
+								"sink": {
+									"name": "serious"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['seriousnessdisabling']"
+								},
+								"sink": {
+									"name": "seriousnessdisabling"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receivedateformat']"
+								},
+								"sink": {
+									"name": "receivedateformat"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receivedate']"
+								},
+								"sink": {
+									"name": "receivedate"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiptdateformat']"
+								},
+								"sink": {
+									"name": "receiptdateformat"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiptdate']"
+								},
+								"sink": {
+									"name": "receiptdate"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['fulfillexpeditecriteria']"
+								},
+								"sink": {
+									"name": "fulfillexpeditecriteria"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['companynumb']"
+								},
+								"sink": {
+									"name": "companynumb"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['duplicate']"
+								},
+								"sink": {
+									"name": "duplicate"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['reportduplicate']['duplicatesource']"
+								},
+								"sink": {
+									"name": "duplicatesource"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['reportduplicate']['duplicatenumb']"
+								},
+								"sink": {
+									"name": "duplicatenumb"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['primarysource']['reportercountry']"
+								},
+								"sink": {
+									"name": "reportercountry"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['primarysource']['qualification']"
+								},
+								"sink": {
+									"name": "qualification"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['sender']['sendertype']"
+								},
+								"sink": {
+									"name": "sendertype"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['sender']['senderorganization']"
+								},
+								"sink": {
+									"name": "senderorganization"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiver']['receivertype']"
+								},
+								"sink": {
+									"name": "receivertype"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['receiver']['receiverorganization']"
+								},
+								"sink": {
+									"name": "receiverorganization"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['patientonsetage']"
+								},
+								"sink": {
+									"name": "patientonsetage"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['patientonsetageunit']"
+								},
+								"sink": {
+									"name": "patientonsetageunit"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['patientsex']"
+								},
+								"sink": {
+									"name": "patientsex"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['reaction'][0]['reactionmeddraversionpt']"
+								},
+								"sink": {
+									"name": "reactionmeddraversionpt"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['reaction'][0]['reactionmeddrapt']"
+								},
+								"sink": {
+									"name": "reactionmeddrapt"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugcharacterization']"
+								},
+								"sink": {
+									"name": "drugcharacterization"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['medicinalproduct']"
+								},
+								"sink": {
+									"name": "medicinalproduct"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugbatchnumb']"
+								},
+								"sink": {
+									"name": "drugbatchnumb"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugauthorizationnumb']"
+								},
+								"sink": {
+									"name": "drugauthorizationnumb"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugstructuredosagenumb']"
+								},
+								"sink": {
+									"name": "drugstructuredosagenumb"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugstructuredosageunit']"
+								},
+								"sink": {
+									"name": "drugstructuredosageunit"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugdosagetext']"
+								},
+								"sink": {
+									"name": "drugdosagetext"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugadministrationroute']"
+								},
+								"sink": {
+									"name": "drugadministrationroute"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugindication']"
+								},
+								"sink": {
+									"name": "drugindication"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugstartdateformat']"
+								},
+								"sink": {
+									"name": "drugstartdateformat"
+								}
+							},
+							{
+								"source": {
+									"path": "$['results'][0]['patient']['drug'][0]['drugstartdate']"
+								},
+								"sink": {
+									"name": "drugstartdate"
+								}
+							}
+						],
+						"collectionReference": "$['results']"
+					}
 				},
 				"inputs": [
 					{
