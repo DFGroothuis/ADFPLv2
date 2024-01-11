@@ -9,7 +9,7 @@
 		"type": "RestResource",
 		"typeProperties": {
 			"relativeUrl": {
-				"value": "'?search=reactionmeddrapt:\"headache\"'",
+				"value": "?search=reactionmeddrapt=\"headache\"",
 				"type": "Expression"
 			}
 		},
