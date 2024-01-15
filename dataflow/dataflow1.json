@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_adls_parquet_002",
+						"referenceName": "ds_adls_parquet_001",
 						"type": "DatasetReference"
 					},
 					"name": "source1"

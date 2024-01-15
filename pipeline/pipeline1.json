@@ -26,7 +26,7 @@
 								"EnvRegSys": "DEVNL200",
 								"Domain": "MaterialManagement",
 								"Object": "Material",
-								"CDS": "MARA"
+								"Table": "MARA"
 							}
 						}
 					},
