@@ -17,18 +17,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dataflow1",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"source1": {
-								"EnvStorage": "dev",
-								"Zone": "Staging",
-								"DataSource": "SAP",
-								"EnvRegSys": "DEVNL200",
-								"Domain": "MaterialManagement",
-								"Object": "Material",
-								"Table": "MARA"
-							}
-						}
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
