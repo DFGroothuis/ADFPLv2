@@ -28,7 +28,6 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          MANDT as short,",
 				"          MATNR as string,",
 				"          ERSDA as date,",
 				"          CREATED_AT_TIME as integer,",
