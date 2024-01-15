@@ -6,6 +6,9 @@
 				"type": "string",
 				"value": "dev"
 			}
+		},
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "true"
 		}
 	},
 	"location": "westeurope",
