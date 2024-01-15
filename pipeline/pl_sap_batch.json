@@ -84,6 +84,9 @@
 				]
 			}
 		},
+		"folder": {
+			"name": "PL full table"
+		},
 		"annotations": []
 	}
 }

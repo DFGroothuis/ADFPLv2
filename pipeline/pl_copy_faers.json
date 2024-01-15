@@ -247,6 +247,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "PL API"
+		},
 		"annotations": []
 	}
 }

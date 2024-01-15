@@ -29,6 +29,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "PL CDC Table"
+		},
 		"annotations": [],
 		"lastPublishTime": "2023-12-18T10:37:29Z"
 	},
