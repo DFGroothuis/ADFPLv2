@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
-								"table_filename": "mara_changes.csv"
+								"table_filename": "marachanges.csv"
 							}
 						}
 					},
