@@ -17,7 +17,12 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dataflow1",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"table_filename": "mara_changes.csv"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
