@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Set variable1",
+						"activity": "Lookup1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -29,13 +29,6 @@
 								"name": "@pipeline().TriggerTime",
 								"value": {
 									"value": "@concat(pipeline().TriggerTime, pipeline().globalParameters.environment,pipeline().RunId, 'test')",
-									"type": "Expression"
-								}
-							},
-							{
-								"name": "@variables('variable')",
-								"value": {
-									"value": "@variables('variable')",
 									"type": "Expression"
 								}
 							}
@@ -110,30 +103,6 @@
 					"dataset": {
 						"referenceName": "ds_deltext_exec",
 						"type": "DatasetReference"
-					}
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "variable",
-					"value": {
-						"value": "@activity('Lookup1').output.firstRow.Prop_0",
-						"type": "Expression"
 					}
 				}
 			}
