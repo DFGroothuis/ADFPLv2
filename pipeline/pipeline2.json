@@ -26,11 +26,22 @@
 						"type": "DelimitedTextSource",
 						"additionalColumns": [
 							{
-								"name": "@pipeline().TriggerTime",
+								"name": "test1",
 								"value": {
-									"value": "@concat(pipeline().TriggerTime, pipeline().globalParameters.environment,pipeline().RunId, 'test')",
+									"value": "'test'",
 									"type": "Expression"
 								}
+							},
+							{
+								"name": "test2",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "test3",
+								"value": "@pipeline().TriggerTime"
 							}
 						],
 						"storeSettings": {
@@ -103,7 +114,8 @@
 					"dataset": {
 						"referenceName": "ds_deltext_exec",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
