@@ -34,7 +34,10 @@
 							},
 							{
 								"name": "test",
-								"value": "$$FILEPATH"
+								"value": {
+									"value": "@activity('Lookup1').output.firstRow.Prop_0",
+									"type": "Expression"
+								}
 							}
 						],
 						"storeSettings": {
