@@ -50,10 +50,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
-						"additionalColumns": {
-							"type": "Expression",
-							"value": "@pipeline().TriggerTime"
-						},
+						"additionalColumns": [
+							{
+								"name": "last",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
