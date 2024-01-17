@@ -31,13 +31,6 @@
 									"value": "@pipeline().TriggerTime",
 									"type": "Expression"
 								}
-							},
-							{
-								"name": "test",
-								"value": {
-									"value": "@activity('Lookup1').output.firstRow.Prop_0",
-									"type": "Expression"
-								}
 							}
 						],
 						"storeSettings": {
