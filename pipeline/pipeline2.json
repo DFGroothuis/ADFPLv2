@@ -5,7 +5,14 @@
 			{
 				"name": "Copy data1",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -22,6 +29,13 @@
 								"name": "@pipeline().TriggerTime",
 								"value": {
 									"value": "@concat(pipeline().TriggerTime, pipeline().globalParameters.environment,pipeline().RunId, 'test')",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "@variables('variable')",
+								"value": {
+									"value": "@variables('variable')",
 									"type": "Expression"
 								}
 							}
@@ -68,8 +82,67 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_deltext_exec",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "variable",
+					"value": {
+						"value": "@concat(activity('Lookup1').output.pipelineReturnValue,' next ',activity('Lookup1').output,' next ', activity('Lookup1').output.firstRow)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"variable": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
