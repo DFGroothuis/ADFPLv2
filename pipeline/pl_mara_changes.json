@@ -91,7 +91,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText2",
+						"referenceName": "ds_deltext_exec",
 						"type": "DatasetReference"
 					}
 				],
