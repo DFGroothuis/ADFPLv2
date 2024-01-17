@@ -132,7 +132,7 @@
 				"typeProperties": {
 					"variableName": "variable",
 					"value": {
-						"value": "@concat(activity('Lookup1').output)",
+						"value": "@activity('Lookup1').output.firstRow.Prop_0",
 						"type": "Expression"
 					}
 				}
