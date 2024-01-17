@@ -20,7 +20,8 @@
 				},
 				"container": "dev"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "",
+			"rowDelimiter": "",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
