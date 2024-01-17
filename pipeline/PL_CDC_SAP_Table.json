@@ -18,7 +18,7 @@
 					"source": {
 						"type": "SapTableSource",
 						"rfcTableOptions": {
-							"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', utcNow('yyyyMMdd'), '''')",
+							"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', pipeline().parameters.LastExecDate, '''')",
 							"type": "Expression"
 						},
 						"customRfcReadTableFunctionModule": "",
@@ -116,6 +116,9 @@
 				"type": "string"
 			},
 			"ChangeDateColumn": {
+				"type": "string"
+			},
+			"LastExecDate": {
 				"type": "string"
 			}
 		},
