@@ -104,7 +104,7 @@
 						"referenceName": "ds_deltext_exec",
 						"type": "DatasetReference"
 					},
-					"firstRowOnly": false
+					"firstRowOnly": true
 				}
 			},
 			{
@@ -134,6 +134,9 @@
 		],
 		"variables": {
 			"variable": {
+				"type": "String"
+			},
+			"lastdate": {
 				"type": "String"
 			}
 		},
