@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "pl_mara_changes.txt",
+				"fileName": "template.txt",
 				"folderPath": "pipeline_meta/pl_mara_changes",
 				"container": "dev"
 			},
