@@ -31,6 +31,10 @@
 									"value": "@pipeline().TriggerTime",
 									"type": "Expression"
 								}
+							},
+							{
+								"name": "test",
+								"value": "$$FILEPATH"
 							}
 						],
 						"storeSettings": {
