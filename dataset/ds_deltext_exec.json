@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "utcNow",
+					"value": "@utcNow()",
 					"type": "Expression"
 				},
 				"folderPath": {
