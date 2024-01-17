@@ -50,6 +50,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": {
+							"type": "Expression",
+							"value": "@pipeline().TriggerTime"
+						},
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
@@ -82,7 +86,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_deltext_exec",
+						"referenceName": "DelimitedText2",
 						"type": "DatasetReference"
 					}
 				],
