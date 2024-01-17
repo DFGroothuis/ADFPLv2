@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@pipeline().Pipeline",
+					"value": "@concat(pipeline().Pipeline, '.txt')",
 					"type": "Expression"
 				},
 				"folderPath": {
