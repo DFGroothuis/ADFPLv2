@@ -1,44 +1,11 @@
 {
-	"name": "pl_mara_changes",
+	"name": "pipeline2",
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_CDC_SAP_Table",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"Zone": "Staging",
-						"EnvStorage": {
-							"value": "@pipeline().globalParameters.environment",
-							"type": "Expression"
-						},
-						"DataSource": "SAP",
-						"EnvRegSys": "DEVNL200",
-						"Domain": "MaterialManagement",
-						"Object": "Material",
-						"table": "MARA",
-						"ChangeDateColumn": "LAEDA"
-					}
-				}
-			},
-			{
 				"name": "Copy data1",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Execute Pipeline1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -104,7 +71,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_deltext_exec",
+						"referenceName": "DelimitedText2",
 						"type": "DatasetReference"
 					}
 				],
@@ -116,9 +83,6 @@
 				]
 			}
 		],
-		"folder": {
-			"name": "PL CDC Table"
-		},
 		"annotations": []
 	}
 }

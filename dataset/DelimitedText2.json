@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "meta",
-				"folderPath": "pipe",
+				"fileName": "pl_mara_changes.txt",
+				"folderPath": "pipeline_meta/pl_mara_changes",
 				"container": "dev"
 			},
 			"columnDelimiter": ",",
