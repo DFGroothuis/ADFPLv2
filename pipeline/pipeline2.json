@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Set variable1",
+						"activity": "Lookup1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -112,30 +112,6 @@
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "variable",
-					"value": {
-						"value": "@formatDateTime(activity('Lookup1').output.firstRow.Prop_0, 'yyyyMMdd')",
-						"type": "Expression"
-					}
 				}
 			}
 		],
