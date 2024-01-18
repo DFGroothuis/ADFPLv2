@@ -29,10 +29,11 @@
 								"source": {
 									"type": "SapTableSource",
 									"rfcTableOptions": {
-										"value": "@concat('TABNAME EQ ''', item(), ''' AND DDLANGUAGE EQ ''EN''')",
+										"value": "@{concat('TABNAME EQ ''', item(), ''' AND DDLANGUAGE EQ ''EN''')}",
 										"type": "Expression"
 									},
 									"customRfcReadTableFunctionModule": "",
+									"rfcTableFields": "FIELDNAME, POSITION, DATATYPE, LENG, DECIMALS, KEYFLAG",
 									"partitionOption": "None"
 								},
 								"sink": {
@@ -74,7 +75,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"table_filename": {
-											"value": "@concat(item(), '.txt')",
+											"value": "@concat(item(), '.CSV')",
 											"type": "Expression"
 										}
 									}
