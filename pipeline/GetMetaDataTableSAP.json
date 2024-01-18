@@ -187,7 +187,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('CALL D3010_DEV_BRONZE_RAW.PUBLIC.create_table_sql_from_meta( ''D3010_DEV_BRONZE_RAW'', ''SAP_S4H_LSD200'',''', item(), ''');' )",
+											"value": "@concat('CALL D3010_DEV_BRONZE_RAW.PUBLIC.create_table_sql_from_meta( ''D1010_PROD_BRONZE_RAW'', ''SAP_S4H_LSD200'',''', item(), ''');' )",
 											"type": "Expression"
 										}
 									}
