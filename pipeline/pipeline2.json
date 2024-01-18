@@ -66,7 +66,13 @@
 				"inputs": [
 					{
 						"referenceName": "DelimitedText2",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"pipeline": {
+								"value": "template",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -101,8 +107,14 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "ds_deltext_exec",
-						"type": "DatasetReference"
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference",
+						"parameters": {
+							"pipeline": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": true
 				}

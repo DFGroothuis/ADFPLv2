@@ -5,13 +5,21 @@
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"pipeline": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "template.txt",
-				"folderPath": "pipeline_meta/pl_mara_changes",
+				"fileName": {
+					"value": "@concat(dataset().pipeline, '.txt')",
+					"type": "Expression"
+				},
+				"folderPath": "pipeline_meta",
 				"container": "dev"
 			},
 			"columnDelimiter": ",",
