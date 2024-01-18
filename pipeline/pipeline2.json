@@ -35,6 +35,10 @@
 							{
 								"name": "last2",
 								"value": "@pipeline().TriggerTime"
+							},
+							{
+								"name": "last3",
+								"value": "$$COLUMN:@pipeline().TriggerTime"
 							}
 						],
 						"storeSettings": {
