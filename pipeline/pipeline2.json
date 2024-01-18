@@ -26,19 +26,11 @@
 						"type": "DelimitedTextSource",
 						"additionalColumns": [
 							{
-								"name": "last",
+								"name": "@pipeline().TriggerTime",
 								"value": {
 									"value": "@pipeline().TriggerTime",
 									"type": "Expression"
 								}
-							},
-							{
-								"name": "last2",
-								"value": "@pipeline().TriggerTime"
-							},
-							{
-								"name": "last3",
-								"value": "$$COLUMN:@pipeline().TriggerTime"
 							}
 						],
 						"storeSettings": {
