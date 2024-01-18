@@ -31,6 +31,10 @@
 									"value": "@pipeline().TriggerTime",
 									"type": "Expression"
 								}
+							},
+							{
+								"name": "last2",
+								"value": "@pipeline().TriggerTime"
 							}
 						],
 						"storeSettings": {
