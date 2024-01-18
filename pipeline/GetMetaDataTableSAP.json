@@ -50,9 +50,83 @@
 								"enableStaging": false,
 								"translator": {
 									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "FIELDNAME",
+												"type": "String",
+												"physicalType": "C"
+											},
+											"sink": {
+												"name": "FIELDNAME",
+												"type": "String",
+												"physicalType": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "POSITION",
+												"type": "Number",
+												"physicalType": "N"
+											},
+											"sink": {
+												"name": "POSITION",
+												"type": "Number",
+												"physicalType": "Number"
+											}
+										},
+										{
+											"source": {
+												"name": "DATATYPE",
+												"type": "String",
+												"physicalType": "C"
+											},
+											"sink": {
+												"name": "DATATYPE",
+												"type": "String",
+												"physicalType": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "LENG",
+												"type": "String",
+												"physicalType": "N"
+											},
+											"sink": {
+												"name": "LENG",
+												"type": "String",
+												"physicalType": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DECIMALS",
+												"type": "String",
+												"physicalType": "N"
+											},
+											"sink": {
+												"name": "DECIMALS",
+												"type": "String",
+												"physicalType": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "KEYFLAG",
+												"type": "String",
+												"physicalType": "C"
+											},
+											"sink": {
+												"name": "KEYFLAG",
+												"type": "String",
+												"physicalType": "String"
+											}
+										}
+									],
 									"typeConversion": true,
 									"typeConversionSettings": {
-										"allowDataTruncation": true,
+										"allowDataTruncation": false,
 										"treatBooleanAsNumber": false
 									}
 								}
