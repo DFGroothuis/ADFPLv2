@@ -7,7 +7,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "LookupLastTriggerDate",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -33,14 +33,14 @@
 						"table": "MARA",
 						"ChangeDateColumn": "LAEDA",
 						"LastExecDate": {
-							"value": "@formatDateTime(activity('Lookup1').output.firstRow.Prop_0, 'yyyyMMdd')",
+							"value": "@formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd')",
 							"type": "Expression"
 						}
 					}
 				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "LookupLastTriggerDate",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -64,14 +64,20 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "ds_deltext_exec",
-						"type": "DatasetReference"
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference",
+						"parameters": {
+							"pipeline": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": true
 				}
 			},
 			{
-				"name": "StoreTriggerDate",
+				"name": "Store Trigger Date",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -134,7 +140,13 @@
 				"inputs": [
 					{
 						"referenceName": "DelimitedText2",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"pipeline": {
+								"value": "template",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
