@@ -88,6 +88,45 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Copy Full Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_snowflake",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"database": "D3010_DEV_BRONZE_RAW"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('USE DATABASE D1010_PROD_BRONZE_RAW;\nUSE SCHEMA SAP_S4H_LSD200;COPY INTO ', pipeline().parameters.table, ' \n  FROM az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().parameters.EnvRegSys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
 			}
 		],
 		"parameters": {

@@ -52,7 +52,8 @@
 				"defaultValue": [
 					"MCHA",
 					"MCHB",
-					"MCH1"
+					"MCH1",
+					"MARC"
 				]
 			}
 		},
