@@ -1,9 +1,9 @@
 {
-	"name": "pl_sap_mm",
+	"name": "pl_sap_purchaseorder",
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
+				"name": "ForEachTable",
 				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
@@ -12,6 +12,7 @@
 						"value": "@variables('table')",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute Full Table Load",
@@ -32,8 +33,8 @@
 									},
 									"DataSource": "SAP",
 									"EnvRegSys": "DEVNL200",
-									"Domain": "MaterialManagement",
-									"Object": "Material",
+									"Domain": "BatchManagement",
+									"Object": "Batch",
 									"table": {
 										"value": "@item()",
 										"type": "Expression"
@@ -49,9 +50,12 @@
 			"table": {
 				"type": "Array",
 				"defaultValue": [
-					"MARA",
-					"MAKT",
-					"MARC"
+					"EKKO",
+					"EKPO",
+					"EKET",
+					"EKBE",
+					"EKES",
+					"EKKN"
 				]
 			}
 		},
