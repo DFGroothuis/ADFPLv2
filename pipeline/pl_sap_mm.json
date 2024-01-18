@@ -49,8 +49,6 @@
 			"table": {
 				"type": "Array",
 				"defaultValue": [
-					"MARA",
-					"MAKT",
 					"MARC"
 				]
 			}
