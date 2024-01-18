@@ -33,8 +33,8 @@
 									},
 									"DataSource": "SAP",
 									"EnvRegSys": "DEVNL200",
-									"Domain": "BatchManagement",
-									"Object": "Batch",
+									"Domain": "PurchaseOrderDomain",
+									"Object": "PurchaseOrder",
 									"table": {
 										"value": "@item()",
 										"type": "Expression"
