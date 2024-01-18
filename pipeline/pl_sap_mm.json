@@ -12,6 +12,7 @@
 						"value": "@variables('table')",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute Full Table Load",
@@ -49,6 +50,8 @@
 			"table": {
 				"type": "Array",
 				"defaultValue": [
+					"MARA",
+					"MAKT",
 					"MARC"
 				]
 			}

@@ -50,10 +50,7 @@
 			"table": {
 				"type": "Array",
 				"defaultValue": [
-					"MCHA",
-					"MCHB",
-					"MCH1",
-					"MARC"
+					"MARD"
 				]
 			}
 		},
