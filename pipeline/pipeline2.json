@@ -26,7 +26,7 @@
 						"type": "DelimitedTextSource",
 						"additionalColumns": [
 							{
-								"name": "@pipeline().TriggerTime",
+								"name": "last",
 								"value": {
 									"value": "@pipeline().TriggerTime",
 									"type": "Expression"
