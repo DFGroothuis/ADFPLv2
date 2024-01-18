@@ -74,7 +74,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"table_filename": {
-											"value": "@concat(item(), '.csv')",
+											"value": "@concat(item(), '.txt')",
 											"type": "Expression"
 										}
 									}
@@ -89,17 +89,13 @@
 			"table": {
 				"type": "array",
 				"defaultValue": [
-					"VBAK",
-					"VBAP",
-					"VBFA",
-					"VBEP",
-					"VBKD",
-					"VBPA",
-					"VBBE",
-					"VBUK",
-					"MARA",
-					"MAKT"
+					"MARA"
 				]
+			}
+		},
+		"variables": {
+			"lastdate": {
+				"type": "String"
 			}
 		},
 		"folder": {
