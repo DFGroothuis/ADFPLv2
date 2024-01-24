@@ -2,7 +2,7 @@
 	"name": "ds_sap_table",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SapTableLocal",
+			"referenceName": "ls_sap",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {

@@ -2,15 +2,12 @@
 	"name": "SapTableResource1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SapTableLocal",
+			"referenceName": "ls_sap",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "SapTableResource",
-		"schema": [],
-		"typeProperties": {
-			"tableName": "MARA"
-		}
+		"schema": []
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
