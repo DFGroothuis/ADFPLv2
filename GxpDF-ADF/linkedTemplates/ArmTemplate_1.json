@@ -6,12 +6,1840 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "GxpDF-ADF"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"AzureDataLakeStorage526_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/b4e51074-d735-40c8-ae01-f374217d2c40/resourceGroups/Storage-rg/providers/Microsoft.Storage/storageAccounts/gxpdfdatalake"
+		},
+		"AzureDataLakeStorage526_properties_groupId": {
+			"type": "string",
+			"defaultValue": "dfs"
+		},
+		"AzureDataLakeStorage526_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"gxpdfdatalake.dfs.core.windows.net"
+			]
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "West Europe",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 10,
+							"cleanup": false,
+							"customProperties": []
+						},
+						"pipelineExternalComputeScaleProperties": {
+							"timeToLive": 60,
+							"numberOfPipelineNodes": 1,
+							"numberOfExternalNodes": 1
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/AzureDataLakeStorage526')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('AzureDataLakeStorage526_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('AzureDataLakeStorage526_properties_groupId')]",
+				"fqdns": "[parameters('AzureDataLakeStorage526_properties_fqdns')]"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "@pipeline().TriggerTime",
+										"value": {
+											"value": "@pipeline().TriggerTime",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_deltext_exec",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_deltext_exec",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference",
+								"parameters": {
+									"pipeline": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"variable": {
+						"type": "String"
+					},
+					"lastdate": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_copy_faers')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"supportRFC5988": "true"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "[['safetyreportversion']"
+										},
+										"sink": {
+											"path": "safetyreportversion"
+										}
+									},
+									{
+										"source": {
+											"path": "[['safetyreportid']"
+										},
+										"sink": {
+											"path": "safetyreportid"
+										}
+									},
+									{
+										"source": {
+											"path": "[['primarysourcecountry']"
+										},
+										"sink": {
+											"path": "primarysourcecountry"
+										}
+									},
+									{
+										"source": {
+											"path": "[['occurcountry']"
+										},
+										"sink": {
+											"path": "occurcountry"
+										}
+									},
+									{
+										"source": {
+											"path": "[['transmissiondateformat']"
+										},
+										"sink": {
+											"path": "transmissiondateformat"
+										}
+									},
+									{
+										"source": {
+											"path": "[['transmissiondate']"
+										},
+										"sink": {
+											"path": "transmissiondate"
+										}
+									},
+									{
+										"source": {
+											"path": "[['reporttype']"
+										},
+										"sink": {
+											"path": "reporttype"
+										}
+									},
+									{
+										"source": {
+											"path": "[['serious']"
+										},
+										"sink": {
+											"path": "serious"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnessdeath']"
+										},
+										"sink": {
+											"path": "seriousnessdeath"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnesslifethreatening']"
+										},
+										"sink": {
+											"path": "seriousnesslifethreatening"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnesshospitalization']"
+										},
+										"sink": {
+											"path": "seriousnesshospitalization"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnessdisabling']"
+										},
+										"sink": {
+											"path": "seriousnessdisabling"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnesscongenitalanomali']"
+										},
+										"sink": {
+											"path": "seriousnesscongenitalanomali"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnessother']"
+										},
+										"sink": {
+											"path": "seriousnessother"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receivedateformat']"
+										},
+										"sink": {
+											"path": "receivedateformat"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receivedate']"
+										},
+										"sink": {
+											"path": "receivedate"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receiptdateformat']"
+										},
+										"sink": {
+											"path": "receiptdateformat"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receiptdate']"
+										},
+										"sink": {
+											"path": "receiptdate"
+										}
+									},
+									{
+										"source": {
+											"path": "[['fulfillexpeditecriteria']"
+										},
+										"sink": {
+											"path": "fulfillexpeditecriteria"
+										}
+									},
+									{
+										"source": {
+											"path": "[['companynumb']"
+										},
+										"sink": {
+											"path": "companynumb"
+										}
+									},
+									{
+										"source": {
+											"path": "[['primarysource']"
+										},
+										"sink": {
+											"path": "primarysource"
+										}
+									},
+									{
+										"source": {
+											"path": "[['sender']"
+										},
+										"sink": {
+											"path": "sender"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receiver']"
+										},
+										"sink": {
+											"path": "receiver"
+										}
+									},
+									{
+										"source": {
+											"path": "[['patient']"
+										},
+										"sink": {
+											"path": "patient"
+										}
+									}
+								],
+								"collectionReference": "$['results']"
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_rest_faers",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_json_blob_faers",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "PL API"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAPTableSource_Incremental')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SapTableLocal",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SapTableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().SapTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SapTableResource1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SapTableLocal",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "MARA"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sap_odp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SAP_ODP",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"subscriber": {
+							"value": "@dataset().CDS",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"CDS": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SapOdpResource",
+				"schema": [],
+				"typeProperties": {
+					"context": "ABAP_CDS",
+					"objectName": {
+						"value": "@concat(dataset().CDS, '$P')",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sap_table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SapTableLocal",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "SnowflakeMARA",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          MATNR as string,",
+						"          ERSDA as date,",
+						"          CREATED_AT_TIME as integer,",
+						"          ERNAM as string,",
+						"          LAEDA as date,",
+						"          AENAM as string,",
+						"          VPSTA as string,",
+						"          PSTAT as string,",
+						"          LVORM as string,",
+						"          MTART as string,",
+						"          MBRSH as string,",
+						"          MATKL as string,",
+						"          BISMT as string,",
+						"          MEINS as string,",
+						"          BSTME as string,",
+						"          ZEINR as string,",
+						"          ZEIAR as string,",
+						"          ZEIVR as string,",
+						"          ZEIFO as string,",
+						"          AESZN as string,",
+						"          BLATT as string,",
+						"          BLANZ as string,",
+						"          FERTH as string,",
+						"          FORMT as string,",
+						"          GROES as string,",
+						"          WRKST as string,",
+						"          NORMT as string,",
+						"          LABOR as string,",
+						"          EKWSL as string,",
+						"          BRGEW as double,",
+						"          NTGEW as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 alterRow(upsertIf(isNull('Matnr')==false())) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          MATNR as string,",
+						"          ERSDA as date,",
+						"          CREATED_AT_TIME as timestamp,",
+						"          ERNAM as string,",
+						"          LAEDA as date,",
+						"          AENAM as string,",
+						"          VPSTA as string,",
+						"          PSTAT as string,",
+						"          LVORM as string,",
+						"          MTART as string,",
+						"          MBRSH as string,",
+						"          MATKL as string,",
+						"          BISMT as string,",
+						"          MEINS as string,",
+						"          BSTME as string,",
+						"          ZEINR as string,",
+						"          ZEIAR as string,",
+						"          ZEIVR as string,",
+						"          ZEIFO as string,",
+						"          AESZN as string,",
+						"          BLATT as string,",
+						"          BLANZ as decimal(3,0),",
+						"          FERTH as string,",
+						"          FORMT as string,",
+						"          GROES as string,",
+						"          WRKST as string,",
+						"          NORMT as string,",
+						"          LABOR as string,",
+						"          EKWSL as string,",
+						"          BRGEW as decimal(13,3),",
+						"          NTGEW as decimal(13,3),",
+						"          GEWEI as string,",
+						"          VOLUM as decimal(13,3),",
+						"          VOLEH as string,",
+						"          BEHVO as string,",
+						"          RAUBE as string,",
+						"          TEMPB as string,",
+						"          DISST as string,",
+						"          TRAGR as string,",
+						"          STOFF as string,",
+						"          SPART as string,",
+						"          KUNNR as string,",
+						"          EANNR as string,",
+						"          WESCH as decimal(13,3),",
+						"          BWVOR as string,",
+						"          BWSCL as string,",
+						"          SAISO as string,",
+						"          ETIAR as string,",
+						"          ETIFO as string,",
+						"          ENTAR as string,",
+						"          EAN11 as string,",
+						"          NUMTP as string,",
+						"          LAENG as decimal(13,3),",
+						"          BREIT as decimal(13,3),",
+						"          HOEHE as decimal(13,3),",
+						"          MEABM as string,",
+						"          PRDHA as string,",
+						"          AEKLK as string,",
+						"          CADKZ as string,",
+						"          QMPUR as string,",
+						"          ERGEW as decimal(13,3),",
+						"          ERGEI as string,",
+						"          ERVOL as decimal(13,3),",
+						"          ERVOE as string,",
+						"          GEWTO as decimal(3,1),",
+						"          VOLTO as decimal(3,1),",
+						"          VABME as string,",
+						"          KZREV as string,",
+						"          KZKFG as string,",
+						"          XCHPF as string,",
+						"          VHART as string,",
+						"          FUELG as decimal(3,0),",
+						"          STFAK as decimal(5,0),",
+						"          MAGRV as string,",
+						"          BEGRU as string,",
+						"          DATAB as date,",
+						"          LIQDT as date,",
+						"          SAISJ as string,",
+						"          PLGTP as string,",
+						"          MLGUT as string,",
+						"          EXTWG as string,",
+						"          SATNR as string,",
+						"          ATTYP as string,",
+						"          KZKUP as string,",
+						"          KZNFM as string,",
+						"          PMATA as string,",
+						"          MSTAE as string,",
+						"          MSTAV as string,",
+						"          MSTDE as date,",
+						"          MSTDV as date,",
+						"          TAKLV as string,",
+						"          RBNRM as string,",
+						"          MHDRZ as decimal(4,0),",
+						"          MHDHB as decimal(4,0),",
+						"          MHDLP as decimal(3,0),",
+						"          INHME as string,",
+						"          INHAL as decimal(13,3),",
+						"          VPREH as decimal(5,0),",
+						"          ETIAG as string,",
+						"          INHBR as decimal(13,3),",
+						"          CMETH as string,",
+						"          CUOBF as decimal(18,0),",
+						"          KZUMW as string,",
+						"          KOSCH as string,",
+						"          SPROF as string,",
+						"          NRFHG as string,",
+						"          MFRPN as string,",
+						"          MFRNR as string,",
+						"          BMATN as string,",
+						"          MPROF as string,",
+						"          KZWSM as string,",
+						"          SAITY as string,",
+						"          PROFL as string,",
+						"          IHIVI as string,",
+						"          ILOOS as string,",
+						"          SERLV as string,",
+						"          KZGVH as string,",
+						"          XGCHP as string,",
+						"          KZEFF as string,",
+						"          COMPL as decimal(2,0),",
+						"          IPRKZ as string,",
+						"          RDMHD as string,",
+						"          PRZUS as string,",
+						"          MTPOS_MARA as string,",
+						"          BFLME as string,",
+						"          MATFI as string,",
+						"          CMREL as string,",
+						"          BBTYP as string,",
+						"          SLED_BBD as string,",
+						"          GTIN_VARIANT as string,",
+						"          GENNR as string,",
+						"          RMATP as string,",
+						"          GDS_RELEVANT as string,",
+						"          WEORA as string,",
+						"          HUTYP_DFLT as string,",
+						"          PILFERABLE as string,",
+						"          WHSTC as string,",
+						"          WHMATGR as string,",
+						"          HNDLCODE as string,",
+						"          HAZMAT as string,",
+						"          HUTYP as string,",
+						"          TARE_VAR as string,",
+						"          MAXC as decimal(15,3),",
+						"          MAXC_TOL as decimal(3,1),",
+						"          MAXL as decimal(15,3),",
+						"          MAXB as decimal(15,3),",
+						"          MAXH as decimal(15,3),",
+						"          MAXDIM_UOM as string,",
+						"          HERKL as string,",
+						"          MFRGR as string,",
+						"          QQTIMEUOM as string,",
+						"          QGRP as string,",
+						"          SERIAL as string,",
+						"          PS_SMARTFORM as string,",
+						"          LOGUNIT as string,",
+						"          CWQREL as string,",
+						"          CWQPROC as string,",
+						"          CWQTOLGR as string,",
+						"          ADPROF as string,",
+						"          IPMIPPRODUCT as string,",
+						"          ALLOW_PMAT_IGNO as string,",
+						"          MEDIUM as string,",
+						"          COMMODITY as string,",
+						"          ANIMAL_ORIGIN as string,",
+						"          TEXTILE_COMP_IND as string,",
+						"          LAST_CHANGED_TIME as timestamp,",
+						"          MATNR_EXTERNAL as string,",
+						"          CHML_CMPLNC_RLVNCE_IND as string,",
+						"          LOGISTICAL_MAT_CATEGORY as string,",
+						"          SALES_MATERIAL as string,",
+						"          IDENTIFICATION_TAG_TYPE as string,",
+						"          SGT_CSGR as string,",
+						"          SGT_COVSA as string,",
+						"          SGT_STAT as string,",
+						"          SGT_SCOPE as string,",
+						"          SGT_REL as string,",
+						"          ANP as decimal(9,0),",
+						"          PSM_CODE as string,",
+						"          FSH_MG_AT1 as string,",
+						"          FSH_MG_AT2 as string,",
+						"          FSH_MG_AT3 as string,",
+						"          FSH_SEALV as string,",
+						"          FSH_SEAIM as string,",
+						"          FSH_SC_MID as string,",
+						"          DUMMY_PRD_INCL_EEW_PS as string,",
+						"          SCM_MATID_GUID16 as string,",
+						"          SCM_MATID_GUID22 as string,",
+						"          SCM_MATURITY_DUR as decimal(11,0),",
+						"          SCM_SHLF_LFE_REQ_MIN as decimal(11,0),",
+						"          SCM_SHLF_LFE_REQ_MAX as decimal(11,0),",
+						"          SCM_PUOM as string,",
+						"          RMATP_PB as string,",
+						"          PROD_SHAPE as string,",
+						"          MO_PROFILE_ID as string,",
+						"          OVERHANG_TRESH as decimal(5,2),",
+						"          BRIDGE_TRESH as decimal(5,2),",
+						"          BRIDGE_MAX_SLOPE as decimal(5,2),",
+						"          HEIGHT_NONFLAT as decimal(13,3),",
+						"          HEIGHT_NONFLAT_UOM as string,",
+						"          SCM_KITCOMP as string,",
+						"          SCM_PROD_PAOOPT as string,",
+						"          SCM_BOD_DEPLVL as string,",
+						"          SCM_RESTRICT_INVBAL as string,",
+						"          SCM_DRP_GL_STOCK as string,",
+						"          SCM_EXCL_EXPEDITE as string,",
+						"          {/CWM/XCWMAT} as string,",
+						"          {/CWM/VALUM} as string,",
+						"          {/CWM/TOLGR} as string,",
+						"          {/CWM/TARA} as string,",
+						"          {/CWM/TARUM} as string,",
+						"          {/BEV1/LULEINH} as decimal(8,0),",
+						"          {/BEV1/LULDEGRP} as string,",
+						"          {/BEV1/NESTRUCCAT} as string,",
+						"          {/DSD/SL_TOLTYP} as string,",
+						"          {/DSD/SV_CNT_GRP} as string,",
+						"          {/DSD/VC_GROUP} as string,",
+						"          {/SAPMP/KADU} as decimal(7,2),",
+						"          {/SAPMP/ABMEIN} as string,",
+						"          {/SAPMP/KADP} as decimal(5,2),",
+						"          {/SAPMP/BRAD} as decimal(4,0),",
+						"          {/SAPMP/SPBI} as decimal(7,2),",
+						"          {/SAPMP/TRAD} as decimal(7,2),",
+						"          {/SAPMP/KEDU} as decimal(7,2),",
+						"          {/SAPMP/SPTR} as decimal(13,3),",
+						"          {/SAPMP/FBDK} as decimal(7,2),",
+						"          {/SAPMP/FBHK} as decimal(7,2),",
+						"          {/SAPMP/RILI} as string,",
+						"          {/SAPMP/FBAK} as string,",
+						"          {/SAPMP/AHO} as decimal(3,0),",
+						"          {/SAPMP/MIFRR} as decimal(7,2),",
+						"          {/STTPEC/SERTYPE} as decimal(3,0),",
+						"          {/STTPEC/SYNCACT} as string,",
+						"          {/STTPEC/SYNCTIME} as decimal(15,0),",
+						"          {/STTPEC/SYNCCHG} as string,",
+						"          {/STTPEC/COUNTRY_REF} as string,",
+						"          {/STTPEC/PRDCAT} as string,",
+						"          {/VSO/R_TILT_IND} as string,",
+						"          {/VSO/R_STACK_IND} as string,",
+						"          {/VSO/R_BOT_IND} as string,",
+						"          {/VSO/R_TOP_IND} as string,",
+						"          {/VSO/R_STACK_NO} as decimal(3,0),",
+						"          {/VSO/R_PAL_IND} as string,",
+						"          {/VSO/R_PAL_OVR_D} as decimal(13,3),",
+						"          {/VSO/R_PAL_OVR_W} as decimal(13,3),",
+						"          {/VSO/R_PAL_B_HT} as decimal(13,3),",
+						"          {/VSO/R_PAL_MIN_H} as decimal(13,3),",
+						"          {/VSO/R_TOL_B_HT} as decimal(13,3),",
+						"          {/VSO/R_NO_P_GVH} as decimal(2,0),",
+						"          {/VSO/R_QUAN_UNIT} as string,",
+						"          {/VSO/R_KZGVH_IND} as string,",
+						"          PACKCODE as string,",
+						"          DG_PACK_STATUS as string,",
+						"          SRV_DURA as decimal(13,3),",
+						"          SRV_DURA_UOM as string,",
+						"          SRV_SERWI as string,",
+						"          SRV_ESCAL as string,",
+						"          SOM_CYCLE as string,",
+						"          SOM_CYCLE_RULE as string,",
+						"          SOM_TC_SCHEMA as string,",
+						"          SOM_CTR_AUTORENEWAL as string,",
+						"          MCOND as string,",
+						"          RETDELC as string,",
+						"          LOGLEV_RETO as string,",
+						"          NSNID as string,",
+						"          ICFA as string,",
+						"          RIC_ID as decimal(19,0),",
+						"          DFS_SENSITIVITY_KEY as string,",
+						"          DFS_MFRP2 as string,",
+						"          OVLPN as string,",
+						"          ADSPC_SPC as decimal(1,0),",
+						"          VARID as string,",
+						"          MSBOOKPARTNO as string,",
+						"          TOLERANCE_TYPE as string,",
+						"          DPCBT as string,",
+						"          XGRDT as string,",
+						"          IMATN as string,",
+						"          PICNUM as string,",
+						"          BSTAT as string,",
+						"          COLOR_ATINN as decimal(10,0),",
+						"          SIZE1_ATINN as decimal(10,0),",
+						"          SIZE2_ATINN as decimal(10,0),",
+						"          COLOR as string,",
+						"          SIZE1 as string,",
+						"          SIZE2 as string,",
+						"          FREE_CHAR as string,",
+						"          CARE_CODE as string,",
+						"          BRAND_ID as string,",
+						"          FIBER_CODE1 as string,",
+						"          FIBER_PART1 as decimal(3,0),",
+						"          FIBER_CODE2 as string,",
+						"          FIBER_PART2 as decimal(3,0),",
+						"          FIBER_CODE3 as string,",
+						"          FIBER_PART3 as decimal(3,0),",
+						"          FIBER_CODE4 as string,",
+						"          FIBER_PART4 as decimal(3,0),",
+						"          FIBER_CODE5 as string,",
+						"          FIBER_PART5 as decimal(3,0),",
+						"          FASHGRD as string",
+						"     ),",
+						"     deletable:true,",
+						"     insertable:true,",
+						"     updateable:true,",
+						"     upsertable:true,",
+						"     keys:[('MATNR')],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     stageInsert: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GetMetaDataTableSAP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy SAP meta to Blob",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SapTableSource",
+											"rfcTableOptions": {
+												"value": "@{concat('TABNAME EQ ''', item(), ''' AND DDLANGUAGE EQ ''EN''')}",
+												"type": "Expression"
+											},
+											"customRfcReadTableFunctionModule": "",
+											"rfcTableFields": "FIELDNAME, POSITION, DATATYPE, LENG, DECIMALS, KEYFLAG",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "FIELDNAME",
+														"type": "String",
+														"physicalType": "C"
+													},
+													"sink": {
+														"name": "FIELDNAME",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "POSITION",
+														"type": "Number",
+														"physicalType": "N"
+													},
+													"sink": {
+														"name": "POSITION",
+														"type": "Number",
+														"physicalType": "Number"
+													}
+												},
+												{
+													"source": {
+														"name": "DATATYPE",
+														"type": "String",
+														"physicalType": "C"
+													},
+													"sink": {
+														"name": "DATATYPE",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "LENG",
+														"type": "String",
+														"physicalType": "N"
+													},
+													"sink": {
+														"name": "LENG",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "DECIMALS",
+														"type": "String",
+														"physicalType": "N"
+													},
+													"sink": {
+														"name": "DECIMALS",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "KEYFLAG",
+														"type": "String",
+														"physicalType": "C"
+													},
+													"sink": {
+														"name": "KEYFLAG",
+														"type": "String",
+														"physicalType": "String"
+													}
+												}
+											],
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": false,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_sap_table",
+											"type": "DatasetReference",
+											"parameters": {
+												"table_name": {
+													"value": "DD03M",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_DelText_Blob",
+											"type": "DatasetReference",
+											"parameters": {
+												"table_filename": {
+													"value": "@concat(item(), '.CSV')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Script1",
+									"type": "Script",
+									"dependsOn": [
+										{
+											"activity": "Copy SAP meta to Blob",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "ls_snowflake",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"database": "D3010_DEV_BRONZE_RAW"
+										}
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "Query",
+												"text": {
+													"value": "@concat('CALL D3010_DEV_BRONZE_RAW.PUBLIC.create_table_sql_from_meta( ''D1010_PROD_BRONZE_RAW'', ''SAP_S4H_LSD200'',''', item(), ''');' )",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"table": {
+						"type": "array",
+						"defaultValue": [
+							"MARD"
+						]
+					}
+				},
+				"variables": {
+					"lastdate": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "MetaData"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TemplateADF_IncrementalTable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyFromSAPTable",
+						"description": "Copy incremental data from SAP table to AzureBlobStorage",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LookupLastCopiedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": {
+									"value": "@{concat(pipeline().parameters.SapTableDateColumn,' LE ',formatDateTime(adddays(pipeline().TriggerTime,-1),'yyyyMMdd'), ' AND ',pipeline().parameters.SapTableDateColumn,' GE ', formatDateTime(activity('LookupLastCopiedDate').output.firstRow.Prop_0, 'yyyyMMdd'))}",
+									"type": "Expression"
+								},
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SAPTableSource_Incremental",
+								"type": "DatasetReference",
+								"parameters": {
+									"SapTableName": {
+										"value": "@pipeline().parameters.SapTableName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DelimitedTextSink",
+								"type": "DatasetReference",
+								"parameters": {
+									"DelimitedTextSinkContainer": {
+										"value": "@pipeline().parameters.DelimitedTextSinkContainer",
+										"type": "Expression"
+									},
+									"DelimitedTextSinkDirectory": {
+										"value": "@pipeline().parameters.DelimitedTextSinkDirectory",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "LookupLastCopiedDate",
+						"description": "Copy incremental data from SAP table to AzureBlobStorage",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "AzureBlobDelimitedDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"HighWatermarkBlobDirectory": {
+										"value": "@pipeline().parameters.HighWatermarkBlobDirectory",
+										"type": "Expression"
+									},
+									"HighWatermarkBlobName": {
+										"value": "@pipeline().parameters.HighWatermarkBlobName",
+										"type": "Expression"
+									},
+									"HighWatermarkBlobContainer": {
+										"value": "@pipeline().parameters.HighWatermarkBlobContainer",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					},
+					{
+						"name": "SetLastCopiedDate",
+						"description": "Store the last copied date into blob by calling Logic App",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "CopyFromSAPTable",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"url": {
+								"value": "@pipeline().parameters.LogicAppURL",
+								"type": "Expression"
+							},
+							"body": {
+								"value": "{\"copiedDate\":\"@{pipeline().TriggerTime}\"",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"HighWatermarkBlobDirectory": {
+						"type": "string"
+					},
+					"HighWatermarkBlobName": {
+						"type": "string"
+					},
+					"HighWatermarkBlobContainer": {
+						"type": "string"
+					},
+					"SapTableName": {
+						"type": "string"
+					},
+					"DelimitedTextSinkContainer": {
+						"type": "string"
+					},
+					"DelimitedTextSinkDirectory": {
+						"type": "string"
+					},
+					"LogicAppURL": {
+						"type": "string"
+					},
+					"SapTableDateColumn": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SAPTableSource_Incremental')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "PL CDC Table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SapToDeltaLookupJson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "SapToDeltaParameters.json",
+						"fileSystem": "demo"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"sapContext": {
+							"type": "string"
+						},
+						"sapObjectName": {
+							"type": "string"
+						},
+						"sapRunMode": {
+							"type": "string"
+						},
+						"sapKeyColumns": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"sapPartitions": {
+							"type": "array",
+							"items": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"fieldName": {
+											"type": "string"
+										},
+										"sign": {
+											"type": "string"
+										},
+										"option": {
+											"type": "string"
+										},
+										"low": {
+											"type": "string"
+										},
+										"high": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"deltaContainer": {
+							"type": "string"
+						},
+						"deltaFolder": {
+							"type": "string"
+						},
+						"deltaKeyColumns": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"deltaPartition": {
+							"type": "string"
+						},
+						"stagingStorageFolder": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_001')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"EnvStorage": {
+						"type": "String"
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"Table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().table,'_',utcnow(), '.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().Table)",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().EnvStorage",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_0011')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"EnvStorage": {
+						"type": "String"
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"Table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().table,'_',utcnow(), '.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().Table)",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().EnvStorage",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MaterialCDS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_sap_odp",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     staged: true,",
+						"     readMode: 'fullAndIncrementalLoad',",
+						"     keys: ['PRODUCT'],",
+						"     format: 'sapObject',",
+						"     fixDecimalPrecision: true) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     preCommands: [],",
+						"     postCommands: []) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_odp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP2DeltaTemplateDataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "SAP_ODP",
+								"type": "LinkedServiceReference"
+							},
+							"name": "SAPSource"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "DeltaSink"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"parameters{",
+						"     sapContext as string (\"context\"),",
+						"     sapObjectName as string (\"obj\"),",
+						"     sapKeyColumns as string[] ([\"key1\",\"key2\"]),",
+						"     deltaContainer as string (\"container\"),",
+						"     deltaFolder as string (\"folder\"),",
+						"     deltaPartition as string (\"partition\"),",
+						"     deltaKeyColumns as string[] ([\"key3\",\"key4\"]),",
+						"     sapPartitions as string (\"[[\\{\\\"fieldName\\\": \\\"ID\\\",\\\"sign\\\": \\\"I\\\", \\\"option\\\": \\\"BT\\\",\\\"low\\\": \\\"1\\\",\\\"high\\\": \\\"4\\\"}]]\"),",
+						"     sapRunMode as string (\"fullAndIncrementalLoad\")",
+						"}",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     store: 'SapOdp',",
+						"     format: 'sapObject',",
+						"     staged: true,",
+						"     context: ($sapContext),",
+						"     objectName: ($sapObjectName),",
+						"     readMode: ($sapRunMode),",
+						"     keys: ($sapKeyColumns),",
+						"     partitionPredicates: ($sapPartitions),",
+						"     partitionBy('external', 1)) ~> SAPSource",
+						"SAPSource sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delta',",
+						"     fileSystem: ($deltaContainer),",
+						"     folderPath: ($deltaFolder),",
+						"     mergeSchema: false,",
+						"     autoCompact: false,",
+						"     optimizedWrite: false,",
+						"     vacuum: 0,",
+						"     deletable: true,",
+						"     insertable: true,",
+						"     updateable: true,",
+						"     upsertable: true,",
+						"     keys:($deltaKeyColumns),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('key',",
+						"          0,",
+						"          byName($deltaPartition)",
+						"     )) ~> DeltaSink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_sap_cdc')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_sap_odp",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_adls_parquet_002",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"parameters{",
+						"     KeyFields as string[]",
+						"}",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     staged: true,",
+						"     readMode: 'fullAndIncrementalLoad',",
+						"     keys: ($KeyFields),",
+						"     format: 'sapObject',",
+						"     fixDecimalPrecision: true) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     preCommands: [],",
+						"     postCommands: []) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_odp')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_CDS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -41,7 +1869,12 @@
 									}
 								},
 								"datasetParameters": {
-									"source1": {},
+									"source1": {
+										"CDS": {
+											"value": "@pipeline().parameters.CDS",
+											"type": "Expression"
+										}
+									},
 									"sink1": {
 										"EnvStorage": {
 											"value": "@pipeline().parameters.EnvStorage",
@@ -79,7 +1912,7 @@
 									"referenceName": "AzureBlobStorage1",
 									"type": "LinkedServiceReference"
 								},
-								"folderPath": "staging"
+								"folderPath": "dev/Staging/cdc"
 							},
 							"compute": {
 								"coreCount": 8,
@@ -126,479 +1959,8 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_Table')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Changes Table",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SapTableSource",
-								"rfcTableOptions": {
-									"value": "@pipeline().parameters.filter",
-									"type": "Expression"
-								},
-								"customRfcReadTableFunctionModule": "",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "ds_sap_table",
-								"type": "DatasetReference",
-								"parameters": {
-									"table_name": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_adls_parquet_001",
-								"type": "DatasetReference",
-								"parameters": {
-									"EnvStorage": {
-										"value": "@pipeline().parameters.EnvStorage",
-										"type": "Expression"
-									},
-									"Zone": {
-										"value": "@pipeline().parameters.Zone",
-										"type": "Expression"
-									},
-									"DataSource": {
-										"value": "@pipeline().parameters.DataSource",
-										"type": "Expression"
-									},
-									"EnvRegSys": {
-										"value": "@pipeline().parameters.EnvRegSys",
-										"type": "Expression"
-									},
-									"Domain": {
-										"value": "@pipeline().parameters.Domain",
-										"type": "Expression"
-									},
-									"Object": {
-										"value": "@pipeline().parameters.Object",
-										"type": "Expression"
-									},
-									"Table": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"Zone": {
-						"type": "string"
-					},
-					"EnvStorage": {
-						"type": "string"
-					},
-					"DataSource": {
-						"type": "string"
-					},
-					"EnvRegSys": {
-						"type": "string"
-					},
-					"Domain": {
-						"type": "string"
-					},
-					"Object": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					},
-					"filter": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Full_Load_SAP_Table')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Full Table",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SapTableSource",
-								"rfcTableOptions": "",
-								"customRfcReadTableFunctionModule": "",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "ds_sap_table",
-								"type": "DatasetReference",
-								"parameters": {
-									"table_name": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_adls_parquet_001",
-								"type": "DatasetReference",
-								"parameters": {
-									"EnvStorage": {
-										"value": "@pipeline().parameters.EnvStorage",
-										"type": "Expression"
-									},
-									"Zone": {
-										"value": "@pipeline().parameters.Zone",
-										"type": "Expression"
-									},
-									"DataSource": {
-										"value": "@pipeline().parameters.DataSource",
-										"type": "Expression"
-									},
-									"EnvRegSys": {
-										"value": "@pipeline().parameters.EnvRegSys",
-										"type": "Expression"
-									},
-									"Domain": {
-										"value": "@pipeline().parameters.Domain",
-										"type": "Expression"
-									},
-									"Object": {
-										"value": "@pipeline().parameters.Object",
-										"type": "Expression"
-									},
-									"Table": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"Zone": {
-						"type": "string"
-					},
-					"EnvStorage": {
-						"type": "string"
-					},
-					"DataSource": {
-						"type": "string"
-					},
-					"EnvRegSys": {
-						"type": "string"
-					},
-					"Domain": {
-						"type": "string"
-					},
-					"Object": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MaterialDataFlow')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_CDC_SAP_CDS",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-12-18T10:37:29Z"
-			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_CDC_SAP_CDS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_mara_changes')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_CDC_SAP_Table",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"Zone": "Staging",
-								"EnvStorage": "dev",
-								"DataSource": "SAP",
-								"EnvRegSys": "DEVNL110",
-								"Domain": "Material",
-								"Object": "MaterialManagement",
-								"table": "MARA",
-								"filter": {
-									"value": "@concat('LAEDA GE ''', utcNow('yyyyMMdd'), '''')",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_CDC_SAP_Table')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_sap_mm')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('table')",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Execute Full Table Load",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "PL_Full_Load_SAP_Table",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"Zone": "Staging",
-											"EnvStorage": "dev",
-											"DataSource": "SAP",
-											"EnvRegSys": "DEVNL110",
-											"Domain": "MaterialManagement",
-											"Object": "Material",
-											"table": {
-												"value": "@item()",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"table": {
-						"type": "Array",
-						"defaultValue": [
-							"MARA",
-							"MAKT"
-						]
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_sap_sales')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@pipeline().parameters.table",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Execute Full Table Load",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "PL_Full_Load_SAP_Table",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"Zone": "Staging",
-											"EnvStorage": "dev",
-											"DataSource": "SAP",
-											"EnvRegSys": "DEVNL110",
-											"Domain": "Sales and Distribution",
-											"Object": "Sales Order",
-											"table": {
-												"value": "@item()",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"table": {
-						"type": "array",
-						"defaultValue": [
-							"VBAK",
-							"VBAP",
-							"VBFA",
-							"VBEP",
-							"VBKD",
-							"VBPA",
-							"VBBE",
-							"VBUK"
-						]
-					}
-				},
-				"variables": {
-					"Object": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-12-15T19:11:11Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+				"[concat(variables('factoryId'), '/dataflows/df_sap_cdc')]"
 			]
 		}
 	]

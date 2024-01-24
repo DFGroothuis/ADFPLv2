@@ -11,25 +11,21 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"ls_snowflake_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_snowflake'"
+		},
 		"SAP_ODP_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SAP_ODP'"
-		},
-		"SapTable1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SapTable1'"
 		},
 		"SapTableLocal_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SapTableLocal'"
 		},
-		"AzureDataLakeStorage1_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
-		},
-		"AzureDataLakeStorageLocal_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageLocal'"
+		"ls_rest_faers_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.fda.gov/drug/event.json"
 		},
 		"SAP_ODP_properties_typeProperties_clientId": {
 			"type": "string",
@@ -44,22 +40,6 @@
 			"defaultValue": "bfeslsd.solco.global.nttdata.com"
 		},
 		"SAP_ODP_properties_typeProperties_systemNumber": {
-			"type": "string",
-			"defaultValue": "00"
-		},
-		"SapTable1_properties_typeProperties_clientId": {
-			"type": "string",
-			"defaultValue": "200"
-		},
-		"SapTable1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "NL22511"
-		},
-		"SapTable1_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "10.134.4.62"
-		},
-		"SapTable1_properties_typeProperties_systemNumber": {
 			"type": "string",
 			"defaultValue": "00"
 		},
@@ -78,28 +58,6 @@
 		"SapTableLocal_properties_typeProperties_systemNumber": {
 			"type": "string",
 			"defaultValue": "00"
-		},
-		"AzureDataLakeStorage526_properties_privateLinkResourceId": {
-			"type": "string",
-			"defaultValue": "/subscriptions/b4e51074-d735-40c8-ae01-f374217d2c40/resourceGroups/Storage-rg/providers/Microsoft.Storage/storageAccounts/gxpdfdatalake"
-		},
-		"AzureDataLakeStorage526_properties_groupId": {
-			"type": "string",
-			"defaultValue": "dfs"
-		},
-		"AzureDataLakeStorage526_properties_fqdns": {
-			"type": "array",
-			"defaultValue": [
-				"gxpdfdatalake.dfs.core.windows.net"
-			]
-		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
-		},
-		"AzureDataLakeStorageLocal_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
@@ -115,6 +73,41 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_rest_faers')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('ls_rest_faers_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_snowflake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"database": {
+						"type": "string",
+						"defaultValue": "D3010_DEV_BRONZE_RAW"
+					}
+				},
+				"annotations": [],
+				"type": "Snowflake",
+				"typeProperties": {
+					"authenticationType": "Basic",
+					"connectionString": "[parameters('ls_snowflake_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -196,6 +189,76 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "changesmara.csv",
+						"container": "dev"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": ";MANDT;MATNR;ERSDA;CREATED_AT_TIME;ERNAM;LAEDA;AENAM;VPSTA;PSTAT;LVORM;MTART;MBRSH;MATKL;BISMT;MEINS;BSTME;ZEINR;ZEIAR;ZEIVR;ZEIFO;AESZN;BLATT;BLANZ;FERTH;FORMT;GROES;WRKST;NORMT;LABOR;EKWSL;BRGEW;NTGEW;GEWEI;VOLUM;VOLEH;BEHVO;RAUBE;TEMPB;DISST;TRAGR;STOFF;SPART;KUNNR;EANNR;WESCH;BWVOR;BWSCL;SAISO;ETIAR;ETIFO;ENTAR;EAN11;NUMTP;LAENG;BREIT;HOEHE;MEABM;PRDHA;AEKLK;CADKZ;QMPUR;ERGEW;ERGEI;ERVOL;ERVOE;GEWTO;VOLTO;VABME;KZREV;KZKFG;XCHPF;VHART;FUELG;STFAK;MAGRV;BEGRU;DATAB;LIQDT;SAISJ;PLGTP;MLGUT;EXTWG;SATNR;ATTYP;KZKUP;KZNFM;PMATA;MSTAE;MSTAV;MSTDE;MSTDV;TAKLV;RBNRM;MHDRZ;MHDHB;MHDLP;INHME;INHAL;VPREH;ETIAG;INHBR;CMETH;CUOBF;KZUMW;KOSCH;SPROF;NRFHG;MFRPN;MFRNR;BMATN;MPROF;KZWSM;SAITY;PROFL;IHIVI;ILOOS;SERLV;KZGVH;XGCHP;KZEFF;COMPL;IPRKZ;RDMHD;PRZUS;MTPOS_MARA;BFLME;MATFI;CMREL;BBTYP;SLED_BBD;GTIN_VARIANT;GENNR;RMATP;GDS_RELEVANT;WEORA;HUTYP_DFLT;PILFERABLE;WHSTC;WHMATGR;HNDLCODE;HAZMAT;HUTYP;TARE_VAR;MAXC;MAXC_TOL;MAXL;MAXB;MAXH;MAXDIM_UOM;HERKL;MFRGR;QQTIME;QQTIMEUOM;QGRP;SERIAL;PS_SMARTFORM;LOGUNIT;CWQREL;CWQPROC;CWQTOLGR;ADPROF;IPMIPPRODUCT;ALLOW_PMAT_IGNO;MEDIUM;COMMODITY;ANIMAL_ORIGIN;TEXTILE_COMP_IND;LAST_CHANGED_TIME;MATNR_EXTERNAL;CHML_CMPLNC_RLVNCE_IND;LOGISTICAL_MAT_CATEGORY;SALES_MATERIAL;IDENTIFICATION_TAG_TYPE;SGT_CSGR;SGT_COVSA;SGT_STAT;SGT_SCOPE;SGT_REL;ANP;PSM_CODE;FSH_MG_AT1;FSH_MG_AT2;FSH_MG_AT3;FSH_SEALV;FSH_SEAIM;FSH_SC_MID;DUMMY_PRD_INCL_EEW_PS;SCM_MATID_GUID16;SCM_MATID_GUID22;SCM_MATURITY_DUR;SCM_SHLF_LFE_REQ_MIN;SCM_SHLF_LFE_REQ_MAX;SCM_PUOM;RMATP_PB;PROD_SHAPE;MO_PROFILE_ID;OVERHANG_TRESH;BRIDGE_TRESH;BRIDGE_MAX_SLOPE;HEIGHT_NONFLAT;HEIGHT_NONFLAT_UOM;SCM_KITCOMP;SCM_PROD_PAOOPT;SCM_BOD_DEPLVL;SCM_RESTRICT_INVBAL;SCM_DRP_GL_STOCK;SCM_EXCL_EXPEDITE;/CWM/XCWMAT;/CWM/VALUM;/CWM/TOLGR;/CWM/TARA;/CWM/TARUM;/BEV1/LULEINH;/BEV1/LULDEGRP;/BEV1/NESTRUCCAT;/DSD/SL_TOLTYP;/DSD/SV_CNT_GRP;/DSD/VC_GROUP;/SAPMP/KADU;/SAPMP/ABMEIN;/SAPMP/KADP;/SAPMP/BRAD;/SAPMP/SPBI;/SAPMP/TRAD;/SAPMP/KEDU;/SAPMP/SPTR;/SAPMP/FBDK;/SAPMP/FBHK;/SAPMP/RILI;/SAPMP/FBAK;/SAPMP/AHO;/SAPMP/MIFRR;/STTPEC/SERTYPE;/STTPEC/SYNCACT;/STTPEC/SYNCTIME;/STTPEC/SYNCCHG;/STTPEC/COUNTRY_REF;/STTPEC/PRDCAT;/VSO/R_TILT_IND;/VSO/R_STACK_IND;/VSO/R_BOT_IND;/VSO/R_TOP_IND;/VSO/R_STACK_NO;/VSO/R_PAL_IND;/VSO/R_PAL_OVR_D;/VSO/R_PAL_OVR_W;/VSO/R_PAL_B_HT;/VSO/R_PAL_MIN_H;/VSO/R_TOL_B_HT;/VSO/R_NO_P_GVH;/VSO/R_QUAN_UNIT;/VSO/R_KZGVH_IND;PACKCODE;DG_PACK_STATUS;SRV_DURA;SRV_DURA_UOM;SRV_SERWI;SRV_ESCAL;SOM_CYCLE;SOM_CYCLE_RULE;SOM_TC_SCHEMA;SOM_CTR_AUTORENEWAL;MCOND;RETDELC;LOGLEV_RETO;NSNID;ICFA;RIC_ID;DFS_SENSITIVITY_KEY;DFS_MFRP2;OVLPN;ADSPC_SPC;VARID;MSBOOKPARTNO;TOLERANCE_TYPE;DPCBT;XGRDT;IMATN;PICNUM;BSTAT;COLOR_ATINN;SIZE1_ATINN;SIZE2_ATINN;COLOR;SIZE1;SIZE2;FREE_CHAR;CARE_CODE;BRAND_ID;FIBER_CODE1;FIBER_PART1;FIBER_CODE2;FIBER_PART2;FIBER_CODE3;FIBER_PART3;FIBER_CODE4;FIBER_PART4;FIBER_CODE5;FIBER_PART5;FASHGRD",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pipeline": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat(dataset().pipeline, '.txt')",
+							"type": "Expression"
+						},
+						"folderPath": "pipeline_meta",
+						"container": "dev"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedTextSink')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -230,6 +293,1876 @@
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"nullValue": "\\N",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeMARA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_snowflake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeTable",
+				"schema": [
+					{
+						"name": "MATNR",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "ERSDA",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "CREATED_AT_TIME",
+						"type": "TIMESTAMP_NTZ",
+						"precision": 29,
+						"scale": 9
+					},
+					{
+						"name": "ERNAM",
+						"type": "VARCHAR",
+						"precision": 12,
+						"scale": 0
+					},
+					{
+						"name": "LAEDA",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "AENAM",
+						"type": "VARCHAR",
+						"precision": 12,
+						"scale": 0
+					},
+					{
+						"name": "VPSTA",
+						"type": "VARCHAR",
+						"precision": 15,
+						"scale": 0
+					},
+					{
+						"name": "PSTAT",
+						"type": "VARCHAR",
+						"precision": 15,
+						"scale": 0
+					},
+					{
+						"name": "LVORM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MTART",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "MBRSH",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MATKL",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "BISMT",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MEINS",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "BSTME",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "ZEINR",
+						"type": "VARCHAR",
+						"precision": 22,
+						"scale": 0
+					},
+					{
+						"name": "ZEIAR",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "ZEIVR",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "ZEIFO",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "AESZN",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "BLATT",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "BLANZ",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FERTH",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "FORMT",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "GROES",
+						"type": "VARCHAR",
+						"precision": 32,
+						"scale": 0
+					},
+					{
+						"name": "WRKST",
+						"type": "VARCHAR",
+						"precision": 48,
+						"scale": 0
+					},
+					{
+						"name": "NORMT",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "LABOR",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "EKWSL",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "BRGEW",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "NTGEW",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "GEWEI",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "VOLUM",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "VOLEH",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "BEHVO",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "RAUBE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "TEMPB",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "DISST",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "TRAGR",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "STOFF",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "SPART",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "KUNNR",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "EANNR",
+						"type": "VARCHAR",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "WESCH",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "BWVOR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "BWSCL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SAISO",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "ETIAR",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "ETIFO",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "ENTAR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "EAN11",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "NUMTP",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "LAENG",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "BREIT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "HOEHE",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "MEABM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "PRDHA",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "AEKLK",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CADKZ",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "QMPUR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "ERGEW",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "ERGEI",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "ERVOL",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "ERVOE",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "GEWTO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 1
+					},
+					{
+						"name": "VOLTO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 1
+					},
+					{
+						"name": "VABME",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZREV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZKFG",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "XCHPF",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "VHART",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "FUELG",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "STFAK",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "MAGRV",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "BEGRU",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "DATAB",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "LIQDT",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SAISJ",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "PLGTP",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MLGUT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "EXTWG",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SATNR",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "ATTYP",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "KZKUP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZNFM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "PMATA",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MSTAE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MSTAV",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MSTDE",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "MSTDV",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "TAKLV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "RBNRM",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "MHDRZ",
+						"type": "NUMBER",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "MHDHB",
+						"type": "NUMBER",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "MHDLP",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "INHME",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "INHAL",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "VPREH",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "ETIAG",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "INHBR",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "CMETH",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CUOBF",
+						"type": "NUMBER",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "KZUMW",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KOSCH",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SPROF",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "NRFHG",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MFRPN",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MFRNR",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "BMATN",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MPROF",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "KZWSM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SAITY",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "PROFL",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "IHIVI",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "ILOOS",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SERLV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZGVH",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "XGCHP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZEFF",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "COMPL",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "IPRKZ",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "RDMHD",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "PRZUS",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MTPOS_MARA",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "BFLME",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MATFI",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CMREL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "BBTYP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SLED_BBD",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "GTIN_VARIANT",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "GENNR",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "RMATP",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "GDS_RELEVANT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "WEORA",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "HUTYP_DFLT",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "PILFERABLE",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "WHSTC",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "WHMATGR",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "HNDLCODE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "HAZMAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "HUTYP",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "TARE_VAR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MAXC",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXC_TOL",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 1
+					},
+					{
+						"name": "MAXL",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXB",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXH",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXDIM_UOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "HERKL",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "MFRGR",
+						"type": "VARCHAR",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "QQTIMEUOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "QGRP",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SERIAL",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "PS_SMARTFORM",
+						"type": "VARCHAR",
+						"precision": 30,
+						"scale": 0
+					},
+					{
+						"name": "LOGUNIT",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "CWQREL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CWQPROC",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "CWQTOLGR",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "ADPROF",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "IPMIPPRODUCT",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "ALLOW_PMAT_IGNO",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MEDIUM",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "COMMODITY",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "ANIMAL_ORIGIN",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "TEXTILE_COMP_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "LAST_CHANGED_TIME",
+						"type": "TIMESTAMP_NTZ",
+						"precision": 29,
+						"scale": 9
+					},
+					{
+						"name": "MATNR_EXTERNAL",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "CHML_CMPLNC_RLVNCE_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "LOGISTICAL_MAT_CATEGORY",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SALES_MATERIAL",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "IDENTIFICATION_TAG_TYPE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "SGT_CSGR",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SGT_COVSA",
+						"type": "VARCHAR",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "SGT_STAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SGT_SCOPE",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SGT_REL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "ANP",
+						"type": "NUMBER",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "PSM_CODE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "FSH_MG_AT1",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "FSH_MG_AT2",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "FSH_MG_AT3",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "FSH_SEALV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "FSH_SEAIM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "FSH_SC_MID",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "DUMMY_PRD_INCL_EEW_PS",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_MATID_GUID16",
+						"type": "VARCHAR",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "SCM_MATID_GUID22",
+						"type": "VARCHAR",
+						"precision": 22,
+						"scale": 0
+					},
+					{
+						"name": "SCM_MATURITY_DUR",
+						"type": "NUMBER",
+						"precision": 11,
+						"scale": 0
+					},
+					{
+						"name": "SCM_SHLF_LFE_REQ_MIN",
+						"type": "NUMBER",
+						"precision": 11,
+						"scale": 0
+					},
+					{
+						"name": "SCM_SHLF_LFE_REQ_MAX",
+						"type": "NUMBER",
+						"precision": 11,
+						"scale": 0
+					},
+					{
+						"name": "SCM_PUOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "RMATP_PB",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "PROD_SHAPE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MO_PROFILE_ID",
+						"type": "VARCHAR",
+						"precision": 20,
+						"scale": 0
+					},
+					{
+						"name": "OVERHANG_TRESH",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "BRIDGE_TRESH",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "BRIDGE_MAX_SLOPE",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "HEIGHT_NONFLAT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "HEIGHT_NONFLAT_UOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "SCM_KITCOMP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_PROD_PAOOPT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_BOD_DEPLVL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_RESTRICT_INVBAL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_DRP_GL_STOCK",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_EXCL_EXPEDITE",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/XCWMAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/VALUM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/TOLGR",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/TARA",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/TARUM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/BEV1/LULEINH",
+						"type": "NUMBER",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "/BEV1/LULDEGRP",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/BEV1/NESTRUCCAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/DSD/SL_TOLTYP",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "/DSD/SV_CNT_GRP",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "/DSD/VC_GROUP",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/KADU",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/ABMEIN",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/KADP",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/BRAD",
+						"type": "NUMBER",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/SPBI",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/TRAD",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/KEDU",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/SPTR",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/SAPMP/FBDK",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/FBHK",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/RILI",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/FBAK",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/AHO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/MIFRR",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/STTPEC/SERTYPE",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/SYNCACT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/SYNCTIME",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/SYNCCHG",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/COUNTRY_REF",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/PRDCAT",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_TILT_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_STACK_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_BOT_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_TOP_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_STACK_NO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_PAL_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_PAL_OVR_D",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_PAL_OVR_W",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_PAL_B_HT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_PAL_MIN_H",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_TOL_B_HT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_NO_P_GVH",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_QUAN_UNIT",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_KZGVH_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "PACKCODE",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "DG_PACK_STATUS",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SRV_DURA",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "SRV_DURA_UOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "SRV_SERWI",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SRV_ESCAL",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SOM_CYCLE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SOM_CYCLE_RULE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SOM_TC_SCHEMA",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "SOM_CTR_AUTORENEWAL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MCOND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "RETDELC",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "LOGLEV_RETO",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "NSNID",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "ICFA",
+						"type": "VARCHAR",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "RIC_ID",
+						"type": "NUMBER",
+						"precision": 19,
+						"scale": 0
+					},
+					{
+						"name": "DFS_SENSITIVITY_KEY",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "DFS_MFRP2",
+						"type": "VARCHAR",
+						"precision": 60,
+						"scale": 0
+					},
+					{
+						"name": "OVLPN",
+						"type": "VARCHAR",
+						"precision": 32,
+						"scale": 0
+					},
+					{
+						"name": "ADSPC_SPC",
+						"type": "NUMBER",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "VARID",
+						"type": "VARCHAR",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "MSBOOKPARTNO",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "TOLERANCE_TYPE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "DPCBT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "XGRDT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "IMATN",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "PICNUM",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "BSTAT",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "COLOR_ATINN",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SIZE1_ATINN",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SIZE2_ATINN",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "COLOR",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SIZE1",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SIZE2",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "FREE_CHAR",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "CARE_CODE",
+						"type": "VARCHAR",
+						"precision": 16,
+						"scale": 0
+					},
+					{
+						"name": "BRAND_ID",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE1",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART1",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE2",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART2",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE3",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART3",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE4",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART4",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE5",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART5",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FASHGRD",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "SAP_S4H_LSD200",
+					"table": "MARA"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_snowflake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_DelText_Blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table_filename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().table_filename",
+							"type": "Expression"
+						},
+						"folderPath": "sap-meta",
+						"container": "dev"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
 				"schema": []
@@ -297,15 +2230,142 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_faers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "Staging/FAERS/AdverseEvents",
+						"container": "dev"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "MANDT",
+						"type": "UTF8"
+					},
+					{
+						"name": "MATNR",
+						"type": "UTF8"
+					},
+					{
+						"name": "SPRAS",
+						"type": "UTF8"
+					},
+					{
+						"name": "MAKTX",
+						"type": "UTF8"
+					},
+					{
+						"name": "MAKTG",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_deltext_exec')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat(pipeline().Pipeline, '.txt')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "pipeline_meta",
+							"type": "Expression"
+						},
+						"container": "dev"
+					},
+					"columnDelimiter": ";",
+					"rowDelimiter": "\n",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_json_blob_faers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "faers.json",
+						"folderPath": "Staging/FAERS/AdverseEvents",
+						"container": "dev"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_rest_faers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_rest_faers",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "?search=medicinalproduct=CINRYZE+AND+(transmissiondate=[20180101+TO+20240111])&limit=10",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_rest_faers')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SAP_ODP')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"parameters": {
-					"test_subscriber": {
-						"type": "string"
-					},
-					"test_param": {
+					"subscriber": {
 						"type": "string"
 					}
 				},
@@ -316,7 +2376,7 @@
 					"language": "EN",
 					"sncMode": false,
 					"userName": "[parameters('SAP_ODP_properties_typeProperties_userName')]",
-					"subscriberName": "IPRODUCT",
+					"subscriberName": "@{linkedService().subscriber}",
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('SAP_ODP_password')]"
@@ -331,34 +2391,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/IRLocal')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SapTable1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SapTable",
-				"typeProperties": {
-					"clientId": "[parameters('SapTable1_properties_typeProperties_clientId')]",
-					"language": "EN",
-					"sncMode": false,
-					"userName": "[parameters('SapTable1_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('SapTable1_password')]"
-					},
-					"server": "[parameters('SapTable1_properties_typeProperties_server')]",
-					"systemNumber": "[parameters('SapTable1_properties_typeProperties_systemNumber')]"
-				},
-				"connectVia": {
-					"referenceName": "ir-ih73vfvvtagr4",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/ir-ih73vfvvtagr4')]"
 			]
 		},
 		{
@@ -387,489 +2419,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/IRLocal')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "Managed",
-				"typeProperties": {
-					"computeProperties": {
-						"location": "West Europe",
-						"dataFlowProperties": {
-							"computeType": "General",
-							"coreCount": 8,
-							"timeToLive": 10,
-							"cleanup": false,
-							"customProperties": []
-						},
-						"pipelineExternalComputeScaleProperties": {
-							"timeToLive": 60,
-							"numberOfPipelineNodes": 1,
-							"numberOfExternalNodes": 1
-						}
-					}
-				},
-				"managedVirtualNetwork": {
-					"type": "ManagedVirtualNetworkReference",
-					"referenceName": "default"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/default/AzureDataLakeStorage526')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"privateLinkResourceId": "[parameters('AzureDataLakeStorage526_properties_privateLinkResourceId')]",
-				"groupId": "[parameters('AzureDataLakeStorage526_properties_groupId')]",
-				"fqdns": "[parameters('AzureDataLakeStorage526_properties_fqdns')]"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SAPTableSource_Incremental')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SapTableLocal",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"SapTableName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "SapTableResource",
-				"schema": [],
-				"typeProperties": {
-					"tableName": {
-						"value": "@dataset().SapTableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SapTableLocal')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_sap_odp')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SAP_ODP",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"test_subscriber": "IPRODUCT",
-						"test_param": "0"
-					}
-				},
-				"annotations": [],
-				"type": "SapOdpResource",
-				"schema": [],
-				"typeProperties": {
-					"context": "ABAP_CDS",
-					"objectName": "IPRODUCT$P"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SAP_ODP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_sap_table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SapTableLocal",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"table_name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "SapTableResource",
-				"schema": [],
-				"typeProperties": {
-					"tableName": {
-						"value": "@dataset().table_name",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SapTableLocal')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime1",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageLocal')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('AzureDataLakeStorageLocal_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('AzureDataLakeStorageLocal_accountKey')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime1",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IncrementalCopyFromSAPTable')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CopyFromSAPTable",
-						"description": "Copy incremental data from SAP table to AzureBlobStorage",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LookupLastCopiedDate",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SapTableSource",
-								"rfcTableOptions": {
-									"value": "@{concat(pipeline().parameters.SapTableDateColumn,' LE ',formatDateTime(adddays(pipeline().TriggerTime,-1),'yyyyMMdd'), ' AND ',pipeline().parameters.SapTableDateColumn,' GE ', formatDateTime(activity('LookupLastCopiedDate').output.firstRow.Prop_0, 'yyyyMMdd'))}",
-									"type": "Expression"
-								},
-								"customRfcReadTableFunctionModule": "",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SAPTableSource_Incremental",
-								"type": "DatasetReference",
-								"parameters": {
-									"SapTableName": {
-										"value": "@pipeline().parameters.SapTableName",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DelimitedTextSink",
-								"type": "DatasetReference",
-								"parameters": {
-									"DelimitedTextSinkContainer": {
-										"value": "@pipeline().parameters.DelimitedTextSinkContainer",
-										"type": "Expression"
-									},
-									"DelimitedTextSinkDirectory": {
-										"value": "@pipeline().parameters.DelimitedTextSinkDirectory",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "LookupLastCopiedDate",
-						"description": "Copy incremental data from SAP table to AzureBlobStorage",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"dataset": {
-								"referenceName": "AzureBlobDelimitedDataset",
-								"type": "DatasetReference",
-								"parameters": {
-									"HighWatermarkBlobDirectory": {
-										"value": "@pipeline().parameters.HighWatermarkBlobDirectory",
-										"type": "Expression"
-									},
-									"HighWatermarkBlobName": {
-										"value": "@pipeline().parameters.HighWatermarkBlobName",
-										"type": "Expression"
-									},
-									"HighWatermarkBlobContainer": {
-										"value": "@pipeline().parameters.HighWatermarkBlobContainer",
-										"type": "Expression"
-									}
-								}
-							}
-						}
-					},
-					{
-						"name": "SetLastCopiedDate",
-						"description": "Store the last copied date into blob by calling Logic App",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "CopyFromSAPTable",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@pipeline().parameters.LogicAppURL",
-								"type": "Expression"
-							},
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/json"
-							},
-							"body": {
-								"value": "{\"copiedDate\":\"@{pipeline().TriggerTime}\"",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"HighWatermarkBlobDirectory": {
-						"type": "string"
-					},
-					"HighWatermarkBlobName": {
-						"type": "string"
-					},
-					"HighWatermarkBlobContainer": {
-						"type": "string"
-					},
-					"SapTableName": {
-						"type": "string"
-					},
-					"DelimitedTextSinkContainer": {
-						"type": "string"
-					},
-					"DelimitedTextSinkDirectory": {
-						"type": "string"
-					},
-					"LogicAppURL": {
-						"type": "string"
-					},
-					"SapTableDateColumn": {
-						"type": "string"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SAPTableSource_Incremental')]",
-				"[concat(variables('factoryId'), '/datasets/DelimitedTextSink')]",
-				"[concat(variables('factoryId'), '/datasets/AzureBlobDelimitedDataset')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_001')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"EnvStorage": {
-						"type": "String"
-					},
-					"Zone": {
-						"type": "string"
-					},
-					"DataSource": {
-						"type": "string"
-					},
-					"EnvRegSys": {
-						"type": "string"
-					},
-					"Domain": {
-						"type": "string"
-					},
-					"Object": {
-						"type": "string"
-					},
-					"Table": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@concat(dataset().table,'_',utcnow(), '.parquet')",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().Table)",
-							"type": "Expression"
-						},
-						"fileSystem": {
-							"value": "@dataset().EnvStorage",
-							"type": "Expression"
-						}
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_sap_cdc')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_sap_odp",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_adls_parquet_002",
-								"type": "DatasetReference"
-							},
-							"name": "sink1",
-							"rejectedDataLinkedService": {
-								"referenceName": "AzureDataLakeStorageLocal",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"parameters{",
-						"     KeyFields as string[]",
-						"}",
-						"source(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     staged: true,",
-						"     readMode: 'fullAndIncrementalLoad',",
-						"     keys: ($KeyFields),",
-						"     format: 'sapObject',",
-						"     fixDecimalPrecision: true) ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     truncate: true,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     preCommands: [],",
-						"     postCommands: []) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_sap_odp')]",
-				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_002')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageLocal')]"
 			]
 		}
 	]

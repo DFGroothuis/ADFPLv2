@@ -1,0 +1,1198 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "GxpDF-ADF"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_Table')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Changes Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": {
+									"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', pipeline().parameters.LastExecDate, '''')",
+									"type": "Expression"
+								},
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sap_table",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_adls_parquet_001",
+								"type": "DatasetReference",
+								"parameters": {
+									"EnvStorage": {
+										"value": "@pipeline().parameters.EnvStorage",
+										"type": "Expression"
+									},
+									"Zone": {
+										"value": "@pipeline().parameters.Zone",
+										"type": "Expression"
+									},
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
+									"EnvRegSys": {
+										"value": "@pipeline().parameters.EnvRegSys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
+									"Table": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Zone": {
+						"type": "string"
+					},
+					"EnvStorage": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					},
+					"ChangeDateColumn": {
+						"type": "string"
+					},
+					"LastExecDate": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Full_Load_SAP_Table')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Full Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": "",
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sap_table",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_adls_parquet_001",
+								"type": "DatasetReference",
+								"parameters": {
+									"EnvStorage": {
+										"value": "@pipeline().parameters.EnvStorage",
+										"type": "Expression"
+									},
+									"Zone": {
+										"value": "@pipeline().parameters.Zone",
+										"type": "Expression"
+									},
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
+									"EnvRegSys": {
+										"value": "@pipeline().parameters.EnvRegSys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
+									"Table": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Script1",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Copy Full Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "ls_snowflake",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"database": "D3010_DEV_BRONZE_RAW"
+							}
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat('USE DATABASE D1010_PROD_BRONZE_RAW;\nUSE SCHEMA SAP_S4H_LSD200;COPY INTO ', pipeline().parameters.table, ' \n  FROM @az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().parameters.EnvRegSys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Zone": {
+						"type": "string"
+					},
+					"EnvStorage": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Full_Load_SAP_Table1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Full Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": "",
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sap_table",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_adls_parquet_0011",
+								"type": "DatasetReference",
+								"parameters": {
+									"EnvStorage": {
+										"value": "@pipeline().parameters.EnvStorage",
+										"type": "Expression"
+									},
+									"Zone": {
+										"value": "@pipeline().parameters.Zone",
+										"type": "Expression"
+									},
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
+									"EnvRegSys": {
+										"value": "@pipeline().parameters.EnvRegSys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
+									"Table": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Zone": {
+						"type": "string"
+					},
+					"EnvStorage": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TemplateADF_DataFlowSAP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Use this template to replicate multiple tables from SAP to Azure Data Lake Gen2 in Delta format with key partition.",
+				"activities": [
+					{
+						"name": "SAP2DeltaLookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "SapToDeltaLookupJson",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "SAP2DeltaLookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('SAP2DeltaLookup').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "SAP2DeltaDataflow",
+									"description": "Replicate data from sap table(sap_context, sap_object, sap_key_columns) and write to gen2 storage(sink_container, sink_folder) in delta format with key partition(partition key column)",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "SAP2DeltaTemplateDataflow",
+											"type": "DataFlowReference",
+											"parameters": {
+												"sapContext": {
+													"value": "'@{item().sapContext}'",
+													"type": "Expression"
+												},
+												"sapObjectName": {
+													"value": "'@{item().sapObjectName}'",
+													"type": "Expression"
+												},
+												"sapKeyColumns": {
+													"value": "@item().sapKeyColumns",
+													"type": "Expression"
+												},
+												"deltaContainer": {
+													"value": "'@{item().deltaContainer}'",
+													"type": "Expression"
+												},
+												"deltaFolder": {
+													"value": "'@{item().deltaFolder}'",
+													"type": "Expression"
+												},
+												"deltaPartition": {
+													"value": "'@{item().deltaPartition}'",
+													"type": "Expression"
+												},
+												"deltaKeyColumns": {
+													"value": "@item().deltaKeyColumns",
+													"type": "Expression"
+												},
+												"sapPartitions": {
+													"value": "'@{string(item().sapPartitions)}'",
+													"type": "Expression"
+												},
+												"sapRunMode": {
+													"value": "'@{item().sapRunMode}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"SAPSource": {},
+												"DeltaSink": {}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "AzureDataLakeStorage1",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": {
+												"value": "@item().stagingStorageFolder",
+												"type": "Expression"
+											}
+										},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine",
+										"continuationSettings": {
+											"customizedCheckpointKey": {
+												"value": "@item().checkPointKey",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-17T07:21:10Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_cdc_material')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CDC_SAP_CDS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"EnvStorage": {
+									"value": "@pipeline().globalParameters.environment",
+									"type": "Expression"
+								},
+								"Zone": "Staging",
+								"DataSource": "SAP",
+								"EnvRegSys": "DEVNL200",
+								"Domain": "MaterialManagement",
+								"Object": "Material",
+								"CDS": "IPRODUCT",
+								"KeyFields": "[[\"PRODUCT\"]"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "PL CDC CDS"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-12-18T10:37:29Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_mara_changes')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "LookupLastTriggerDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CDC_SAP_Table",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"Zone": "Staging",
+								"EnvStorage": {
+									"value": "@pipeline().globalParameters.environment",
+									"type": "Expression"
+								},
+								"DataSource": "SAP",
+								"EnvRegSys": "DEVNL200",
+								"Domain": "MaterialManagement",
+								"Object": "Material",
+								"table": "MARA",
+								"ChangeDateColumn": "LAEDA",
+								"LastExecDate": {
+									"value": "@formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "LookupLastTriggerDate",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference",
+								"parameters": {
+									"pipeline": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "Store Trigger Date",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "@pipeline().TriggerTime",
+										"value": {
+											"value": "@pipeline().TriggerTime",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference",
+								"parameters": {
+									"pipeline": {
+										"value": "template",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_deltext_exec",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"lastdate": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PL CDC Table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_CDC_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_batch')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('table')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "BatchManagement",
+											"Object": "Batch",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table": {
+						"type": "Array",
+						"defaultValue": [
+							"MCHA",
+							"MCHB",
+							"MCH1",
+							"MARD"
+						]
+					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_mm')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('table')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "MaterialManagement",
+											"Object": "Material",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table": {
+						"type": "Array",
+						"defaultValue": [
+							"MARA",
+							"MAKT",
+							"MARC"
+						]
+					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_purchaseorder')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('table')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "PurchaseOrderDomain",
+											"Object": "PurchaseOrder",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table": {
+						"type": "Array",
+						"defaultValue": [
+							"EKKO",
+							"EKPO",
+							"EKET",
+							"EKBE",
+							"EKES",
+							"EKKN"
+						]
+					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_sales')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "SalesAndDistribution",
+											"Object": "SalesOrder",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"table": {
+						"type": "array",
+						"defaultValue": [
+							"VBAK",
+							"VBAP",
+							"VBFA",
+							"VBEP",
+							"VBKD",
+							"VBPA",
+							"VBBE",
+							"VBUK"
+						]
+					}
+				},
+				"variables": {
+					"Object": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-12-15T19:11:11Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('table')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table1",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "BatchManagement",
+											"Object": "Batch",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table": {
+						"type": "Array",
+						"defaultValue": [
+							"MCHA",
+							"MCHB",
+							"MCH1"
+						]
+					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table1')]"
+			]
+		}
+	]
+}

@@ -15,27 +15,19 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
 		},
-		"AzureDataLakeStorageLocal_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageLocal'"
-		},
 		"SAP_ODP_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SAP_ODP'"
-		},
-		"SapTable1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SapTable1'"
 		},
 		"SapTableLocal_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SapTableLocal'"
 		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
+		"ls_snowflake_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_snowflake'"
 		},
-		"AzureDataLakeStorageLocal_properties_typeProperties_url": {
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
 		},
@@ -55,22 +47,6 @@
 			"type": "string",
 			"defaultValue": "00"
 		},
-		"SapTable1_properties_typeProperties_clientId": {
-			"type": "string",
-			"defaultValue": "200"
-		},
-		"SapTable1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "NL22511"
-		},
-		"SapTable1_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "10.134.4.62"
-		},
-		"SapTable1_properties_typeProperties_systemNumber": {
-			"type": "string",
-			"defaultValue": "00"
-		},
 		"SapTableLocal_properties_typeProperties_clientId": {
 			"type": "string",
 			"defaultValue": "200"
@@ -86,6 +62,10 @@
 		"SapTableLocal_properties_typeProperties_systemNumber": {
 			"type": "string",
 			"defaultValue": "00"
+		},
+		"ls_rest_faers_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.fda.gov/drug/event.json"
 		},
 		"AzureDataLakeStorage526_properties_privateLinkResourceId": {
 			"type": "string",
@@ -107,7 +87,960 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/IncrementalCopyFromSAPTable')]",
+			"name": "[concat(parameters('factoryName'), '/GetMetaDataTableSAP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy SAP meta to Blob",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SapTableSource",
+											"rfcTableOptions": {
+												"value": "@{concat('TABNAME EQ ''', item(), ''' AND DDLANGUAGE EQ ''EN''')}",
+												"type": "Expression"
+											},
+											"customRfcReadTableFunctionModule": "",
+											"rfcTableFields": "FIELDNAME, POSITION, DATATYPE, LENG, DECIMALS, KEYFLAG",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "FIELDNAME",
+														"type": "String",
+														"physicalType": "C"
+													},
+													"sink": {
+														"name": "FIELDNAME",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "POSITION",
+														"type": "Number",
+														"physicalType": "N"
+													},
+													"sink": {
+														"name": "POSITION",
+														"type": "Number",
+														"physicalType": "Number"
+													}
+												},
+												{
+													"source": {
+														"name": "DATATYPE",
+														"type": "String",
+														"physicalType": "C"
+													},
+													"sink": {
+														"name": "DATATYPE",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "LENG",
+														"type": "String",
+														"physicalType": "N"
+													},
+													"sink": {
+														"name": "LENG",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "DECIMALS",
+														"type": "String",
+														"physicalType": "N"
+													},
+													"sink": {
+														"name": "DECIMALS",
+														"type": "String",
+														"physicalType": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "KEYFLAG",
+														"type": "String",
+														"physicalType": "C"
+													},
+													"sink": {
+														"name": "KEYFLAG",
+														"type": "String",
+														"physicalType": "String"
+													}
+												}
+											],
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": false,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_sap_table",
+											"type": "DatasetReference",
+											"parameters": {
+												"table_name": {
+													"value": "DD03M",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_DelText_Blob",
+											"type": "DatasetReference",
+											"parameters": {
+												"table_filename": {
+													"value": "@concat(item(), '.CSV')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Script1",
+									"type": "Script",
+									"dependsOn": [
+										{
+											"activity": "Copy SAP meta to Blob",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "ls_snowflake",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"database": "D3010_DEV_BRONZE_RAW"
+										}
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "Query",
+												"text": {
+													"value": "@concat('CALL D3010_DEV_BRONZE_RAW.PUBLIC.create_table_sql_from_meta( ''D1010_PROD_BRONZE_RAW'', ''SAP_S4H_LSD200'',''', item(), ''');' )",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"table": {
+						"type": "array",
+						"defaultValue": [
+							"MARD"
+						]
+					}
+				},
+				"variables": {
+					"lastdate": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "MetaData"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
+				"[concat(variables('factoryId'), '/datasets/ds_DelText_Blob')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_snowflake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_CDS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute DataFlow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_sap_cdc",
+								"type": "DataFlowReference",
+								"parameters": {
+									"KeyFields": {
+										"value": "@pipeline().parameters.KeyFields",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"source1": {
+										"CDS": {
+											"value": "@pipeline().parameters.CDS",
+											"type": "Expression"
+										}
+									},
+									"sink1": {
+										"EnvStorage": {
+											"value": "@pipeline().parameters.EnvStorage",
+											"type": "Expression"
+										},
+										"Zone": {
+											"value": "@pipeline().parameters.Zone",
+											"type": "Expression"
+										},
+										"DataSource": {
+											"value": "@pipeline().parameters.DataSource",
+											"type": "Expression"
+										},
+										"EnvRegSys": {
+											"value": "@pipeline().parameters.EnvRegSys",
+											"type": "Expression"
+										},
+										"Domain": {
+											"value": "@pipeline().parameters.Domain",
+											"type": "Expression"
+										},
+										"Object": {
+											"value": "@pipeline().parameters.Object",
+											"type": "Expression"
+										},
+										"CDS": {
+											"value": "@pipeline().parameters.CDS",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "dev/Staging/cdc"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"continuationSettings": {
+								"customizedCheckpointKey": "9e64901c-bb64-4acb-90c7-8227ae9d46e9"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"EnvStorage": {
+						"type": "string"
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"CDS": {
+						"type": "string"
+					},
+					"KeyFields": {
+						"type": "array"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_sap_cdc')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_Table')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Changes Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": {
+									"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', pipeline().parameters.LastExecDate, '''')",
+									"type": "Expression"
+								},
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sap_table",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_adls_parquet_001",
+								"type": "DatasetReference",
+								"parameters": {
+									"EnvStorage": {
+										"value": "@pipeline().parameters.EnvStorage",
+										"type": "Expression"
+									},
+									"Zone": {
+										"value": "@pipeline().parameters.Zone",
+										"type": "Expression"
+									},
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
+									"EnvRegSys": {
+										"value": "@pipeline().parameters.EnvRegSys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
+									"Table": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Zone": {
+						"type": "string"
+					},
+					"EnvStorage": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					},
+					"ChangeDateColumn": {
+						"type": "string"
+					},
+					"LastExecDate": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
+				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_001')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Full_Load_SAP_Table')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Full Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": "",
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sap_table",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_adls_parquet_001",
+								"type": "DatasetReference",
+								"parameters": {
+									"EnvStorage": {
+										"value": "@pipeline().parameters.EnvStorage",
+										"type": "Expression"
+									},
+									"Zone": {
+										"value": "@pipeline().parameters.Zone",
+										"type": "Expression"
+									},
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
+									"EnvRegSys": {
+										"value": "@pipeline().parameters.EnvRegSys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
+									"Table": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Script1",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Copy Full Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "ls_snowflake",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"database": "D3010_DEV_BRONZE_RAW"
+							}
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat('USE DATABASE D1010_PROD_BRONZE_RAW;\nUSE SCHEMA SAP_S4H_LSD200;COPY INTO ', pipeline().parameters.table, ' \n  FROM @az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().parameters.EnvRegSys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Zone": {
+						"type": "string"
+					},
+					"EnvStorage": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
+				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_001')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_snowflake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Full_Load_SAP_Table1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Full Table",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": "",
+								"customRfcReadTableFunctionModule": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sap_table",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_adls_parquet_0011",
+								"type": "DatasetReference",
+								"parameters": {
+									"EnvStorage": {
+										"value": "@pipeline().parameters.EnvStorage",
+										"type": "Expression"
+									},
+									"Zone": {
+										"value": "@pipeline().parameters.Zone",
+										"type": "Expression"
+									},
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
+									"EnvRegSys": {
+										"value": "@pipeline().parameters.EnvRegSys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
+									"Table": {
+										"value": "@pipeline().parameters.table",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Zone": {
+						"type": "string"
+					},
+					"EnvStorage": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
+				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_0011')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TemplateADF_DataFlowSAP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Use this template to replicate multiple tables from SAP to Azure Data Lake Gen2 in Delta format with key partition.",
+				"activities": [
+					{
+						"name": "SAP2DeltaLookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "SapToDeltaLookupJson",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "SAP2DeltaLookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('SAP2DeltaLookup').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "SAP2DeltaDataflow",
+									"description": "Replicate data from sap table(sap_context, sap_object, sap_key_columns) and write to gen2 storage(sink_container, sink_folder) in delta format with key partition(partition key column)",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "SAP2DeltaTemplateDataflow",
+											"type": "DataFlowReference",
+											"parameters": {
+												"sapContext": {
+													"value": "'@{item().sapContext}'",
+													"type": "Expression"
+												},
+												"sapObjectName": {
+													"value": "'@{item().sapObjectName}'",
+													"type": "Expression"
+												},
+												"sapKeyColumns": {
+													"value": "@item().sapKeyColumns",
+													"type": "Expression"
+												},
+												"deltaContainer": {
+													"value": "'@{item().deltaContainer}'",
+													"type": "Expression"
+												},
+												"deltaFolder": {
+													"value": "'@{item().deltaFolder}'",
+													"type": "Expression"
+												},
+												"deltaPartition": {
+													"value": "'@{item().deltaPartition}'",
+													"type": "Expression"
+												},
+												"deltaKeyColumns": {
+													"value": "@item().deltaKeyColumns",
+													"type": "Expression"
+												},
+												"sapPartitions": {
+													"value": "'@{string(item().sapPartitions)}'",
+													"type": "Expression"
+												},
+												"sapRunMode": {
+													"value": "'@{item().sapRunMode}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"SAPSource": {},
+												"DeltaSink": {}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "AzureDataLakeStorage1",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": {
+												"value": "@item().stagingStorageFolder",
+												"type": "Expression"
+											}
+										},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
+										},
+										"traceLevel": "Fine",
+										"continuationSettings": {
+											"customizedCheckpointKey": {
+												"value": "@item().checkPointKey",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Template"
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-01-17T07:21:10Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SapToDeltaLookupJson')]",
+				"[concat(variables('factoryId'), '/dataflows/SAP2DeltaTemplateDataflow')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TemplateADF_IncrementalTable')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -249,13 +1182,13 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": {
-								"value": "@pipeline().parameters.LogicAppURL",
-								"type": "Expression"
-							},
 							"method": "POST",
 							"headers": {
 								"Content-Type": "application/json"
+							},
+							"url": {
+								"value": "@pipeline().parameters.LogicAppURL",
+								"type": "Expression"
 							},
 							"body": {
 								"value": "{\"copiedDate\":\"@{pipeline().TriggerTime}\"",
@@ -293,6 +1226,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Template"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -302,7 +1238,194 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MaterialDataFlow')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "PL CDC Table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "@pipeline().TriggerTime",
+										"value": {
+											"value": "@pipeline().TriggerTime",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_deltext_exec",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_deltext_exec",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference",
+								"parameters": {
+									"pipeline": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"variable": {
+						"type": "String"
+					},
+					"lastdate": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_deltext_exec')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_cdc_material')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -318,12 +1441,27 @@
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
-							"parameters": {}
+							"parameters": {
+								"EnvStorage": {
+									"value": "@pipeline().globalParameters.environment",
+									"type": "Expression"
+								},
+								"Zone": "Staging",
+								"DataSource": "SAP",
+								"EnvRegSys": "DEVNL200",
+								"Domain": "MaterialManagement",
+								"Object": "Material",
+								"CDS": "IPRODUCT",
+								"KeyFields": "[[\"PRODUCT\"]"
+							}
 						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "PL CDC CDS"
 				},
 				"annotations": [],
 				"lastPublishTime": "2023-12-18T10:37:29Z"
@@ -333,14 +1471,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_CDS')]",
+			"name": "[concat(parameters('factoryName'), '/pl_copy_faers')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Execute DataFlow",
-						"type": "ExecuteDataFlow",
+						"name": "Copy data1",
+						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -351,199 +1489,236 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_sap_cdc",
-								"type": "DataFlowReference",
-								"parameters": {
-									"KeyFields": {
-										"value": "@pipeline().parameters.KeyFields",
-										"type": "Expression"
-									}
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"supportRFC5988": "true"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
 								},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {
-										"EnvStorage": {
-											"value": "@pipeline().parameters.EnvStorage",
-											"type": "Expression"
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "[['safetyreportversion']"
 										},
-										"Zone": {
-											"value": "@pipeline().parameters.Zone",
-											"type": "Expression"
+										"sink": {
+											"path": "safetyreportversion"
+										}
+									},
+									{
+										"source": {
+											"path": "[['safetyreportid']"
 										},
-										"DataSource": {
-											"value": "@pipeline().parameters.DataSource",
-											"type": "Expression"
+										"sink": {
+											"path": "safetyreportid"
+										}
+									},
+									{
+										"source": {
+											"path": "[['primarysourcecountry']"
 										},
-										"EnvRegSys": {
-											"value": "@pipeline().parameters.EnvRegSys",
-											"type": "Expression"
+										"sink": {
+											"path": "primarysourcecountry"
+										}
+									},
+									{
+										"source": {
+											"path": "[['occurcountry']"
 										},
-										"Domain": {
-											"value": "@pipeline().parameters.Domain",
-											"type": "Expression"
+										"sink": {
+											"path": "occurcountry"
+										}
+									},
+									{
+										"source": {
+											"path": "[['transmissiondateformat']"
 										},
-										"Object": {
-											"value": "@pipeline().parameters.Object",
-											"type": "Expression"
+										"sink": {
+											"path": "transmissiondateformat"
+										}
+									},
+									{
+										"source": {
+											"path": "[['transmissiondate']"
 										},
-										"CDS": {
-											"value": "@pipeline().parameters.CDS",
-											"type": "Expression"
+										"sink": {
+											"path": "transmissiondate"
+										}
+									},
+									{
+										"source": {
+											"path": "[['reporttype']"
+										},
+										"sink": {
+											"path": "reporttype"
+										}
+									},
+									{
+										"source": {
+											"path": "[['serious']"
+										},
+										"sink": {
+											"path": "serious"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnessdeath']"
+										},
+										"sink": {
+											"path": "seriousnessdeath"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnesslifethreatening']"
+										},
+										"sink": {
+											"path": "seriousnesslifethreatening"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnesshospitalization']"
+										},
+										"sink": {
+											"path": "seriousnesshospitalization"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnessdisabling']"
+										},
+										"sink": {
+											"path": "seriousnessdisabling"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnesscongenitalanomali']"
+										},
+										"sink": {
+											"path": "seriousnesscongenitalanomali"
+										}
+									},
+									{
+										"source": {
+											"path": "[['seriousnessother']"
+										},
+										"sink": {
+											"path": "seriousnessother"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receivedateformat']"
+										},
+										"sink": {
+											"path": "receivedateformat"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receivedate']"
+										},
+										"sink": {
+											"path": "receivedate"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receiptdateformat']"
+										},
+										"sink": {
+											"path": "receiptdateformat"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receiptdate']"
+										},
+										"sink": {
+											"path": "receiptdate"
+										}
+									},
+									{
+										"source": {
+											"path": "[['fulfillexpeditecriteria']"
+										},
+										"sink": {
+											"path": "fulfillexpeditecriteria"
+										}
+									},
+									{
+										"source": {
+											"path": "[['companynumb']"
+										},
+										"sink": {
+											"path": "companynumb"
+										}
+									},
+									{
+										"source": {
+											"path": "[['primarysource']"
+										},
+										"sink": {
+											"path": "primarysource"
+										}
+									},
+									{
+										"source": {
+											"path": "[['sender']"
+										},
+										"sink": {
+											"path": "sender"
+										}
+									},
+									{
+										"source": {
+											"path": "[['receiver']"
+										},
+										"sink": {
+											"path": "receiver"
+										}
+									},
+									{
+										"source": {
+											"path": "[['patient']"
+										},
+										"sink": {
+											"path": "patient"
 										}
 									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "AzureBlobStorage1",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "staging"
-							},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine",
-							"continuationSettings": {
-								"customizedCheckpointKey": "9e64901c-bb64-4acb-90c7-8227ae9d46e9"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"EnvStorage": {
-						"type": "string"
-					},
-					"Zone": {
-						"type": "string"
-					},
-					"DataSource": {
-						"type": "string"
-					},
-					"EnvRegSys": {
-						"type": "string"
-					},
-					"Domain": {
-						"type": "string"
-					},
-					"Object": {
-						"type": "string"
-					},
-					"CDS": {
-						"type": "string"
-					},
-					"KeyFields": {
-						"type": "array"
-					}
-				},
-				"folder": {
-					"name": "Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_sap_cdc')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_CDC_SAP_Table')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Changes Table",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SapTableSource",
-								"rfcTableOptions": {
-									"value": "@pipeline().parameters.filter",
-									"type": "Expression"
-								},
-								"customRfcReadTableFunctionModule": "",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
+								],
+								"collectionReference": "$['results']"
 							}
 						},
 						"inputs": [
 							{
-								"referenceName": "ds_sap_table",
+								"referenceName": "ds_rest_faers",
 								"type": "DatasetReference",
-								"parameters": {
-									"table_name": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ds_adls_parquet_001",
+								"referenceName": "ds_json_blob_faers",
 								"type": "DatasetReference",
-								"parameters": {
-									"EnvStorage": {
-										"value": "@pipeline().parameters.EnvStorage",
-										"type": "Expression"
-									},
-									"Zone": {
-										"value": "@pipeline().parameters.Zone",
-										"type": "Expression"
-									},
-									"DataSource": {
-										"value": "@pipeline().parameters.DataSource",
-										"type": "Expression"
-									},
-									"EnvRegSys": {
-										"value": "@pipeline().parameters.EnvRegSys",
-										"type": "Expression"
-									},
-									"Domain": {
-										"value": "@pipeline().parameters.Domain",
-										"type": "Expression"
-									},
-									"Object": {
-										"value": "@pipeline().parameters.Object",
-										"type": "Expression"
-									},
-									"Table": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
+								"parameters": {}
 							}
 						]
 					}
@@ -551,170 +1726,14 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"parameters": {
-					"Zone": {
-						"type": "string"
-					},
-					"EnvStorage": {
-						"type": "string"
-					},
-					"DataSource": {
-						"type": "string"
-					},
-					"EnvRegSys": {
-						"type": "string"
-					},
-					"Domain": {
-						"type": "string"
-					},
-					"Object": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					},
-					"filter": {
-						"type": "string"
-					}
-				},
 				"folder": {
-					"name": "Template"
+					"name": "PL API"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
-				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_001')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Full_Load_SAP_Table')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Full Table",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SapTableSource",
-								"rfcTableOptions": "",
-								"customRfcReadTableFunctionModule": "",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "ds_sap_table",
-								"type": "DatasetReference",
-								"parameters": {
-									"table_name": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_adls_parquet_001",
-								"type": "DatasetReference",
-								"parameters": {
-									"EnvStorage": {
-										"value": "@pipeline().parameters.EnvStorage",
-										"type": "Expression"
-									},
-									"Zone": {
-										"value": "@pipeline().parameters.Zone",
-										"type": "Expression"
-									},
-									"DataSource": {
-										"value": "@pipeline().parameters.DataSource",
-										"type": "Expression"
-									},
-									"EnvRegSys": {
-										"value": "@pipeline().parameters.EnvRegSys",
-										"type": "Expression"
-									},
-									"Domain": {
-										"value": "@pipeline().parameters.Domain",
-										"type": "Expression"
-									},
-									"Object": {
-										"value": "@pipeline().parameters.Object",
-										"type": "Expression"
-									},
-									"Table": {
-										"value": "@pipeline().parameters.table",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"Zone": {
-						"type": "string"
-					},
-					"EnvStorage": {
-						"type": "string"
-					},
-					"DataSource": {
-						"type": "string"
-					},
-					"EnvRegSys": {
-						"type": "string"
-					},
-					"Domain": {
-						"type": "string"
-					},
-					"Object": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_sap_table')]",
-				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_001')]"
+				"[concat(variables('factoryId'), '/datasets/ds_rest_faers')]",
+				"[concat(variables('factoryId'), '/datasets/ds_json_blob_faers')]"
 			]
 		},
 		{
@@ -726,7 +1745,14 @@
 					{
 						"name": "Execute Pipeline1",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "LookupLastTriggerDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -736,27 +1762,232 @@
 							"waitOnCompletion": true,
 							"parameters": {
 								"Zone": "Staging",
-								"EnvStorage": "dev",
+								"EnvStorage": {
+									"value": "@pipeline().globalParameters.environment",
+									"type": "Expression"
+								},
 								"DataSource": "SAP",
-								"EnvRegSys": "DEVNL110",
-								"Domain": "Material",
-								"Object": "MaterialManagement",
+								"EnvRegSys": "DEVNL200",
+								"Domain": "MaterialManagement",
+								"Object": "Material",
 								"table": "MARA",
-								"filter": {
-									"value": "@concat('LAEDA GE ''', utcNow('yyyyMMdd'), '''')",
+								"ChangeDateColumn": "LAEDA",
+								"LastExecDate": {
+									"value": "@formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd')",
 									"type": "Expression"
 								}
 							}
+						}
+					},
+					{
+						"name": "LookupLastTriggerDate",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference",
+								"parameters": {
+									"pipeline": {
+										"value": "@pipeline().Pipeline",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "Store Trigger Date",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipeline1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "@pipeline().TriggerTime",
+										"value": {
+											"value": "@pipeline().TriggerTime",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DelimitedText2",
+								"type": "DatasetReference",
+								"parameters": {
+									"pipeline": {
+										"value": "template",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_deltext_exec",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"lastdate": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PL CDC Table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_CDC_SAP_Table')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]",
+				"[concat(variables('factoryId'), '/datasets/ds_deltext_exec')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_batch')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('table')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "BatchManagement",
+											"Object": "Batch",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
 						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"variables": {
+					"table": {
+						"type": "Array",
+						"defaultValue": [
+							"MCHA",
+							"MCHB",
+							"MCH1",
+							"MARD"
+						]
+					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_CDC_SAP_Table')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
 			]
 		},
 		{
@@ -775,6 +2006,7 @@
 								"value": "@variables('table')",
 								"type": "Expression"
 							},
+							"isSequential": false,
 							"activities": [
 								{
 									"name": "Execute Full Table Load",
@@ -789,9 +2021,12 @@
 										"waitOnCompletion": true,
 										"parameters": {
 											"Zone": "Staging",
-											"EnvStorage": "dev",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
 											"DataSource": "SAP",
-											"EnvRegSys": "DEVNL110",
+											"EnvRegSys": "DEVNL200",
 											"Domain": "MaterialManagement",
 											"Object": "Material",
 											"table": {
@@ -813,9 +2048,88 @@
 						"type": "Array",
 						"defaultValue": [
 							"MARA",
-							"MAKT"
+							"MAKT",
+							"MARC"
 						]
 					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_purchaseorder')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('table')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "PurchaseOrderDomain",
+											"Object": "PurchaseOrder",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table": {
+						"type": "Array",
+						"defaultValue": [
+							"EKKO",
+							"EKPO",
+							"EKET",
+							"EKBE",
+							"EKES",
+							"EKKN"
+						]
+					}
+				},
+				"folder": {
+					"name": "PL full table"
 				},
 				"annotations": []
 			},
@@ -853,11 +2167,14 @@
 										"waitOnCompletion": true,
 										"parameters": {
 											"Zone": "Staging",
-											"EnvStorage": "dev",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
 											"DataSource": "SAP",
-											"EnvRegSys": "DEVNL110",
-											"Domain": "Sales and Distribution",
-											"Object": "Sales Order",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "SalesAndDistribution",
+											"Object": "SalesOrder",
 											"table": {
 												"value": "@item()",
 												"type": "Expression"
@@ -892,11 +2209,86 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "PL full table"
+				},
 				"annotations": [],
 				"lastPublishTime": "2023-12-15T19:11:11Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_sap_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('table')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Full Table Load",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_Full_Load_SAP_Table1",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Zone": "Staging",
+											"EnvStorage": {
+												"value": "@pipeline().globalParameters.environment",
+												"type": "Expression"
+											},
+											"DataSource": "SAP",
+											"EnvRegSys": "DEVNL200",
+											"Domain": "BatchManagement",
+											"Object": "Batch",
+											"table": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table": {
+						"type": "Array",
+						"defaultValue": [
+							"MCHA",
+							"MCHB",
+							"MCH1"
+						]
+					}
+				},
+				"folder": {
+					"name": "PL full table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Full_Load_SAP_Table1')]"
 			]
 		},
 		{
@@ -939,6 +2331,76 @@
 					},
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "changesmara.csv",
+						"container": "dev"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": ";MANDT;MATNR;ERSDA;CREATED_AT_TIME;ERNAM;LAEDA;AENAM;VPSTA;PSTAT;LVORM;MTART;MBRSH;MATKL;BISMT;MEINS;BSTME;ZEINR;ZEIAR;ZEIVR;ZEIFO;AESZN;BLATT;BLANZ;FERTH;FORMT;GROES;WRKST;NORMT;LABOR;EKWSL;BRGEW;NTGEW;GEWEI;VOLUM;VOLEH;BEHVO;RAUBE;TEMPB;DISST;TRAGR;STOFF;SPART;KUNNR;EANNR;WESCH;BWVOR;BWSCL;SAISO;ETIAR;ETIFO;ENTAR;EAN11;NUMTP;LAENG;BREIT;HOEHE;MEABM;PRDHA;AEKLK;CADKZ;QMPUR;ERGEW;ERGEI;ERVOL;ERVOE;GEWTO;VOLTO;VABME;KZREV;KZKFG;XCHPF;VHART;FUELG;STFAK;MAGRV;BEGRU;DATAB;LIQDT;SAISJ;PLGTP;MLGUT;EXTWG;SATNR;ATTYP;KZKUP;KZNFM;PMATA;MSTAE;MSTAV;MSTDE;MSTDV;TAKLV;RBNRM;MHDRZ;MHDHB;MHDLP;INHME;INHAL;VPREH;ETIAG;INHBR;CMETH;CUOBF;KZUMW;KOSCH;SPROF;NRFHG;MFRPN;MFRNR;BMATN;MPROF;KZWSM;SAITY;PROFL;IHIVI;ILOOS;SERLV;KZGVH;XGCHP;KZEFF;COMPL;IPRKZ;RDMHD;PRZUS;MTPOS_MARA;BFLME;MATFI;CMREL;BBTYP;SLED_BBD;GTIN_VARIANT;GENNR;RMATP;GDS_RELEVANT;WEORA;HUTYP_DFLT;PILFERABLE;WHSTC;WHMATGR;HNDLCODE;HAZMAT;HUTYP;TARE_VAR;MAXC;MAXC_TOL;MAXL;MAXB;MAXH;MAXDIM_UOM;HERKL;MFRGR;QQTIME;QQTIMEUOM;QGRP;SERIAL;PS_SMARTFORM;LOGUNIT;CWQREL;CWQPROC;CWQTOLGR;ADPROF;IPMIPPRODUCT;ALLOW_PMAT_IGNO;MEDIUM;COMMODITY;ANIMAL_ORIGIN;TEXTILE_COMP_IND;LAST_CHANGED_TIME;MATNR_EXTERNAL;CHML_CMPLNC_RLVNCE_IND;LOGISTICAL_MAT_CATEGORY;SALES_MATERIAL;IDENTIFICATION_TAG_TYPE;SGT_CSGR;SGT_COVSA;SGT_STAT;SGT_SCOPE;SGT_REL;ANP;PSM_CODE;FSH_MG_AT1;FSH_MG_AT2;FSH_MG_AT3;FSH_SEALV;FSH_SEAIM;FSH_SC_MID;DUMMY_PRD_INCL_EEW_PS;SCM_MATID_GUID16;SCM_MATID_GUID22;SCM_MATURITY_DUR;SCM_SHLF_LFE_REQ_MIN;SCM_SHLF_LFE_REQ_MAX;SCM_PUOM;RMATP_PB;PROD_SHAPE;MO_PROFILE_ID;OVERHANG_TRESH;BRIDGE_TRESH;BRIDGE_MAX_SLOPE;HEIGHT_NONFLAT;HEIGHT_NONFLAT_UOM;SCM_KITCOMP;SCM_PROD_PAOOPT;SCM_BOD_DEPLVL;SCM_RESTRICT_INVBAL;SCM_DRP_GL_STOCK;SCM_EXCL_EXPEDITE;/CWM/XCWMAT;/CWM/VALUM;/CWM/TOLGR;/CWM/TARA;/CWM/TARUM;/BEV1/LULEINH;/BEV1/LULDEGRP;/BEV1/NESTRUCCAT;/DSD/SL_TOLTYP;/DSD/SV_CNT_GRP;/DSD/VC_GROUP;/SAPMP/KADU;/SAPMP/ABMEIN;/SAPMP/KADP;/SAPMP/BRAD;/SAPMP/SPBI;/SAPMP/TRAD;/SAPMP/KEDU;/SAPMP/SPTR;/SAPMP/FBDK;/SAPMP/FBHK;/SAPMP/RILI;/SAPMP/FBAK;/SAPMP/AHO;/SAPMP/MIFRR;/STTPEC/SERTYPE;/STTPEC/SYNCACT;/STTPEC/SYNCTIME;/STTPEC/SYNCCHG;/STTPEC/COUNTRY_REF;/STTPEC/PRDCAT;/VSO/R_TILT_IND;/VSO/R_STACK_IND;/VSO/R_BOT_IND;/VSO/R_TOP_IND;/VSO/R_STACK_NO;/VSO/R_PAL_IND;/VSO/R_PAL_OVR_D;/VSO/R_PAL_OVR_W;/VSO/R_PAL_B_HT;/VSO/R_PAL_MIN_H;/VSO/R_TOL_B_HT;/VSO/R_NO_P_GVH;/VSO/R_QUAN_UNIT;/VSO/R_KZGVH_IND;PACKCODE;DG_PACK_STATUS;SRV_DURA;SRV_DURA_UOM;SRV_SERWI;SRV_ESCAL;SOM_CYCLE;SOM_CYCLE_RULE;SOM_TC_SCHEMA;SOM_CTR_AUTORENEWAL;MCOND;RETDELC;LOGLEV_RETO;NSNID;ICFA;RIC_ID;DFS_SENSITIVITY_KEY;DFS_MFRP2;OVLPN;ADSPC_SPC;VARID;MSBOOKPARTNO;TOLERANCE_TYPE;DPCBT;XGRDT;IMATN;PICNUM;BSTAT;COLOR_ATINN;SIZE1_ATINN;SIZE2_ATINN;COLOR;SIZE1;SIZE2;FREE_CHAR;CARE_CODE;BRAND_ID;FIBER_CODE1;FIBER_PART1;FIBER_CODE2;FIBER_PART2;FIBER_CODE3;FIBER_PART3;FIBER_CODE4;FIBER_PART4;FIBER_CODE5;FIBER_PART5;FASHGRD",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"pipeline": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat(dataset().pipeline, '.txt')",
+							"type": "Expression"
+						},
+						"folderPath": "pipeline_meta",
+						"container": "dev"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
 					"quoteChar": "\""
 				},
 				"schema": []
@@ -991,6 +2453,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SAPTableSource_Incremental')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1019,7 +2504,2019 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SapTableResource1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SapTableLocal",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "MARA"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SapTableLocal')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SapToDeltaLookupJson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "SapToDeltaParameters.json",
+						"fileSystem": "demo"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"sapContext": {
+							"type": "string"
+						},
+						"sapObjectName": {
+							"type": "string"
+						},
+						"sapRunMode": {
+							"type": "string"
+						},
+						"sapKeyColumns": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"sapPartitions": {
+							"type": "array",
+							"items": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"fieldName": {
+											"type": "string"
+										},
+										"sign": {
+											"type": "string"
+										},
+										"option": {
+											"type": "string"
+										},
+										"low": {
+											"type": "string"
+										},
+										"high": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"deltaContainer": {
+							"type": "string"
+						},
+						"deltaFolder": {
+							"type": "string"
+						},
+						"deltaKeyColumns": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"deltaPartition": {
+							"type": "string"
+						},
+						"stagingStorageFolder": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SnowflakeMARA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_snowflake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeTable",
+				"schema": [
+					{
+						"name": "MATNR",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "ERSDA",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "CREATED_AT_TIME",
+						"type": "TIMESTAMP_NTZ",
+						"precision": 29,
+						"scale": 9
+					},
+					{
+						"name": "ERNAM",
+						"type": "VARCHAR",
+						"precision": 12,
+						"scale": 0
+					},
+					{
+						"name": "LAEDA",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "AENAM",
+						"type": "VARCHAR",
+						"precision": 12,
+						"scale": 0
+					},
+					{
+						"name": "VPSTA",
+						"type": "VARCHAR",
+						"precision": 15,
+						"scale": 0
+					},
+					{
+						"name": "PSTAT",
+						"type": "VARCHAR",
+						"precision": 15,
+						"scale": 0
+					},
+					{
+						"name": "LVORM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MTART",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "MBRSH",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MATKL",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "BISMT",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MEINS",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "BSTME",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "ZEINR",
+						"type": "VARCHAR",
+						"precision": 22,
+						"scale": 0
+					},
+					{
+						"name": "ZEIAR",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "ZEIVR",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "ZEIFO",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "AESZN",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "BLATT",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "BLANZ",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FERTH",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "FORMT",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "GROES",
+						"type": "VARCHAR",
+						"precision": 32,
+						"scale": 0
+					},
+					{
+						"name": "WRKST",
+						"type": "VARCHAR",
+						"precision": 48,
+						"scale": 0
+					},
+					{
+						"name": "NORMT",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "LABOR",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "EKWSL",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "BRGEW",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "NTGEW",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "GEWEI",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "VOLUM",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "VOLEH",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "BEHVO",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "RAUBE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "TEMPB",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "DISST",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "TRAGR",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "STOFF",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "SPART",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "KUNNR",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "EANNR",
+						"type": "VARCHAR",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "WESCH",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "BWVOR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "BWSCL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SAISO",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "ETIAR",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "ETIFO",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "ENTAR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "EAN11",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "NUMTP",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "LAENG",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "BREIT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "HOEHE",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "MEABM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "PRDHA",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "AEKLK",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CADKZ",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "QMPUR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "ERGEW",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "ERGEI",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "ERVOL",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "ERVOE",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "GEWTO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 1
+					},
+					{
+						"name": "VOLTO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 1
+					},
+					{
+						"name": "VABME",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZREV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZKFG",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "XCHPF",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "VHART",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "FUELG",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "STFAK",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "MAGRV",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "BEGRU",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "DATAB",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "LIQDT",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SAISJ",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "PLGTP",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MLGUT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "EXTWG",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SATNR",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "ATTYP",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "KZKUP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZNFM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "PMATA",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MSTAE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MSTAV",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MSTDE",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "MSTDV",
+						"type": "DATE",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "TAKLV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "RBNRM",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "MHDRZ",
+						"type": "NUMBER",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "MHDHB",
+						"type": "NUMBER",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "MHDLP",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "INHME",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "INHAL",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "VPREH",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 0
+					},
+					{
+						"name": "ETIAG",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "INHBR",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "CMETH",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CUOBF",
+						"type": "NUMBER",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "KZUMW",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KOSCH",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SPROF",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "NRFHG",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MFRPN",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MFRNR",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "BMATN",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "MPROF",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "KZWSM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SAITY",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "PROFL",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "IHIVI",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "ILOOS",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SERLV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZGVH",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "XGCHP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "KZEFF",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "COMPL",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "IPRKZ",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "RDMHD",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "PRZUS",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MTPOS_MARA",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "BFLME",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MATFI",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CMREL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "BBTYP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SLED_BBD",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "GTIN_VARIANT",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "GENNR",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "RMATP",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "GDS_RELEVANT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "WEORA",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "HUTYP_DFLT",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "PILFERABLE",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "WHSTC",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "WHMATGR",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "HNDLCODE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "HAZMAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "HUTYP",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "TARE_VAR",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MAXC",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXC_TOL",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 1
+					},
+					{
+						"name": "MAXL",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXB",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXH",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 3
+					},
+					{
+						"name": "MAXDIM_UOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "HERKL",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "MFRGR",
+						"type": "VARCHAR",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "QQTIMEUOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "QGRP",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SERIAL",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "PS_SMARTFORM",
+						"type": "VARCHAR",
+						"precision": 30,
+						"scale": 0
+					},
+					{
+						"name": "LOGUNIT",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "CWQREL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "CWQPROC",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "CWQTOLGR",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "ADPROF",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "IPMIPPRODUCT",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "ALLOW_PMAT_IGNO",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MEDIUM",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "COMMODITY",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "ANIMAL_ORIGIN",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "TEXTILE_COMP_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "LAST_CHANGED_TIME",
+						"type": "TIMESTAMP_NTZ",
+						"precision": 29,
+						"scale": 9
+					},
+					{
+						"name": "MATNR_EXTERNAL",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "CHML_CMPLNC_RLVNCE_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "LOGISTICAL_MAT_CATEGORY",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SALES_MATERIAL",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "IDENTIFICATION_TAG_TYPE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "SGT_CSGR",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SGT_COVSA",
+						"type": "VARCHAR",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "SGT_STAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SGT_SCOPE",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SGT_REL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "ANP",
+						"type": "NUMBER",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "PSM_CODE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "FSH_MG_AT1",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "FSH_MG_AT2",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "FSH_MG_AT3",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "FSH_SEALV",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "FSH_SEAIM",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "FSH_SC_MID",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "DUMMY_PRD_INCL_EEW_PS",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_MATID_GUID16",
+						"type": "VARCHAR",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "SCM_MATID_GUID22",
+						"type": "VARCHAR",
+						"precision": 22,
+						"scale": 0
+					},
+					{
+						"name": "SCM_MATURITY_DUR",
+						"type": "NUMBER",
+						"precision": 11,
+						"scale": 0
+					},
+					{
+						"name": "SCM_SHLF_LFE_REQ_MIN",
+						"type": "NUMBER",
+						"precision": 11,
+						"scale": 0
+					},
+					{
+						"name": "SCM_SHLF_LFE_REQ_MAX",
+						"type": "NUMBER",
+						"precision": 11,
+						"scale": 0
+					},
+					{
+						"name": "SCM_PUOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "RMATP_PB",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "PROD_SHAPE",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "MO_PROFILE_ID",
+						"type": "VARCHAR",
+						"precision": 20,
+						"scale": 0
+					},
+					{
+						"name": "OVERHANG_TRESH",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "BRIDGE_TRESH",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "BRIDGE_MAX_SLOPE",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "HEIGHT_NONFLAT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "HEIGHT_NONFLAT_UOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "SCM_KITCOMP",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_PROD_PAOOPT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_BOD_DEPLVL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_RESTRICT_INVBAL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_DRP_GL_STOCK",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "SCM_EXCL_EXPEDITE",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/XCWMAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/VALUM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/TOLGR",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/TARA",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/CWM/TARUM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/BEV1/LULEINH",
+						"type": "NUMBER",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "/BEV1/LULDEGRP",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/BEV1/NESTRUCCAT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/DSD/SL_TOLTYP",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "/DSD/SV_CNT_GRP",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "/DSD/VC_GROUP",
+						"type": "VARCHAR",
+						"precision": 6,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/KADU",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/ABMEIN",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/KADP",
+						"type": "NUMBER",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/BRAD",
+						"type": "NUMBER",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/SPBI",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/TRAD",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/KEDU",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/SPTR",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/SAPMP/FBDK",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/FBHK",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/SAPMP/RILI",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/FBAK",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/AHO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/SAPMP/MIFRR",
+						"type": "NUMBER",
+						"precision": 7,
+						"scale": 2
+					},
+					{
+						"name": "/STTPEC/SERTYPE",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/SYNCACT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/SYNCTIME",
+						"type": "NUMBER",
+						"precision": 15,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/SYNCCHG",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/COUNTRY_REF",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/STTPEC/PRDCAT",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_TILT_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_STACK_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_BOT_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_TOP_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_STACK_NO",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_PAL_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_PAL_OVR_D",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_PAL_OVR_W",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_PAL_B_HT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_PAL_MIN_H",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_TOL_B_HT",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "/VSO/R_NO_P_GVH",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_QUAN_UNIT",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "/VSO/R_KZGVH_IND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "PACKCODE",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "DG_PACK_STATUS",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SRV_DURA",
+						"type": "NUMBER",
+						"precision": 13,
+						"scale": 3
+					},
+					{
+						"name": "SRV_DURA_UOM",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "SRV_SERWI",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SRV_ESCAL",
+						"type": "VARCHAR",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SOM_CYCLE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SOM_CYCLE_RULE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "SOM_TC_SCHEMA",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "SOM_CTR_AUTORENEWAL",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "MCOND",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "RETDELC",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "LOGLEV_RETO",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "NSNID",
+						"type": "VARCHAR",
+						"precision": 9,
+						"scale": 0
+					},
+					{
+						"name": "ICFA",
+						"type": "VARCHAR",
+						"precision": 8,
+						"scale": 0
+					},
+					{
+						"name": "RIC_ID",
+						"type": "NUMBER",
+						"precision": 19,
+						"scale": 0
+					},
+					{
+						"name": "DFS_SENSITIVITY_KEY",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "DFS_MFRP2",
+						"type": "VARCHAR",
+						"precision": 60,
+						"scale": 0
+					},
+					{
+						"name": "OVLPN",
+						"type": "VARCHAR",
+						"precision": 32,
+						"scale": 0
+					},
+					{
+						"name": "ADSPC_SPC",
+						"type": "NUMBER",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "VARID",
+						"type": "VARCHAR",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "MSBOOKPARTNO",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "TOLERANCE_TYPE",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "DPCBT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "XGRDT",
+						"type": "VARCHAR",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "IMATN",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "PICNUM",
+						"type": "VARCHAR",
+						"precision": 40,
+						"scale": 0
+					},
+					{
+						"name": "BSTAT",
+						"type": "VARCHAR",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "COLOR_ATINN",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SIZE1_ATINN",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "SIZE2_ATINN",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "COLOR",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SIZE1",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "SIZE2",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "FREE_CHAR",
+						"type": "VARCHAR",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "CARE_CODE",
+						"type": "VARCHAR",
+						"precision": 16,
+						"scale": 0
+					},
+					{
+						"name": "BRAND_ID",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE1",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART1",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE2",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART2",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE3",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART3",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE4",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART4",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_CODE5",
+						"type": "VARCHAR",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FIBER_PART5",
+						"type": "NUMBER",
+						"precision": 3,
+						"scale": 0
+					},
+					{
+						"name": "FASHGRD",
+						"type": "VARCHAR",
+						"precision": 4,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "SAP_S4H_LSD200",
+					"table": "MARA"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_snowflake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_DelText_Blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table_filename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().table_filename",
+							"type": "Expression"
+						},
+						"folderPath": "sap-meta",
+						"container": "dev"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_001')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"EnvStorage": {
+						"type": "String"
+					},
+					"Zone": {
+						"type": "string"
+					},
+					"DataSource": {
+						"type": "string"
+					},
+					"EnvRegSys": {
+						"type": "string"
+					},
+					"Domain": {
+						"type": "string"
+					},
+					"Object": {
+						"type": "string"
+					},
+					"Table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().table,'_',utcnow(), '.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().Table)",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().EnvStorage",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_0011')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1135,6 +4632,136 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_adls_parquet_faers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "Staging/FAERS/AdverseEvents",
+						"container": "dev"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "MANDT",
+						"type": "UTF8"
+					},
+					{
+						"name": "MATNR",
+						"type": "UTF8"
+					},
+					{
+						"name": "SPRAS",
+						"type": "UTF8"
+					},
+					{
+						"name": "MAKTX",
+						"type": "UTF8"
+					},
+					{
+						"name": "MAKTG",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_deltext_exec')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat(pipeline().Pipeline, '.txt')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "pipeline_meta",
+							"type": "Expression"
+						},
+						"container": "dev"
+					},
+					"columnDelimiter": ";",
+					"rowDelimiter": "\n",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_json_blob_faers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "faers.json",
+						"folderPath": "Staging/FAERS/AdverseEvents",
+						"container": "dev"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_rest_faers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_rest_faers",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "?search=medicinalproduct=CINRYZE+AND+(transmissiondate=[20180101+TO+20240111])&limit=10",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_rest_faers')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_sap_odp')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1143,8 +4770,15 @@
 					"referenceName": "SAP_ODP",
 					"type": "LinkedServiceReference",
 					"parameters": {
-						"test_subscriber": "IPRODUCT",
-						"test_param": "0"
+						"subscriber": {
+							"value": "@dataset().CDS",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"CDS": {
+						"type": "string"
 					}
 				},
 				"annotations": [],
@@ -1152,7 +4786,10 @@
 				"schema": [],
 				"typeProperties": {
 					"context": "ABAP_CDS",
-					"objectName": "IPRODUCT$P"
+					"objectName": {
+						"value": "@concat(dataset().CDS, '$P')",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": [
@@ -1224,38 +4861,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorageLocal')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('AzureDataLakeStorageLocal_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('AzureDataLakeStorageLocal_accountKey')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime1",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SAP_ODP')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"parameters": {
-					"test_subscriber": {
-						"type": "string"
-					},
-					"test_param": {
+					"subscriber": {
 						"type": "string"
 					}
 				},
@@ -1266,7 +4877,7 @@
 					"language": "EN",
 					"sncMode": false,
 					"userName": "[parameters('SAP_ODP_properties_typeProperties_userName')]",
-					"subscriberName": "IPRODUCT",
+					"subscriberName": "@{linkedService().subscriber}",
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('SAP_ODP_password')]"
@@ -1281,34 +4892,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/IRLocal')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SapTable1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SapTable",
-				"typeProperties": {
-					"clientId": "[parameters('SapTable1_properties_typeProperties_clientId')]",
-					"language": "EN",
-					"sncMode": false,
-					"userName": "[parameters('SapTable1_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('SapTable1_password')]"
-					},
-					"server": "[parameters('SapTable1_properties_typeProperties_server')]",
-					"systemNumber": "[parameters('SapTable1_properties_typeProperties_systemNumber')]"
-				},
-				"connectVia": {
-					"referenceName": "ir-ih73vfvvtagr4",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/ir-ih73vfvvtagr4')]"
 			]
 		},
 		{
@@ -1338,6 +4921,41 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/IRLocal')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_rest_faers')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('ls_rest_faers_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_snowflake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"database": {
+						"type": "string",
+						"defaultValue": "D3010_DEV_BRONZE_RAW"
+					}
+				},
+				"annotations": [],
+				"type": "Snowflake",
+				"typeProperties": {
+					"authenticationType": "Basic",
+					"connectionString": "[parameters('ls_snowflake_connectionString')]"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/IRLocal')]",
@@ -1393,6 +5011,522 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MaterialCDS')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_sap_odp",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     staged: true,",
+						"     readMode: 'fullAndIncrementalLoad',",
+						"     keys: ['PRODUCT'],",
+						"     format: 'sapObject',",
+						"     fixDecimalPrecision: true) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     preCommands: [],",
+						"     postCommands: []) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sap_odp')]",
+				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP2DeltaTemplateDataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "SAP_ODP",
+								"type": "LinkedServiceReference"
+							},
+							"name": "SAPSource"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "AzureDataLakeStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"name": "DeltaSink"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"parameters{",
+						"     sapContext as string (\"context\"),",
+						"     sapObjectName as string (\"obj\"),",
+						"     sapKeyColumns as string[] ([\"key1\",\"key2\"]),",
+						"     deltaContainer as string (\"container\"),",
+						"     deltaFolder as string (\"folder\"),",
+						"     deltaPartition as string (\"partition\"),",
+						"     deltaKeyColumns as string[] ([\"key3\",\"key4\"]),",
+						"     sapPartitions as string (\"[[\\{\\\"fieldName\\\": \\\"ID\\\",\\\"sign\\\": \\\"I\\\", \\\"option\\\": \\\"BT\\\",\\\"low\\\": \\\"1\\\",\\\"high\\\": \\\"4\\\"}]]\"),",
+						"     sapRunMode as string (\"fullAndIncrementalLoad\")",
+						"}",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     store: 'SapOdp',",
+						"     format: 'sapObject',",
+						"     staged: true,",
+						"     context: ($sapContext),",
+						"     objectName: ($sapObjectName),",
+						"     readMode: ($sapRunMode),",
+						"     keys: ($sapKeyColumns),",
+						"     partitionPredicates: ($sapPartitions),",
+						"     partitionBy('external', 1)) ~> SAPSource",
+						"SAPSource sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delta',",
+						"     fileSystem: ($deltaContainer),",
+						"     folderPath: ($deltaFolder),",
+						"     mergeSchema: false,",
+						"     autoCompact: false,",
+						"     optimizedWrite: false,",
+						"     vacuum: 0,",
+						"     deletable: true,",
+						"     insertable: true,",
+						"     updateable: true,",
+						"     upsertable: true,",
+						"     keys:($deltaKeyColumns),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('key',",
+						"          0,",
+						"          byName($deltaPartition)",
+						"     )) ~> DeltaSink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SAP_ODP')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "SnowflakeMARA",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          MATNR as string,",
+						"          ERSDA as date,",
+						"          CREATED_AT_TIME as integer,",
+						"          ERNAM as string,",
+						"          LAEDA as date,",
+						"          AENAM as string,",
+						"          VPSTA as string,",
+						"          PSTAT as string,",
+						"          LVORM as string,",
+						"          MTART as string,",
+						"          MBRSH as string,",
+						"          MATKL as string,",
+						"          BISMT as string,",
+						"          MEINS as string,",
+						"          BSTME as string,",
+						"          ZEINR as string,",
+						"          ZEIAR as string,",
+						"          ZEIVR as string,",
+						"          ZEIFO as string,",
+						"          AESZN as string,",
+						"          BLATT as string,",
+						"          BLANZ as string,",
+						"          FERTH as string,",
+						"          FORMT as string,",
+						"          GROES as string,",
+						"          WRKST as string,",
+						"          NORMT as string,",
+						"          LABOR as string,",
+						"          EKWSL as string,",
+						"          BRGEW as double,",
+						"          NTGEW as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 alterRow(upsertIf(isNull('Matnr')==false())) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          MATNR as string,",
+						"          ERSDA as date,",
+						"          CREATED_AT_TIME as timestamp,",
+						"          ERNAM as string,",
+						"          LAEDA as date,",
+						"          AENAM as string,",
+						"          VPSTA as string,",
+						"          PSTAT as string,",
+						"          LVORM as string,",
+						"          MTART as string,",
+						"          MBRSH as string,",
+						"          MATKL as string,",
+						"          BISMT as string,",
+						"          MEINS as string,",
+						"          BSTME as string,",
+						"          ZEINR as string,",
+						"          ZEIAR as string,",
+						"          ZEIVR as string,",
+						"          ZEIFO as string,",
+						"          AESZN as string,",
+						"          BLATT as string,",
+						"          BLANZ as decimal(3,0),",
+						"          FERTH as string,",
+						"          FORMT as string,",
+						"          GROES as string,",
+						"          WRKST as string,",
+						"          NORMT as string,",
+						"          LABOR as string,",
+						"          EKWSL as string,",
+						"          BRGEW as decimal(13,3),",
+						"          NTGEW as decimal(13,3),",
+						"          GEWEI as string,",
+						"          VOLUM as decimal(13,3),",
+						"          VOLEH as string,",
+						"          BEHVO as string,",
+						"          RAUBE as string,",
+						"          TEMPB as string,",
+						"          DISST as string,",
+						"          TRAGR as string,",
+						"          STOFF as string,",
+						"          SPART as string,",
+						"          KUNNR as string,",
+						"          EANNR as string,",
+						"          WESCH as decimal(13,3),",
+						"          BWVOR as string,",
+						"          BWSCL as string,",
+						"          SAISO as string,",
+						"          ETIAR as string,",
+						"          ETIFO as string,",
+						"          ENTAR as string,",
+						"          EAN11 as string,",
+						"          NUMTP as string,",
+						"          LAENG as decimal(13,3),",
+						"          BREIT as decimal(13,3),",
+						"          HOEHE as decimal(13,3),",
+						"          MEABM as string,",
+						"          PRDHA as string,",
+						"          AEKLK as string,",
+						"          CADKZ as string,",
+						"          QMPUR as string,",
+						"          ERGEW as decimal(13,3),",
+						"          ERGEI as string,",
+						"          ERVOL as decimal(13,3),",
+						"          ERVOE as string,",
+						"          GEWTO as decimal(3,1),",
+						"          VOLTO as decimal(3,1),",
+						"          VABME as string,",
+						"          KZREV as string,",
+						"          KZKFG as string,",
+						"          XCHPF as string,",
+						"          VHART as string,",
+						"          FUELG as decimal(3,0),",
+						"          STFAK as decimal(5,0),",
+						"          MAGRV as string,",
+						"          BEGRU as string,",
+						"          DATAB as date,",
+						"          LIQDT as date,",
+						"          SAISJ as string,",
+						"          PLGTP as string,",
+						"          MLGUT as string,",
+						"          EXTWG as string,",
+						"          SATNR as string,",
+						"          ATTYP as string,",
+						"          KZKUP as string,",
+						"          KZNFM as string,",
+						"          PMATA as string,",
+						"          MSTAE as string,",
+						"          MSTAV as string,",
+						"          MSTDE as date,",
+						"          MSTDV as date,",
+						"          TAKLV as string,",
+						"          RBNRM as string,",
+						"          MHDRZ as decimal(4,0),",
+						"          MHDHB as decimal(4,0),",
+						"          MHDLP as decimal(3,0),",
+						"          INHME as string,",
+						"          INHAL as decimal(13,3),",
+						"          VPREH as decimal(5,0),",
+						"          ETIAG as string,",
+						"          INHBR as decimal(13,3),",
+						"          CMETH as string,",
+						"          CUOBF as decimal(18,0),",
+						"          KZUMW as string,",
+						"          KOSCH as string,",
+						"          SPROF as string,",
+						"          NRFHG as string,",
+						"          MFRPN as string,",
+						"          MFRNR as string,",
+						"          BMATN as string,",
+						"          MPROF as string,",
+						"          KZWSM as string,",
+						"          SAITY as string,",
+						"          PROFL as string,",
+						"          IHIVI as string,",
+						"          ILOOS as string,",
+						"          SERLV as string,",
+						"          KZGVH as string,",
+						"          XGCHP as string,",
+						"          KZEFF as string,",
+						"          COMPL as decimal(2,0),",
+						"          IPRKZ as string,",
+						"          RDMHD as string,",
+						"          PRZUS as string,",
+						"          MTPOS_MARA as string,",
+						"          BFLME as string,",
+						"          MATFI as string,",
+						"          CMREL as string,",
+						"          BBTYP as string,",
+						"          SLED_BBD as string,",
+						"          GTIN_VARIANT as string,",
+						"          GENNR as string,",
+						"          RMATP as string,",
+						"          GDS_RELEVANT as string,",
+						"          WEORA as string,",
+						"          HUTYP_DFLT as string,",
+						"          PILFERABLE as string,",
+						"          WHSTC as string,",
+						"          WHMATGR as string,",
+						"          HNDLCODE as string,",
+						"          HAZMAT as string,",
+						"          HUTYP as string,",
+						"          TARE_VAR as string,",
+						"          MAXC as decimal(15,3),",
+						"          MAXC_TOL as decimal(3,1),",
+						"          MAXL as decimal(15,3),",
+						"          MAXB as decimal(15,3),",
+						"          MAXH as decimal(15,3),",
+						"          MAXDIM_UOM as string,",
+						"          HERKL as string,",
+						"          MFRGR as string,",
+						"          QQTIMEUOM as string,",
+						"          QGRP as string,",
+						"          SERIAL as string,",
+						"          PS_SMARTFORM as string,",
+						"          LOGUNIT as string,",
+						"          CWQREL as string,",
+						"          CWQPROC as string,",
+						"          CWQTOLGR as string,",
+						"          ADPROF as string,",
+						"          IPMIPPRODUCT as string,",
+						"          ALLOW_PMAT_IGNO as string,",
+						"          MEDIUM as string,",
+						"          COMMODITY as string,",
+						"          ANIMAL_ORIGIN as string,",
+						"          TEXTILE_COMP_IND as string,",
+						"          LAST_CHANGED_TIME as timestamp,",
+						"          MATNR_EXTERNAL as string,",
+						"          CHML_CMPLNC_RLVNCE_IND as string,",
+						"          LOGISTICAL_MAT_CATEGORY as string,",
+						"          SALES_MATERIAL as string,",
+						"          IDENTIFICATION_TAG_TYPE as string,",
+						"          SGT_CSGR as string,",
+						"          SGT_COVSA as string,",
+						"          SGT_STAT as string,",
+						"          SGT_SCOPE as string,",
+						"          SGT_REL as string,",
+						"          ANP as decimal(9,0),",
+						"          PSM_CODE as string,",
+						"          FSH_MG_AT1 as string,",
+						"          FSH_MG_AT2 as string,",
+						"          FSH_MG_AT3 as string,",
+						"          FSH_SEALV as string,",
+						"          FSH_SEAIM as string,",
+						"          FSH_SC_MID as string,",
+						"          DUMMY_PRD_INCL_EEW_PS as string,",
+						"          SCM_MATID_GUID16 as string,",
+						"          SCM_MATID_GUID22 as string,",
+						"          SCM_MATURITY_DUR as decimal(11,0),",
+						"          SCM_SHLF_LFE_REQ_MIN as decimal(11,0),",
+						"          SCM_SHLF_LFE_REQ_MAX as decimal(11,0),",
+						"          SCM_PUOM as string,",
+						"          RMATP_PB as string,",
+						"          PROD_SHAPE as string,",
+						"          MO_PROFILE_ID as string,",
+						"          OVERHANG_TRESH as decimal(5,2),",
+						"          BRIDGE_TRESH as decimal(5,2),",
+						"          BRIDGE_MAX_SLOPE as decimal(5,2),",
+						"          HEIGHT_NONFLAT as decimal(13,3),",
+						"          HEIGHT_NONFLAT_UOM as string,",
+						"          SCM_KITCOMP as string,",
+						"          SCM_PROD_PAOOPT as string,",
+						"          SCM_BOD_DEPLVL as string,",
+						"          SCM_RESTRICT_INVBAL as string,",
+						"          SCM_DRP_GL_STOCK as string,",
+						"          SCM_EXCL_EXPEDITE as string,",
+						"          {/CWM/XCWMAT} as string,",
+						"          {/CWM/VALUM} as string,",
+						"          {/CWM/TOLGR} as string,",
+						"          {/CWM/TARA} as string,",
+						"          {/CWM/TARUM} as string,",
+						"          {/BEV1/LULEINH} as decimal(8,0),",
+						"          {/BEV1/LULDEGRP} as string,",
+						"          {/BEV1/NESTRUCCAT} as string,",
+						"          {/DSD/SL_TOLTYP} as string,",
+						"          {/DSD/SV_CNT_GRP} as string,",
+						"          {/DSD/VC_GROUP} as string,",
+						"          {/SAPMP/KADU} as decimal(7,2),",
+						"          {/SAPMP/ABMEIN} as string,",
+						"          {/SAPMP/KADP} as decimal(5,2),",
+						"          {/SAPMP/BRAD} as decimal(4,0),",
+						"          {/SAPMP/SPBI} as decimal(7,2),",
+						"          {/SAPMP/TRAD} as decimal(7,2),",
+						"          {/SAPMP/KEDU} as decimal(7,2),",
+						"          {/SAPMP/SPTR} as decimal(13,3),",
+						"          {/SAPMP/FBDK} as decimal(7,2),",
+						"          {/SAPMP/FBHK} as decimal(7,2),",
+						"          {/SAPMP/RILI} as string,",
+						"          {/SAPMP/FBAK} as string,",
+						"          {/SAPMP/AHO} as decimal(3,0),",
+						"          {/SAPMP/MIFRR} as decimal(7,2),",
+						"          {/STTPEC/SERTYPE} as decimal(3,0),",
+						"          {/STTPEC/SYNCACT} as string,",
+						"          {/STTPEC/SYNCTIME} as decimal(15,0),",
+						"          {/STTPEC/SYNCCHG} as string,",
+						"          {/STTPEC/COUNTRY_REF} as string,",
+						"          {/STTPEC/PRDCAT} as string,",
+						"          {/VSO/R_TILT_IND} as string,",
+						"          {/VSO/R_STACK_IND} as string,",
+						"          {/VSO/R_BOT_IND} as string,",
+						"          {/VSO/R_TOP_IND} as string,",
+						"          {/VSO/R_STACK_NO} as decimal(3,0),",
+						"          {/VSO/R_PAL_IND} as string,",
+						"          {/VSO/R_PAL_OVR_D} as decimal(13,3),",
+						"          {/VSO/R_PAL_OVR_W} as decimal(13,3),",
+						"          {/VSO/R_PAL_B_HT} as decimal(13,3),",
+						"          {/VSO/R_PAL_MIN_H} as decimal(13,3),",
+						"          {/VSO/R_TOL_B_HT} as decimal(13,3),",
+						"          {/VSO/R_NO_P_GVH} as decimal(2,0),",
+						"          {/VSO/R_QUAN_UNIT} as string,",
+						"          {/VSO/R_KZGVH_IND} as string,",
+						"          PACKCODE as string,",
+						"          DG_PACK_STATUS as string,",
+						"          SRV_DURA as decimal(13,3),",
+						"          SRV_DURA_UOM as string,",
+						"          SRV_SERWI as string,",
+						"          SRV_ESCAL as string,",
+						"          SOM_CYCLE as string,",
+						"          SOM_CYCLE_RULE as string,",
+						"          SOM_TC_SCHEMA as string,",
+						"          SOM_CTR_AUTORENEWAL as string,",
+						"          MCOND as string,",
+						"          RETDELC as string,",
+						"          LOGLEV_RETO as string,",
+						"          NSNID as string,",
+						"          ICFA as string,",
+						"          RIC_ID as decimal(19,0),",
+						"          DFS_SENSITIVITY_KEY as string,",
+						"          DFS_MFRP2 as string,",
+						"          OVLPN as string,",
+						"          ADSPC_SPC as decimal(1,0),",
+						"          VARID as string,",
+						"          MSBOOKPARTNO as string,",
+						"          TOLERANCE_TYPE as string,",
+						"          DPCBT as string,",
+						"          XGRDT as string,",
+						"          IMATN as string,",
+						"          PICNUM as string,",
+						"          BSTAT as string,",
+						"          COLOR_ATINN as decimal(10,0),",
+						"          SIZE1_ATINN as decimal(10,0),",
+						"          SIZE2_ATINN as decimal(10,0),",
+						"          COLOR as string,",
+						"          SIZE1 as string,",
+						"          SIZE2 as string,",
+						"          FREE_CHAR as string,",
+						"          CARE_CODE as string,",
+						"          BRAND_ID as string,",
+						"          FIBER_CODE1 as string,",
+						"          FIBER_PART1 as decimal(3,0),",
+						"          FIBER_CODE2 as string,",
+						"          FIBER_PART2 as decimal(3,0),",
+						"          FIBER_CODE3 as string,",
+						"          FIBER_PART3 as decimal(3,0),",
+						"          FIBER_CODE4 as string,",
+						"          FIBER_PART4 as decimal(3,0),",
+						"          FIBER_CODE5 as string,",
+						"          FIBER_PART5 as decimal(3,0),",
+						"          FASHGRD as string",
+						"     ),",
+						"     deletable:true,",
+						"     insertable:true,",
+						"     updateable:true,",
+						"     upsertable:true,",
+						"     keys:[('MATNR')],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     stageInsert: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]",
+				"[concat(variables('factoryId'), '/datasets/SnowflakeMARA')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_sap_cdc')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1416,7 +5550,7 @@
 							},
 							"name": "sink1",
 							"rejectedDataLinkedService": {
-								"referenceName": "AzureDataLakeStorageLocal",
+								"referenceName": "AzureDataLakeStorage1",
 								"type": "LinkedServiceReference"
 							}
 						}
@@ -1436,9 +5570,6 @@
 						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     truncate: true,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
 						"     preCommands: [],",
 						"     postCommands: []) ~> sink1"
 					]
@@ -1447,7 +5578,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_sap_odp')]",
 				"[concat(variables('factoryId'), '/datasets/ds_adls_parquet_002')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorageLocal')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
 			]
 		},
 		{

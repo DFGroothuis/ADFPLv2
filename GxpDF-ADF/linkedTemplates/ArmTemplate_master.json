@@ -15,27 +15,19 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
 		},
-		"AzureDataLakeStorageLocal_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageLocal'"
-		},
 		"SAP_ODP_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SAP_ODP'"
-		},
-		"SapTable1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SapTable1'"
 		},
 		"SapTableLocal_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SapTableLocal'"
 		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
+		"ls_snowflake_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_snowflake'"
 		},
-		"AzureDataLakeStorageLocal_properties_typeProperties_url": {
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://gxpdfdatalake.dfs.core.windows.net/"
 		},
@@ -55,22 +47,6 @@
 			"type": "string",
 			"defaultValue": "00"
 		},
-		"SapTable1_properties_typeProperties_clientId": {
-			"type": "string",
-			"defaultValue": "200"
-		},
-		"SapTable1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "NL22511"
-		},
-		"SapTable1_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "10.134.4.62"
-		},
-		"SapTable1_properties_typeProperties_systemNumber": {
-			"type": "string",
-			"defaultValue": "00"
-		},
 		"SapTableLocal_properties_typeProperties_clientId": {
 			"type": "string",
 			"defaultValue": "200"
@@ -86,6 +62,10 @@
 		"SapTableLocal_properties_typeProperties_systemNumber": {
 			"type": "string",
 			"defaultValue": "00"
+		},
+		"ls_rest_faers_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.fda.gov/drug/event.json"
 		},
 		"AzureDataLakeStorage526_properties_privateLinkResourceId": {
 			"type": "string",
@@ -131,20 +111,17 @@
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
+					"ls_snowflake_connectionString": {
+						"value": "[parameters('ls_snowflake_connectionString')]"
+					},
 					"SAP_ODP_password": {
 						"value": "[parameters('SAP_ODP_password')]"
-					},
-					"SapTable1_password": {
-						"value": "[parameters('SapTable1_password')]"
 					},
 					"SapTableLocal_password": {
 						"value": "[parameters('SapTableLocal_password')]"
 					},
-					"AzureDataLakeStorage1_accountKey": {
-						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
-					},
-					"AzureDataLakeStorageLocal_accountKey": {
-						"value": "[parameters('AzureDataLakeStorageLocal_accountKey')]"
+					"ls_rest_faers_properties_typeProperties_url": {
+						"value": "[parameters('ls_rest_faers_properties_typeProperties_url')]"
 					},
 					"SAP_ODP_properties_typeProperties_clientId": {
 						"value": "[parameters('SAP_ODP_properties_typeProperties_clientId')]"
@@ -158,18 +135,6 @@
 					"SAP_ODP_properties_typeProperties_systemNumber": {
 						"value": "[parameters('SAP_ODP_properties_typeProperties_systemNumber')]"
 					},
-					"SapTable1_properties_typeProperties_clientId": {
-						"value": "[parameters('SapTable1_properties_typeProperties_clientId')]"
-					},
-					"SapTable1_properties_typeProperties_userName": {
-						"value": "[parameters('SapTable1_properties_typeProperties_userName')]"
-					},
-					"SapTable1_properties_typeProperties_server": {
-						"value": "[parameters('SapTable1_properties_typeProperties_server')]"
-					},
-					"SapTable1_properties_typeProperties_systemNumber": {
-						"value": "[parameters('SapTable1_properties_typeProperties_systemNumber')]"
-					},
 					"SapTableLocal_properties_typeProperties_clientId": {
 						"value": "[parameters('SapTableLocal_properties_typeProperties_clientId')]"
 					},
@@ -181,21 +146,6 @@
 					},
 					"SapTableLocal_properties_typeProperties_systemNumber": {
 						"value": "[parameters('SapTableLocal_properties_typeProperties_systemNumber')]"
-					},
-					"AzureDataLakeStorage526_properties_privateLinkResourceId": {
-						"value": "[parameters('AzureDataLakeStorage526_properties_privateLinkResourceId')]"
-					},
-					"AzureDataLakeStorage526_properties_groupId": {
-						"value": "[parameters('AzureDataLakeStorage526_properties_groupId')]"
-					},
-					"AzureDataLakeStorage526_properties_fqdns": {
-						"value": "[parameters('AzureDataLakeStorage526_properties_fqdns')]"
-					},
-					"AzureDataLakeStorage1_properties_typeProperties_url": {
-						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
-					},
-					"AzureDataLakeStorageLocal_properties_typeProperties_url": {
-						"value": "[parameters('AzureDataLakeStorageLocal_properties_typeProperties_url')]"
 					}
 				}
 			},
@@ -214,11 +164,46 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"AzureDataLakeStorage526_properties_privateLinkResourceId": {
+						"value": "[parameters('AzureDataLakeStorage526_properties_privateLinkResourceId')]"
+					},
+					"AzureDataLakeStorage526_properties_groupId": {
+						"value": "[parameters('AzureDataLakeStorage526_properties_groupId')]"
+					},
+					"AzureDataLakeStorage526_properties_fqdns": {
+						"value": "[parameters('AzureDataLakeStorage526_properties_fqdns')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'GxpDF-ADF_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "GxpDF-ADF_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'GxpDF-ADF_ArmTemplate_1')]"
 			]
 		}
 	]
