@@ -42,7 +42,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_sap_table1",
+						"referenceName": "ds_sap_table",
 						"type": "DatasetReference",
 						"parameters": {
 							"table_name": {
