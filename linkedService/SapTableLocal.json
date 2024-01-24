@@ -1,5 +1,5 @@
 {
-	"name": "SapTableLocal",
+	"name": "ls_sap",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"annotations": [],
