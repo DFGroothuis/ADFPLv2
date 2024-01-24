@@ -7,7 +7,10 @@
 		},
 		"annotations": [],
 		"type": "SapTableResource",
-		"schema": []
+		"schema": [],
+		"typeProperties": {
+			"tableName": "MARA"
+		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
