@@ -3,7 +3,10 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_snowflake",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"database": "D3010_DEV_BRONZE_RAW"
+			}
 		},
 		"annotations": [],
 		"type": "SnowflakeTable",
