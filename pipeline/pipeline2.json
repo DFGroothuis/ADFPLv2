@@ -19,7 +19,7 @@
 						"type": "ParquetSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"fileListPath": "*",
+							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
