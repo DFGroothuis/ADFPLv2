@@ -1,5 +1,5 @@
 {
-	"name": "ls_sap",
+	"name": "ls_sap_",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"parameters": {
