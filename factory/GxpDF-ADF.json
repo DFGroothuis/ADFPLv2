@@ -9,6 +9,10 @@
 			"sf_warehouse": {
 				"type": "string",
 				"value": "D3010_DEV_BRONZE_RAW"
+			},
+			"sap_servername": {
+				"type": "string",
+				"value": "bfeslsd.solco.global.nttdata.com"
 			}
 		},
 		"globalConfigurations": {
