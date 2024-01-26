@@ -9,7 +9,19 @@
 			"table_name": {
 				"type": "string"
 			},
+			"server_name": {
+				"type": "string"
+			},
 			"system_number": {
+				"type": "string"
+			},
+			"client_id": {
+				"type": "string"
+			},
+			"language": {
+				"type": "string"
+			},
+			"user_name": {
 				"type": "string"
 			}
 		},

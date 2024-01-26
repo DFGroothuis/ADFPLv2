@@ -139,6 +139,26 @@
 										"table_name": {
 											"value": "DD03M",
 											"type": "Expression"
+										},
+										"server_name": {
+											"value": "@pipeline().globalParameters.sap_servername",
+											"type": "Expression"
+										},
+										"system_number": {
+											"value": "@pipeline().globalParameters.sap_systemnumber",
+											"type": "Expression"
+										},
+										"client_id": {
+											"value": "@pipeline().globalParameters.sap_clientid",
+											"type": "Expression"
+										},
+										"language": {
+											"value": "@pipeline().globalParameters.sap_language",
+											"type": "Expression"
+										},
+										"user_name": {
+											"value": "@pipeline().globalParameters.sap_username",
+											"type": "Expression"
 										}
 									}
 								}
