@@ -5,14 +5,7 @@
 			{
 				"name": "Copy data1",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -23,34 +16,22 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
-						"additionalColumns": [
-							{
-								"name": "@pipeline().TriggerTime",
-								"value": {
-									"value": "@pipeline().TriggerTime",
-									"type": "Expression"
-								}
-							}
-						],
+						"type": "ParquetSource",
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
+							"type": "AzureBlobFSReadSettings",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+							"type": "ParquetReadSettings"
 						}
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "ParquetSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
+							"type": "ParquetWriteSettings"
 						}
 					},
 					"enableStaging": false,
@@ -65,53 +46,52 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_deltext_exec",
-						"type": "DatasetReference"
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Staging",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": {
+								"value": "MARA",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_deltext_exec",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
-				"name": "Lookup1",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"dataset": {
-						"referenceName": "DelimitedText2",
+						"referenceName": "ds_adls_parquet_001",
 						"type": "DatasetReference",
 						"parameters": {
-							"pipeline": {
-								"value": "@pipeline().Pipeline",
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Archive",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": {
+								"value": "MARA",
 								"type": "Expression"
 							}
 						}
-					},
-					"firstRowOnly": true
-				}
+					}
+				]
 			}
 		],
 		"variables": {

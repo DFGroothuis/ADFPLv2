@@ -22,15 +22,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Zone": "Staging",
-						"EnvStorage": {
-							"value": "@pipeline().globalParameters.gp_adls_environment",
-							"type": "Expression"
-						},
 						"DataSource": "SAP",
-						"EnvRegSys": {
-							"value": "@pipeline().globalParameters.gp_adls_envregsys",
-							"type": "Expression"
-						},
 						"Domain": "MaterialManagement",
 						"Object": "Material",
 						"table": {
@@ -203,6 +195,104 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Script1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Staging",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": {
+								"value": "@pipeline().parameters.table_name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Archive",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": {
+								"value": "@pipeline().parameters.table_name",
+								"type": "Expression"
+							}
+						}
+					}
+				]
 			}
 		],
 		"parameters": {
