@@ -21,6 +21,10 @@
 			"sap_username": {
 				"type": "string",
 				"value": "nl35167"
+			},
+			"sap_systemnumber": {
+				"type": "string",
+				"value": "00"
 			}
 		},
 		"globalConfigurations": {
