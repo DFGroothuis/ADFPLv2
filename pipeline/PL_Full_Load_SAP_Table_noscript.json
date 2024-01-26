@@ -1,5 +1,5 @@
 {
-	"name": "PL_Full_Load_SAP_Table1",
+	"name": "PL_Full_Load_SAP_Table_noscript",
 	"properties": {
 		"activities": [
 			{

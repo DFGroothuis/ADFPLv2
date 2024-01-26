@@ -21,7 +21,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "PL_Full_Load_SAP_Table1",
+									"referenceName": "PL_Full_Load_SAP_Table_noscript",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
