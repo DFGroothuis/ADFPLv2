@@ -141,23 +141,23 @@
 											"type": "Expression"
 										},
 										"server_name": {
-											"value": "@pipeline().globalParameters.sap_servername",
+											"value": "@pipeline().globalParameters.gp_sap_servername",
 											"type": "Expression"
 										},
 										"system_number": {
-											"value": "@pipeline().globalParameters.sap_systemnumber",
+											"value": "@pipeline().globalParameters.gp_sap_systemnumber",
 											"type": "Expression"
 										},
 										"client_id": {
-											"value": "@pipeline().globalParameters.sap_clientid",
+											"value": "@pipeline().globalParameters.gp_sap_clientid",
 											"type": "Expression"
 										},
 										"language": {
-											"value": "@pipeline().globalParameters.sap_language",
+											"value": "@pipeline().globalParameters.gp_sap_language",
 											"type": "Expression"
 										},
 										"user_name": {
-											"value": "@pipeline().globalParameters.sap_username",
+											"value": "@pipeline().globalParameters.gp_sap_username",
 											"type": "Expression"
 										}
 									}

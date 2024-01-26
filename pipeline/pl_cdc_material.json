@@ -15,12 +15,15 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"EnvStorage": {
-							"value": "@pipeline().globalParameters.environment",
+							"value": "@pipeline().globalParameters.gp_adls_environment",
 							"type": "Expression"
 						},
 						"Zone": "Staging",
 						"DataSource": "SAP",
-						"EnvRegSys": "DEVNL200",
+						"EnvRegSys": {
+							"value": "@pipeline().globalParameters.gp_adls_envregsys",
+							"type": "Expression"
+						},
 						"Domain": "MaterialManagement",
 						"Object": "Material",
 						"CDS": "IPRODUCT",
