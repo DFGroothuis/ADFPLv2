@@ -5,6 +5,10 @@
 			"environment": {
 				"type": "string",
 				"value": "dev"
+			},
+			"sf_warehouse": {
+				"type": "string",
+				"value": "D3010_DEV_BRONZE_RAW"
 			}
 		},
 		"globalConfigurations": {
