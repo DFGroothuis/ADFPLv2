@@ -2,7 +2,7 @@
 	"name": "SAPTableSource_Incremental",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_sap",
+			"referenceName": "ls_sap_table",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {

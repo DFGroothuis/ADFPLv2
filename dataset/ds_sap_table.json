@@ -2,8 +2,30 @@
 	"name": "ds_sap_table",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_sap",
-			"type": "LinkedServiceReference"
+			"referenceName": "ls_sap_table",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"server_name": {
+					"value": "@dataset().server_name",
+					"type": "Expression"
+				},
+				"system_number": {
+					"value": "@dataset().system_number",
+					"type": "Expression"
+				},
+				"client_id": {
+					"value": "@dataset().client_id",
+					"type": "Expression"
+				},
+				"language": {
+					"value": "@dataset().language",
+					"type": "Expression"
+				},
+				"user_name": {
+					"value": "@dataset().user_name",
+					"type": "Expression"
+				}
+			}
 		},
 		"parameters": {
 			"table_name": {

@@ -43,15 +43,43 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
-						"referenceName": "SAPTableSource_Incremental",
+						"referenceName": "ds_sap_table",
 						"type": "DatasetReference",
 						"parameters": {
-							"SapTableName": {
+							"table_name": {
 								"value": "@pipeline().parameters.SapTableName",
+								"type": "Expression"
+							},
+							"server_name": {
+								"value": "@pipeline().globalParameters.sap_servername",
+								"type": "Expression"
+							},
+							"system_number": {
+								"value": "@pipeline().globalParameters.sap_systemnumber",
+								"type": "Expression"
+							},
+							"client_id": {
+								"value": "@pipeline().globalParameters.sap_clientid",
+								"type": "Expression"
+							},
+							"language": {
+								"value": "@pipeline().globalParameters.sap_language",
+								"type": "Expression"
+							},
+							"user_name": {
+								"value": "@pipeline().globalParameters.sap_username",
 								"type": "Expression"
 							}
 						}
@@ -139,13 +167,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"url": {
-						"value": "@pipeline().parameters.LogicAppURL",
-						"type": "Expression"
-					},
 					"method": "POST",
 					"headers": {
 						"Content-Type": "application/json"
+					},
+					"url": {
+						"value": "@pipeline().parameters.LogicAppURL",
+						"type": "Expression"
 					},
 					"body": {
 						"value": "{\"copiedDate\":\"@{pipeline().TriggerTime}\"",
