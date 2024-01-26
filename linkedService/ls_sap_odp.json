@@ -5,19 +5,34 @@
 		"parameters": {
 			"subscriber": {
 				"type": "string"
+			},
+			"server_name": {
+				"type": "string"
+			},
+			"system_number": {
+				"type": "string"
+			},
+			"client_id": {
+				"type": "string"
+			},
+			"language": {
+				"type": "string"
+			},
+			"user_name": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "SapOdp",
 		"typeProperties": {
-			"clientId": "200",
-			"language": "EN",
+			"clientId": "@{linkedService().client_id}",
+			"language": "@{linkedService().language}",
 			"sncMode": false,
-			"userName": "NL35167",
+			"userName": "@{linkedService().user_name}",
 			"subscriberName": "@{linkedService().subscriber}",
-			"server": "bfeslsd.solco.global.nttdata.com",
-			"systemNumber": "00",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhY2M0OTIxNi0yMjE2LTQzODctYmY2Mi1iZjllZDhjYjJkMWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"server": "@{linkedService().server_name}",
+			"systemNumber": "@{linkedService().system_number}",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhNWFjNjllNi0xZTNhLTRiMzAtOGRiYy03MzQxZDAyMGY0NzUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "IRLocal",
