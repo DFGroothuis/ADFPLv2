@@ -47,7 +47,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_adls_parquet_001",
+						"referenceName": "ds_adls_parquet_001_copy1",
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
@@ -62,23 +62,23 @@
 							},
 							"Domain": "MaterialManagement",
 							"Object": "Material",
-							"Table": {
-								"value": "MARA",
-								"type": "Expression"
-							}
+							"Table": "MARA"
 						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_adls_parquet_001",
+						"referenceName": "ds_adls_parquet_001_copy1",
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
 								"value": "@pipeline().globalParameters.gp_adls_environment",
 								"type": "Expression"
 							},
-							"Zone": "Archive",
+							"Zone": {
+								"value": "Staging",
+								"type": "Expression"
+							},
 							"DataSource": "SAP",
 							"EnvRegSys": {
 								"value": "@pipeline().globalParameters.gp_adls_envregsys",
@@ -86,10 +86,7 @@
 							},
 							"Domain": "MaterialManagement",
 							"Object": "Material",
-							"Table": {
-								"value": "MARA",
-								"type": "Expression"
-							}
+							"Table": "MARA"
 						}
 					}
 				]

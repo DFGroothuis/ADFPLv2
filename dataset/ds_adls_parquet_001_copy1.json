@@ -1,0 +1,50 @@
+{
+	"name": "ds_adls_parquet_001_copy1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"EnvStorage": {
+				"type": "String"
+			},
+			"Zone": {
+				"type": "string"
+			},
+			"DataSource": {
+				"type": "string"
+			},
+			"EnvRegSys": {
+				"type": "string"
+			},
+			"Domain": {
+				"type": "string"
+			},
+			"Object": {
+				"type": "string"
+			},
+			"Table": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().Table)",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().EnvStorage",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
