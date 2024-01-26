@@ -80,7 +80,7 @@
 								"type": "Expression"
 							},
 							"Zone": {
-								"value": "Staging",
+								"value": "Archive",
 								"type": "Expression"
 							},
 							"DataSource": "SAP",
