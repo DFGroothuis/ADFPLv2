@@ -17,6 +17,10 @@
 			"sap_clientid": {
 				"type": "string",
 				"value": "200"
+			},
+			"sap_username": {
+				"type": "string",
+				"value": "nl35167"
 			}
 		},
 		"globalConfigurations": {
