@@ -2,31 +2,31 @@
 	"name": "GxpDF-ADF",
 	"properties": {
 		"globalParameters": {
-			"environment": {
+			"gp_adls_environment": {
 				"type": "string",
 				"value": "dev"
 			},
-			"sf_warehouse": {
+			"gp_sf_warehouse": {
 				"type": "string",
 				"value": "D3010_DEV_BRONZE_RAW"
 			},
-			"sap_servername": {
+			"gp_sap_servername": {
 				"type": "string",
 				"value": "bfeslsd.solco.global.nttdata.com"
 			},
-			"sap_clientid": {
+			"gp_sap_clientid": {
 				"type": "string",
 				"value": "200"
 			},
-			"sap_username": {
+			"gp_sap_username": {
 				"type": "string",
 				"value": "nl35167"
 			},
-			"sap_systemnumber": {
+			"gp_sap_systemnumber": {
 				"type": "string",
 				"value": "00"
 			},
-			"sap_language": {
+			"gp_sap_language": {
 				"type": "string",
 				"value": "EN"
 			},
