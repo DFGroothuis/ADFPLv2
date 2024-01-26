@@ -32,9 +32,18 @@
 										"type": "Expression"
 									},
 									"DataSource": "SAP",
-									"EnvRegSys": "DEVNL200",
-									"Domain": "Purchase",
-									"Object": "PurchaseOrder",
+									"EnvRegSys": {
+										"value": "@pipeline().globalParameters.gp_adls_envregsys",
+										"type": "Expression"
+									},
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
 									"table": {
 										"value": "@item()",
 										"type": "Expression"
@@ -46,6 +55,16 @@
 				}
 			}
 		],
+		"parameters": {
+			"Domain": {
+				"type": "string",
+				"defaultValue": "Purchase"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "PurchaseOrder"
+			}
+		},
 		"variables": {
 			"table": {
 				"type": "Array",

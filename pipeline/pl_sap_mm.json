@@ -28,11 +28,14 @@
 								"parameters": {
 									"Zone": "Staging",
 									"EnvStorage": {
-										"value": "@pipeline().globalParameters.environment",
+										"value": "@pipeline().globalParameters.gp_adls_environment",
 										"type": "Expression"
 									},
 									"DataSource": "SAP",
-									"EnvRegSys": "DEVNL200",
+									"EnvRegSys": {
+										"value": "@pipeline().globalParameters.gp_adls_envregsys",
+										"type": "Expression"
+									},
 									"Domain": "MaterialManagement",
 									"Object": "Material",
 									"table": {

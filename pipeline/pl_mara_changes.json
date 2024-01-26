@@ -160,11 +160,6 @@
 				]
 			}
 		],
-		"variables": {
-			"lastdate": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "PL CDC Table"
 		},

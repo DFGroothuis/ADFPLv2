@@ -199,7 +199,10 @@
 								"referenceName": "ls_snowflake",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"database": "D3010_DEV_BRONZE_RAW"
+									"database": {
+										"value": "@pipeline().globalParameters.gp_sf_warehouse",
+										"type": "Expression"
+									}
 								}
 							},
 							"typeProperties": {
@@ -207,7 +210,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('CALL D3010_DEV_BRONZE_RAW.PUBLIC.create_table_sql_from_meta( ''D1010_PROD_BRONZE_RAW'', ''SAP_S4H_LSD200'',''', item(), ''');' )",
+											"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_warehouse, '.PUBLIC.create_table_sql_from_meta( ''', pipeline().globalParameters.gp_sf_warehouse,''', ''SAP_S4H_LSD200'',''', item(), ''');' )",
 											"type": "Expression"
 										}
 									}
