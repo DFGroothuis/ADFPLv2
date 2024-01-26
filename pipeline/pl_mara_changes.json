@@ -33,7 +33,10 @@
 						},
 						"Domain": "MaterialManagement",
 						"Object": "Material",
-						"table": "MARA",
+						"table": {
+							"value": "@pipeline().parameters.table_name",
+							"type": "Expression"
+						},
 						"ChangeDateColumn": "LAEDA",
 						"LastExecDate": {
 							"value": "@formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd')",
@@ -158,8 +161,56 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_snowflake",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"database": {
+							"value": "@pipeline().globalParameters.gp_sf_warehouse",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_warehouse,'.PUBLIC.COPY_DATA_FROM_STAGE(''', pipeline().globalParameters.gp_sf_warehouse, ''' ,''SAP_S4H_LSD200'',''', pipeline().parameters.table_name, ''', ''SAP/DEVNL200/MaterialManagement/Material/'');')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
 			}
 		],
+		"parameters": {
+			"table_name": {
+				"type": "string",
+				"defaultValue": "MARA"
+			}
+		},
 		"folder": {
 			"name": "PL CDC Table"
 		},
