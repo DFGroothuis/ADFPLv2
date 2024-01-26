@@ -29,6 +29,10 @@
 			"sap_language": {
 				"type": "string",
 				"value": "EN"
+			},
+			"gp_adls_envregsys": {
+				"type": "string",
+				"value": "DEVNL200"
 			}
 		},
 		"globalConfigurations": {
