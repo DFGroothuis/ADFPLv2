@@ -2,16 +2,33 @@
 	"name": "ls_sap",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"parameters": {
+			"server_name": {
+				"type": "string"
+			},
+			"system_number": {
+				"type": "string"
+			},
+			"client_id": {
+				"type": "string"
+			},
+			"language": {
+				"type": "string"
+			},
+			"user_name": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SapTable",
 		"typeProperties": {
-			"clientId": "200",
-			"language": "EN",
+			"clientId": "@{linkedService().client_id}",
+			"language": "@{linkedService().language}",
 			"sncMode": false,
-			"userName": "NL35167",
-			"server": "bfeslsd.solco.global.nttdata.com",
-			"systemNumber": "00",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjMzAxYzNiZi0xMTdlLTQ3YTctYmU2YS0xYThjOWRlYzhiYTciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userName": "@{linkedService().user_name}",
+			"server": "@{linkedService().server_name}",
+			"systemNumber": "@{linkedService().system_number}",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiMzBiYTRjOS05MDY3LTQxZjktYTJkYy01YzQ5MDFkNDEyNWUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "IRLocal",
