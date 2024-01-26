@@ -13,6 +13,10 @@
 			"sap_servername": {
 				"type": "string",
 				"value": "bfeslsd.solco.global.nttdata.com"
+			},
+			"sap_clientid": {
+				"type": "string",
+				"value": "200"
 			}
 		},
 		"globalConfigurations": {
