@@ -8,6 +8,9 @@
 		"parameters": {
 			"table_name": {
 				"type": "string"
+			},
+			"system_number": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
