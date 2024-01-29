@@ -81,7 +81,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
-								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"value": "@pipeline().parameters.EnvStorage",
 								"type": "Expression"
 							},
 							"Zone": {
@@ -93,7 +93,7 @@
 								"type": "Expression"
 							},
 							"EnvRegSys": {
-								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"value": "@pipeline().parameters.EnvRegSys",
 								"type": "Expression"
 							},
 							"Domain": {
@@ -117,7 +117,13 @@
 			"Zone": {
 				"type": "string"
 			},
+			"EnvStorage": {
+				"type": "string"
+			},
 			"DataSource": {
+				"type": "string"
+			},
+			"EnvRegSys": {
 				"type": "string"
 			},
 			"Domain": {
