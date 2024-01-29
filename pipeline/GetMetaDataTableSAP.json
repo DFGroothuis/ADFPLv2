@@ -200,9 +200,11 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"database": {
-										"value": "@pipeline().globalParameters.gp_sf_warehouse",
+										"value": "@pipeline().globalParameters.gp_sf_database",
 										"type": "Expression"
-									}
+									},
+									"warehouse": "INGEST_DEV_WH",
+									"role": "INGEST_DEV"
 								}
 							},
 							"typeProperties": {
@@ -210,7 +212,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_warehouse, '.PUBLIC.create_table_sql_from_meta( ''', pipeline().globalParameters.gp_sf_warehouse,''', ''SAP_S4H_LSD200'',''', item(), ''');' )",
+											"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database, '.PUBLIC.create_table_sql_from_meta( ''', pipeline().globalParameters.gp_sf_database,''', ''SAP_S4H_LSD200'',''', item(), ''');' )",
 											"type": "Expression"
 										}
 									}
