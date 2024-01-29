@@ -5,7 +5,9 @@
 			"referenceName": "ls_snowflake",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"database": "D3010_DEV_BRONZE_RAW"
+				"database": "D3010_DEV_BRONZE_RAW",
+				"warehouse": "INGEST_DEV_WH",
+				"role": "INGEST_DEV"
 			}
 		},
 		"annotations": [],

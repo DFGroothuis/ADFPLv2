@@ -180,6 +180,14 @@
 						"database": {
 							"value": "@pipeline().globalParameters.gp_sf_warehouse",
 							"type": "Expression"
+						},
+						"warehouse": {
+							"value": "@pipeline().globalParameters.gp_sf_warehouse",
+							"type": "Expression"
+						},
+						"role": {
+							"value": "@pipeline().globalParameters.gp_sf_role",
+							"type": "Expression"
 						}
 					}
 				},
@@ -296,6 +304,54 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Delete1",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Staging",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": "MARA"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*parquet",
+						"enablePartitionDiscovery": false
+					}
+				}
 			}
 		],
 		"parameters": {
