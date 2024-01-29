@@ -203,8 +203,14 @@
 										"value": "@pipeline().globalParameters.gp_sf_database",
 										"type": "Expression"
 									},
-									"warehouse": "INGEST_DEV_WH",
-									"role": "INGEST_DEV"
+									"warehouse": {
+										"value": "@pipeline().globalParameters.gp_sf_wh_ingest",
+										"type": "Expression"
+									},
+									"role": {
+										"value": "@pipeline().globalParameters.gp_sf_role",
+										"type": "Expression"
+									}
 								}
 							},
 							"typeProperties": {

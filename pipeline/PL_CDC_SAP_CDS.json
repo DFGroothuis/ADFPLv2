@@ -53,27 +53,27 @@
 							},
 							"sink1": {
 								"EnvStorage": {
-									"value": "@pipeline().parameters.EnvStorage",
+									"value": "@pipeline().globalParameters.gp_adls_environment",
 									"type": "Expression"
 								},
 								"Zone": {
-									"value": "@pipeline().parameters.Zone",
+									"value": "Staging",
 									"type": "Expression"
 								},
 								"DataSource": {
-									"value": "@pipeline().parameters.DataSource",
+									"value": "SAP",
 									"type": "Expression"
 								},
 								"EnvRegSys": {
-									"value": "@pipeline().parameters.EnvRegSys",
+									"value": "@pipeline().globalParameters.gp_adls_envregsys",
 									"type": "Expression"
 								},
 								"Domain": {
-									"value": "@pipeline().parameters.Domain",
+									"value": "MaterialManagement",
 									"type": "Expression"
 								},
 								"Object": {
-									"value": "@pipeline().parameters.Object",
+									"value": "Material",
 									"type": "Expression"
 								},
 								"CDS": {
@@ -102,24 +102,6 @@
 			}
 		],
 		"parameters": {
-			"EnvStorage": {
-				"type": "string"
-			},
-			"Zone": {
-				"type": "string"
-			},
-			"DataSource": {
-				"type": "string"
-			},
-			"EnvRegSys": {
-				"type": "string"
-			},
-			"Domain": {
-				"type": "string"
-			},
-			"Object": {
-				"type": "string"
-			},
 			"CDS": {
 				"type": "string"
 			},
