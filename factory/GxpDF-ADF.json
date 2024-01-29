@@ -37,6 +37,10 @@
 			"gp_sf_wh_ingest": {
 				"type": "string",
 				"value": "INGEST_DEV_WH"
+			},
+			"gp_sf_role": {
+				"type": "string",
+				"value": "INGEST_DEV"
 			}
 		},
 		"globalConfigurations": {
