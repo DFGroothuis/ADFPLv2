@@ -6,7 +6,7 @@
 				"type": "string",
 				"value": "dev"
 			},
-			"gp_sf_warehouse": {
+			"gp_sf_database": {
 				"type": "string",
 				"value": "D3010_DEV_BRONZE_RAW"
 			},
