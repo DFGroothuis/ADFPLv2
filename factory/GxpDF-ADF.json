@@ -33,6 +33,10 @@
 			"gp_adls_envregsys": {
 				"type": "string",
 				"value": "DEVNL200"
+			},
+			"gp_sf_wh_ingest": {
+				"type": "string",
+				"value": "INGEST_DEV_WH"
 			}
 		},
 		"globalConfigurations": {
