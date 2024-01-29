@@ -220,11 +220,14 @@
 						"type": "ParquetSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*parquet",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
 							"type": "ParquetReadSettings"
-						}
+						},
+						"deleteFilesAfterCompletion": true
 					},
 					"sink": {
 						"type": "ParquetSink",
@@ -293,22 +296,6 @@
 						}
 					}
 				]
-			},
-			{
-				"name": "Delete1",
-				"type": "Delete",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"enableLogging": true
-				}
 			}
 		],
 		"parameters": {
