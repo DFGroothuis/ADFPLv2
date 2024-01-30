@@ -1,12 +1,12 @@
 {
-	"name": "sapTableLocal",
+	"name": "SAPTableSource_Incremental",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SapTableLocal",
+			"referenceName": "ls_sap_table",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"table_name": {
+			"SapTableName": {
 				"type": "string"
 			}
 		},
@@ -15,10 +15,9 @@
 		"schema": [],
 		"typeProperties": {
 			"tableName": {
-				"value": "@dataset().table_name",
+				"value": "@dataset().SapTableName",
 				"type": "Expression"
 			}
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

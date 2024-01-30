@@ -1,0 +1,70 @@
+{
+	"name": "pl_sap_purchaseorder",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachTable",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('table')",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Execute Full Table Load",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_Full_Load_SAP_Table",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Zone": "Staging",
+									"EnvStorage": {
+										"value": "@pipeline().globalParameters.gp_adls_environment",
+										"type": "Expression"
+									},
+									"DataSource": "SAP",
+									"EnvRegSys": {
+										"value": "@pipeline().globalParameters.gp_adls_envregsys",
+										"type": "Expression"
+									},
+									"Domain": "PurchaseOrderDomain",
+									"Object": "PurchaseOrder",
+									"table": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"table": {
+				"type": "Array",
+				"defaultValue": [
+					"EKKO",
+					"EKPO",
+					"EKET",
+					"EKBE",
+					"EKES",
+					"EKKN"
+				]
+			}
+		},
+		"folder": {
+			"name": "PL full table"
+		},
+		"annotations": []
+	}
+}

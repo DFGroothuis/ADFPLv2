@@ -1,5 +1,52 @@
 {
 	"name": "GxpDF-ADF",
+	"properties": {
+		"globalParameters": {
+			"gp_adls_environment": {
+				"type": "string",
+				"value": "dev"
+			},
+			"gp_sf_database": {
+				"type": "string",
+				"value": "D3010_DEV_BRONZE_RAW"
+			},
+			"gp_sap_servername": {
+				"type": "string",
+				"value": "bfeslsd.solco.global.nttdata.com"
+			},
+			"gp_sap_clientid": {
+				"type": "string",
+				"value": "200"
+			},
+			"gp_sap_username": {
+				"type": "string",
+				"value": "nl35167"
+			},
+			"gp_sap_systemnumber": {
+				"type": "string",
+				"value": "00"
+			},
+			"gp_sap_language": {
+				"type": "string",
+				"value": "EN"
+			},
+			"gp_adls_envregsys": {
+				"type": "string",
+				"value": "DEVNL200"
+			},
+			"gp_sf_wh_ingest": {
+				"type": "string",
+				"value": "INGEST_DEV_WH"
+			},
+			"gp_sf_role": {
+				"type": "string",
+				"value": "INGEST_DEV"
+			}
+		},
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "true"
+		}
+	},
 	"location": "westeurope",
 	"identity": {
 		"type": "SystemAssigned",

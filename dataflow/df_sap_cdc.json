@@ -1,5 +1,5 @@
 {
-	"name": "MaterialCDS",
+	"name": "df_sap_cdc",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -15,26 +15,32 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Parquet1",
+						"referenceName": "ds_adls_parquet_002",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [],
 			"scriptLines": [
+				"parameters{",
+				"     KeyFields as string[]",
+				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     staged: true,",
 				"     readMode: 'fullAndIncrementalLoad',",
-				"     keys: ['PRODUCT'],",
+				"     keys: ($KeyFields),",
 				"     format: 'sapObject',",
-				"     fixDecimalPrecision: true) ~> source1",
+				"     fixDecimalPrecision: true,",
+				"     partitionBy('hash', 1)) ~> source1",
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     preCommands: [],",
 				"     postCommands: []) ~> sink1"
 			]

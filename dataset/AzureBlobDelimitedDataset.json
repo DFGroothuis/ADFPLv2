@@ -1,0 +1,43 @@
+{
+	"name": "AzureBlobDelimitedDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"HighWatermarkBlobDirectory": {
+				"type": "string"
+			},
+			"HighWatermarkBlobName": {
+				"type": "string"
+			},
+			"HighWatermarkBlobContainer": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().HighWatermarkBlobName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().HighWatermarkBlobDirectory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().HighWatermarkBlobContainer",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

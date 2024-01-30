@@ -1,0 +1,66 @@
+{
+	"name": "ds_sap_odp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sap_odp",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"subscriber": {
+					"value": "@dataset().CDS",
+					"type": "Expression"
+				},
+				"server_name": {
+					"value": "@dataset().server_name",
+					"type": "Expression"
+				},
+				"system_number": {
+					"value": "@dataset().system_number",
+					"type": "Expression"
+				},
+				"client_id": {
+					"value": "@dataset().client_id",
+					"type": "Expression"
+				},
+				"language": {
+					"value": "@dataset().language",
+					"type": "Expression"
+				},
+				"user_name": {
+					"value": "@dataset().user_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"CDS": {
+				"type": "string"
+			},
+			"system_number": {
+				"type": "string"
+			},
+			"client_id": {
+				"type": "string"
+			},
+			"server_name": {
+				"type": "string"
+			},
+			"language": {
+				"type": "string"
+			},
+			"user_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SapOdpResource",
+		"schema": [],
+		"typeProperties": {
+			"context": "ABAP_CDS",
+			"objectName": {
+				"value": "@concat(dataset().CDS, '$P')",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

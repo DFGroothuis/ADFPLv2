@@ -1,0 +1,41 @@
+{
+	"name": "ds_adls_parquet_faers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "Staging/FAERS/AdverseEvents",
+				"container": "dev"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "MANDT",
+				"type": "UTF8"
+			},
+			{
+				"name": "MATNR",
+				"type": "UTF8"
+			},
+			{
+				"name": "SPRAS",
+				"type": "UTF8"
+			},
+			{
+				"name": "MAKTX",
+				"type": "UTF8"
+			},
+			{
+				"name": "MAKTG",
+				"type": "UTF8"
+			}
+		]
+	}
+}
