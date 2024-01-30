@@ -1,0 +1,28 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CDC_SAP_CDS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"CDS": {
+							"value": "@pipeline().parameters.table_name",
+							"type": "Expression"
+						},
+						"KeyFields": "[\"PRODUCT\"]"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
