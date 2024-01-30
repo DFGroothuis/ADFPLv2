@@ -62,7 +62,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "DelimitedText2",
+						"referenceName": "ds_adls_csv_001",
 						"type": "DatasetReference",
 						"parameters": {
 							"pipeline": {
@@ -137,7 +137,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DelimitedText2",
+						"referenceName": "ds_adls_csv_001",
 						"type": "DatasetReference",
 						"parameters": {
 							"pipeline": {
