@@ -205,7 +205,7 @@
 				}
 			},
 			{
-				"name": "Copy *parquet Staging->Archive",
+				"name": "Copy parquet Staging To Archive",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -306,11 +306,11 @@
 				]
 			},
 			{
-				"name": "Delete Copied *parquet files",
+				"name": "Delete Copied Parquet files",
 				"type": "Delete",
 				"dependsOn": [
 					{
-						"activity": "Copy *parquet Staging->Archive",
+						"activity": "Copy parquet Staging To Archive",
 						"dependencyConditions": [
 							"Succeeded"
 						]

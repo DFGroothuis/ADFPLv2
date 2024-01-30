@@ -234,7 +234,7 @@
 			"table": {
 				"type": "array",
 				"defaultValue": [
-					"MARD"
+					"IPRODUCT"
 				]
 			}
 		},
