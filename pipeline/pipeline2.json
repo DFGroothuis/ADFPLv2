@@ -23,6 +23,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"table_name": {
+				"type": "string",
+				"defaultValue": "IPRODUCT"
+			}
+		},
 		"annotations": []
 	}
 }
