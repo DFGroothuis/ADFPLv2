@@ -165,7 +165,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ds_DelText_Blob",
+									"referenceName": "ds_adls_csv_002",
 									"type": "DatasetReference",
 									"parameters": {
 										"table_filename": {

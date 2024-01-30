@@ -1,5 +1,5 @@
 {
-	"name": "ds_DelText_Blob",
+	"name": "ds_adls_csv_002",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -19,7 +19,7 @@
 					"value": "@dataset().table_filename",
 					"type": "Expression"
 				},
-				"folderPath": "sap-meta",
+				"folderPath": "meta/sap-meta",
 				"container": "dev"
 			},
 			"columnDelimiter": ";",

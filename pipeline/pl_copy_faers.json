@@ -241,7 +241,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_json_blob_faers",
+						"referenceName": "ds_adls_json_001",
 						"type": "DatasetReference"
 					}
 				]

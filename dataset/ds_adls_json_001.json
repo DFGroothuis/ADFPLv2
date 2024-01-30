@@ -1,5 +1,5 @@
 {
-	"name": "ds_json_blob_faers",
+	"name": "ds_adls_json_001",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
