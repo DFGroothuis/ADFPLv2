@@ -73,6 +73,54 @@
 				}
 			},
 			{
+				"name": "Delete Copied Parquet file",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy parquet Staging To Archive",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Staging",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": "MARA"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*parquet",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
 				"name": "Copy parquet Staging To Archive",
 				"type": "Copy",
 				"dependsOn": [
@@ -172,54 +220,6 @@
 						}
 					}
 				]
-			},
-			{
-				"name": "Delete Copied Parquet files",
-				"type": "Delete",
-				"dependsOn": [
-					{
-						"activity": "Copy parquet Staging To Archive",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "ds_adls_parquet_001",
-						"type": "DatasetReference",
-						"parameters": {
-							"EnvStorage": {
-								"value": "@pipeline().globalParameters.gp_adls_environment",
-								"type": "Expression"
-							},
-							"Zone": "Staging",
-							"DataSource": "SAP",
-							"EnvRegSys": {
-								"value": "@pipeline().globalParameters.gp_adls_envregsys",
-								"type": "Expression"
-							},
-							"Domain": "MaterialManagement",
-							"Object": "Material",
-							"Table": "MARA"
-						}
-					},
-					"enableLogging": false,
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
-						"wildcardFileName": "*parquet",
-						"enablePartitionDiscovery": false
-					}
-				}
 			}
 		],
 		"parameters": {
