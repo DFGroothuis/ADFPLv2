@@ -3,36 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_CDC_SAP_CDS",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"CDS": {
-							"value": "@pipeline().parameters.table_name",
-							"type": "Expression"
-						},
-						"KeyFields": "[\"PRODUCT\"]"
-					}
-				}
-			},
-			{
 				"name": "Call Procedure Snowflake",
 				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "Execute Pipeline1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
