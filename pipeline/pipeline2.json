@@ -3,30 +3,114 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1",
-				"type": "ExecutePipeline",
+				"name": "Execute DataFlow",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_CDC_SAP_CDS",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"CDS": {
-							"value": "@pipeline().parameters.table_name",
-							"type": "Expression"
+					"dataflow": {
+						"referenceName": "df_sap_cdc",
+						"type": "DataFlowReference",
+						"parameters": {
+							"KeyFields": {
+								"value": "@pipeline().parameters.KeyFields",
+								"type": "Expression"
+							}
 						},
-						"KeyFields": "[\"PRODUCT\"]"
+						"datasetParameters": {
+							"source1": {
+								"CDS": {
+									"value": "@pipeline().parameters.CDS",
+									"type": "Expression"
+								},
+								"system_number": {
+									"value": "@pipeline().globalParameters.gp_sap_systemnumber",
+									"type": "Expression"
+								},
+								"client_id": {
+									"value": "@pipeline().globalParameters.gp_sap_clientid",
+									"type": "Expression"
+								},
+								"server_name": {
+									"value": "@pipeline().globalParameters.gp_sap_servername",
+									"type": "Expression"
+								},
+								"language": {
+									"value": "@pipeline().globalParameters.gp_sap_language",
+									"type": "Expression"
+								},
+								"user_name": {
+									"value": "@pipeline().globalParameters.gp_sap_username",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"EnvStorage": {
+									"value": "@pipeline().globalParameters.gp_adls_environment",
+									"type": "Expression"
+								},
+								"Zone": {
+									"value": "Staging",
+									"type": "Expression"
+								},
+								"DataSource": {
+									"value": "SAP",
+									"type": "Expression"
+								},
+								"EnvRegSys": {
+									"value": "@pipeline().globalParameters.gp_adls_envregsys",
+									"type": "Expression"
+								},
+								"Domain": {
+									"value": "MaterialManagement",
+									"type": "Expression"
+								},
+								"Object": {
+									"value": "Material",
+									"type": "Expression"
+								},
+								"CDS": {
+									"value": "@pipeline().parameters.CDS",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "dev/Staging/cdc"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"continuationSettings": {
+						"customizedCheckpointKey": "9e64901c-bb64-4acb-90c7-8227ae9d46e9"
 					}
 				}
 			}
 		],
 		"parameters": {
-			"table_name": {
+			"CDS": {
 				"type": "string",
 				"defaultValue": "IPRODUCT"
+			},
+			"KeyFields": {
+				"type": "string",
+				"defaultValue": [
+					"PRODUCT"
+				]
 			}
 		},
 		"annotations": []
