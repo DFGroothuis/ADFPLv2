@@ -1,0 +1,238 @@
+{
+	"name": "pl_cdc_material_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CDC_SAP_CDS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"CDS": {
+							"value": "@pipeline().parameters.table_name",
+							"type": "Expression"
+						},
+						"KeyFields": "[\"PRODUCT\"]"
+					}
+				}
+			},
+			{
+				"name": "Call Procedure Snowflake",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_snowflake",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"database": {
+							"value": "@pipeline().globalParameters.gp_sf_database",
+							"type": "Expression"
+						},
+						"warehouse": {
+							"value": "@pipeline().globalParameters.gp_sf_wh_ingest",
+							"type": "Expression"
+						},
+						"role": {
+							"value": "@pipeline().globalParameters.gp_sf_role",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database,'.PUBLIC.COPY_DATA_FROM_STAGE(''', pipeline().globalParameters.gp_sf_database, ''' ,''SAP_S4H_LSD200'',''', pipeline().parameters.table_name, ''', ''SAP/DEVNL200/MaterialManagement/Material/'');')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Copy parquet Staging To Archive",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Call Procedure Snowflake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						},
+						"deleteFilesAfterCompletion": true
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Staging",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": {
+								"value": "@pipeline().parameters.table_name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Archive",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": {
+								"value": "@pipeline().parameters.table_name",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Delete Copied Parquet files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy parquet Staging To Archive",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_adls_parquet_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Staging",
+							"DataSource": "SAP",
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": "MaterialManagement",
+							"Object": "Material",
+							"Table": "MARA"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*parquet",
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"parameters": {
+			"table_name": {
+				"type": "string",
+				"defaultValue": "IPRODUCT"
+			}
+		},
+		"folder": {
+			"name": "PL CDC CDS"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-12-18T10:37:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
