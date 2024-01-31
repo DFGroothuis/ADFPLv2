@@ -86,7 +86,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_adls_parquet_001",
+						"referenceName": "ds_adls_parquet_001_table",
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {

@@ -13,6 +13,9 @@
 						]
 					}
 				],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
@@ -258,7 +261,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_adls_parquet_001",
+						"referenceName": "ds_adls_parquet_001_table",
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
@@ -282,7 +285,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_adls_parquet_001",
+						"referenceName": "ds_adls_parquet_001_table",
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
@@ -326,7 +329,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_adls_parquet_001",
+						"referenceName": "ds_adls_parquet_001_table",
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
