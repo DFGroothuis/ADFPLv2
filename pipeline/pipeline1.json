@@ -22,7 +22,11 @@
 						"Zone": "Staging",
 						"DataSource": "SAP",
 						"Domain": "MaterialManagement",
-						"Object": "Material"
+						"Object": "Material",
+						"pipeline_name": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						}
 					}
 				}
 			}

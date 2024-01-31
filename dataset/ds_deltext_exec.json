@@ -5,13 +5,18 @@
 			"referenceName": "ls_blob_001",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"pipeline_name": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat(pipeline().Pipeline, '.txt')",
+					"value": "@concat(dataset().pipeline_name, '.txt')",
 					"type": "Expression"
 				},
 				"folderPath": {

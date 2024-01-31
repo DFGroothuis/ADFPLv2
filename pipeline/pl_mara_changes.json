@@ -31,7 +31,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"pipeline": {
-								"value": "@pipeline().Pipeline",
+								"value": "@pipeline().parameters.pipeline_name",
 								"type": "Expression"
 							}
 						}
@@ -115,7 +115,13 @@
 				"outputs": [
 					{
 						"referenceName": "ds_deltext_exec",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"pipeline_name": {
+								"value": "@pipeline().parameters.pipeline_name",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
@@ -695,6 +701,10 @@
 			"Object": {
 				"type": "string",
 				"defaultValue": "Material"
+			},
+			"pipeline_name": {
+				"type": "string",
+				"defaultValue": "pl_mara_changes"
 			}
 		},
 		"folder": {

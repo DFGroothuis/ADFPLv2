@@ -17,6 +17,9 @@
 							"name": "Execute Full Table Load",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
@@ -30,13 +33,22 @@
 										"value": "@pipeline().globalParameters.gp_adls_environment",
 										"type": "Expression"
 									},
-									"DataSource": "SAP",
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
 									"EnvRegSys": {
 										"value": "@pipeline().globalParameters.gp_adls_envregsys",
 										"type": "Expression"
 									},
-									"Domain": "SalesAndDistribution",
-									"Object": "SalesOrder",
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
 									"table": {
 										"value": "@item()",
 										"type": "Expression"
@@ -61,6 +73,18 @@
 					"VBBE",
 					"VBUK"
 				]
+			},
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			},
+			"Domain": {
+				"type": "string",
+				"defaultValue": "SalesAndDistribution"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "SalesOrder"
 			}
 		},
 		"variables": {
