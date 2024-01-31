@@ -17,6 +17,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SapTableSource",
+						"additionalColumns": [
+							{
+								"name": "_GXPDF_LOADED_AT",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"rfcTableOptions": "",
 						"customRfcReadTableFunctionModule": "",
 						"partitionOption": "None"
