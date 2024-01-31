@@ -1,5 +1,5 @@
 {
-	"name": "pl_sap_sales",
+	"name": "pl_sap_salesorder",
 	"properties": {
 		"activities": [
 			{
@@ -93,7 +93,7 @@
 			}
 		},
 		"folder": {
-			"name": "PL full table"
+			"name": "PL_SAP_FULL_SD"
 		},
 		"annotations": [],
 		"lastPublishTime": "2023-12-15T19:11:11Z"
