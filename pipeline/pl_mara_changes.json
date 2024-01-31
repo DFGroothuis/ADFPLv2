@@ -234,14 +234,26 @@
 								"value": "@pipeline().globalParameters.gp_adls_environment",
 								"type": "Expression"
 							},
-							"Zone": "Staging",
-							"DataSource": "SAP",
+							"Zone": {
+								"value": "@pipeline().parameters.Zone",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
 							"EnvRegSys": {
 								"value": "@pipeline().globalParameters.gp_adls_envregsys",
 								"type": "Expression"
 							},
-							"Domain": "MaterialManagement",
-							"Object": "Material",
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
 							"Table": {
 								"value": "@pipeline().parameters.table_name",
 								"type": "Expression"
@@ -259,13 +271,22 @@
 								"type": "Expression"
 							},
 							"Zone": "Archive",
-							"DataSource": "SAP",
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
 							"EnvRegSys": {
 								"value": "@pipeline().globalParameters.gp_adls_envregsys",
 								"type": "Expression"
 							},
-							"Domain": "MaterialManagement",
-							"Object": "Material",
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
 							"Table": {
 								"value": "@pipeline().parameters.table_name",
 								"type": "Expression"
@@ -281,13 +302,15 @@
 					{
 						"activity": "Copy parquet Staging To Archive",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Skipped"
 						]
 					},
 					{
 						"activity": "Copy parquet Staging To Failed",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Skipped"
 						]
 					}
 				],
@@ -308,15 +331,30 @@
 								"value": "@pipeline().globalParameters.gp_adls_environment",
 								"type": "Expression"
 							},
-							"Zone": "Staging",
-							"DataSource": "SAP",
+							"Zone": {
+								"value": "@pipeline().parameters.Zone",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
 							"EnvRegSys": {
 								"value": "@pipeline().globalParameters.gp_adls_envregsys",
 								"type": "Expression"
 							},
-							"Domain": "MaterialManagement",
-							"Object": "Material",
-							"Table": "MARA"
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.table_name",
+								"type": "Expression"
+							}
 						}
 					},
 					"enableLogging": false,
@@ -389,14 +427,26 @@
 								"value": "@pipeline().globalParameters.gp_adls_environment",
 								"type": "Expression"
 							},
-							"Zone": "Staging",
-							"DataSource": "SAP",
+							"Zone": {
+								"value": "@pipeline().parameters.Zone",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
 							"EnvRegSys": {
 								"value": "@pipeline().globalParameters.gp_adls_envregsys",
 								"type": "Expression"
 							},
-							"Domain": "MaterialManagement",
-							"Object": "Material",
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
 							"Table": {
 								"value": "@pipeline().parameters.table_name",
 								"type": "Expression"
@@ -414,13 +464,22 @@
 								"type": "Expression"
 							},
 							"Zone": "Failed",
-							"DataSource": "SAP",
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
 							"EnvRegSys": {
 								"value": "@pipeline().globalParameters.gp_adls_envregsys",
 								"type": "Expression"
 							},
-							"Domain": "MaterialManagement",
-							"Object": "Material",
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
 							"Table": {
 								"value": "@pipeline().parameters.table_name",
 								"type": "Expression"
