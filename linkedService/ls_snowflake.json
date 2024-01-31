@@ -14,14 +14,18 @@
 			"role": {
 				"type": "string",
 				"defaultValue": "INGEST_DEV"
+			},
+			"account_name": {
+				"type": "string",
+				"defaultValue": "bb34365.west-europe.azure"
 			}
 		},
 		"annotations": [],
 		"type": "Snowflake",
 		"typeProperties": {
 			"authenticationType": "Basic",
-			"connectionString": "jdbc:snowflake://bb34365.west-europe.azure.snowflakecomputing.com/?user=CREUGEBRINK&db=@{linkedService().database}&warehouse=@{linkedService().warehouse}&role=@{linkedService().role}",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDkyREVDQkY2LTY5RkMtNDdFRi04OEU5LTlGNDU1QTZBNjAwMV84ODk4YTYzMC03Yjc0LTRiNjUtODRkNS01MWZiMDdkNGQyYzYiDQp9"
+			"connectionString": "jdbc:snowflake://@{linkedService().account_name}.snowflakecomputing.com/?user=CREUGEBRINK&db=@{linkedService().database}&warehouse=@{linkedService().warehouse}&role=@{linkedService().role}",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDkyREVDQkY2LTY5RkMtNDdFRi04OEU5LTlGNDU1QTZBNjAwMV82NjQxM2IxNS1iODY0LTRiZTAtODZkZC0wNTY1ODZjYjc1ZWQiDQp9"
 		}
 	}
 }
