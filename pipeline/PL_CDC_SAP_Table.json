@@ -17,6 +17,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SapTableSource",
+						"additionalColumns": [
+							{
+								"name": "_gxpdf_loaded_at",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"rfcTableOptions": {
 							"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', pipeline().parameters.LastExecDate, '''')",
 							"type": "Expression"
