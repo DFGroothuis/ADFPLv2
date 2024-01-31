@@ -87,11 +87,6 @@
 				"defaultValue": "SalesOrder"
 			}
 		},
-		"variables": {
-			"Object": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "PL_SAP_FULL_SD"
 		},
