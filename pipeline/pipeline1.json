@@ -1,0 +1,35 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_mara_changes",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"table_name": "MARA",
+						"ChangeDateColumn": "LAEDA",
+						"Zone": "Staging",
+						"DataSource": "SAP",
+						"Domain": "MaterialManagement",
+						"Object": "Material"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "PL CDC Table"
+		},
+		"annotations": []
+	}
+}
