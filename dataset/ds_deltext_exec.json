@@ -20,7 +20,7 @@
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "pipeline_meta",
+					"value": "meta/pipeline-meta",
 					"type": "Expression"
 				},
 				"container": "dev"
