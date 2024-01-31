@@ -2,7 +2,7 @@
 	"name": "ds_adls_csv_001",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureDataLakeStorage1",
+			"referenceName": "ls_adls_001",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
