@@ -1,5 +1,5 @@
 {
-	"name": "AzureDataLakeStorage1",
+	"name": "ls_adls_001",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"annotations": [],
