@@ -56,7 +56,7 @@
 					"source": {
 						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
+							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
@@ -109,7 +109,7 @@
 							}
 						],
 						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
+							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
@@ -190,6 +190,10 @@
 						},
 						"role": {
 							"value": "@pipeline().globalParameters.gp_sf_role",
+							"type": "Expression"
+						},
+						"account_name": {
+							"value": "@pipeline().globalParameters.gp_sf_accountname",
 							"type": "Expression"
 						}
 					}

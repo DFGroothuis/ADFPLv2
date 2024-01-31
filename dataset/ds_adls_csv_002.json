@@ -2,7 +2,7 @@
 	"name": "ds_adls_csv_002",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -14,13 +14,13 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"fileName": {
 					"value": "@dataset().table_filename",
 					"type": "Expression"
 				},
 				"folderPath": "meta/sap-meta",
-				"container": "dev"
+				"fileSystem": "dev"
 			},
 			"columnDelimiter": ";",
 			"escapeChar": "\\",

@@ -210,6 +210,10 @@
 									"role": {
 										"value": "@pipeline().globalParameters.gp_sf_role",
 										"type": "Expression"
+									},
+									"account_name": {
+										"value": "@pipeline().globalParameters.gp_sf_accountname",
+										"type": "Expression"
 									}
 								}
 							},

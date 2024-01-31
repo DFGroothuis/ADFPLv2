@@ -132,7 +132,22 @@
 					"referenceName": "ls_snowflake",
 					"type": "LinkedServiceReference",
 					"parameters": {
-						"database": "D3010_DEV_BRONZE_RAW"
+						"database": {
+							"value": "@pipeline().globalParameters.gp_sf_database",
+							"type": "Expression"
+						},
+						"warehouse": {
+							"value": "@pipeline().globalParameters.gp_sf_wh_ingest",
+							"type": "Expression"
+						},
+						"role": {
+							"value": "@pipeline().globalParameters.gp_sf_role",
+							"type": "Expression"
+						},
+						"account_name": {
+							"value": "@pipeline().globalParameters.gp_sf_accountname",
+							"type": "Expression"
+						}
 					}
 				},
 				"typeProperties": {
