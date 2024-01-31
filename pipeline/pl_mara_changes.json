@@ -615,13 +615,13 @@
 				]
 			},
 			{
-				"name": "Web1",
+				"name": "Web Failed SAP",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
 						"activity": "Copy Changes Table",
 						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					}
 				],
@@ -637,7 +637,35 @@
 					"method": "POST",
 					"url": "https://logic-app-adf.azurewebsites.net:443/api/worflow-email-adf/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=0vAOQ7H9qERnaCMUYRAFdHnCw1vqv1UkGHRn1H08RWc",
 					"body": {
-						"value": "{\n    \"message\" : \"This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"cas.reugebrink@bs.nttdata.com\"\n   }",
+						"value": "{\n    \"message\" : \"Failed to copy data from SAP @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"cas.reugebrink@bs.nttdata.com\"\n   }",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web Failed SF",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Call Procedure Snowflake",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://logic-app-adf.azurewebsites.net:443/api/worflow-email-adf/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=0vAOQ7H9qERnaCMUYRAFdHnCw1vqv1UkGHRn1H08RWc",
+					"body": {
+						"value": "{\n    \"message\" : \"Failed to copy data into Snowflake @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"cas.reugebrink@bs.nttdata.com\"\n   }",
 						"type": "Expression"
 					}
 				}
