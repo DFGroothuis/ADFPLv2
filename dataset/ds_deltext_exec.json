@@ -2,7 +2,7 @@
 	"name": "ds_deltext_exec",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "ls_blob_001",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],

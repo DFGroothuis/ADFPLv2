@@ -85,7 +85,7 @@
 					},
 					"staging": {
 						"linkedService": {
-							"referenceName": "AzureBlobStorage1",
+							"referenceName": "ls_blob_001",
 							"type": "LinkedServiceReference"
 						},
 						"folderPath": "dev/Staging/cdc"

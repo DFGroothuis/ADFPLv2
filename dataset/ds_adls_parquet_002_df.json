@@ -2,7 +2,7 @@
 	"name": "ds_adls_parquet_002_df",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "ls_blob_001",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
