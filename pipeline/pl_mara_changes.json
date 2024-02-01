@@ -171,7 +171,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database,'.PUBLIC.COPY_DATA_FROM_STAGE(''', pipeline().globalParameters.gp_sf_database, ''' ,''SAP_S4H_LSD200'',''', pipeline().parameters.table_name, ''', ''SAP/DEVNL200/MaterialManagement/Material/'');')",
+								"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database,'.PUBLIC.COPY_DATA_FROM_STAGE(''', pipeline().globalParameters.gp_sf_database, ''' ,''SAP_S4H'',''', pipeline().parameters.table_name, ''', ''SAP/DEVNL200/MaterialManagement/Material/'');')",
 								"type": "Expression"
 							}
 						}

@@ -222,7 +222,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database, '.PUBLIC.create_table_sql_from_meta( ''', pipeline().globalParameters.gp_sf_database,''', ''SAP_S4H_LSD200'',''', item(), ''');' )",
+											"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database, '.PUBLIC.create_table_sql_from_meta( ''', pipeline().globalParameters.gp_sf_database,''', ''SAP_S4H'',''', item(), ''');' )",
 											"type": "Expression"
 										}
 									}

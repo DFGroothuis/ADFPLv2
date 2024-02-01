@@ -164,7 +164,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('USE DATABASE ', pipeline().globalParameters.gp_sf_database, ';\nUSE SCHEMA PUBLIC;\nCOPY INTO SAP_S4H_LSD200.', pipeline().parameters.table, ' \n  FROM @az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().parameters.EnvRegSys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
+								"value": "@concat('USE DATABASE ', pipeline().globalParameters.gp_sf_database, ';\nUSE SCHEMA PUBLIC;\nCOPY INTO SAP_S4H.', pipeline().parameters.table, ' \n  FROM @az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().parameters.EnvRegSys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
 								"type": "Expression"
 							}
 						}
