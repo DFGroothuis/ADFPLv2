@@ -23,7 +23,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "PL_Full_Load_SAP_Table",
+									"referenceName": "pl-sap-FullTableLoad",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,

@@ -1,5 +1,5 @@
 {
-	"name": "pl_mara_changes",
+	"name": "pl-sap-CDC_Table",
 	"properties": {
 		"activities": [
 			{
@@ -241,7 +241,7 @@
 								"type": "Expression"
 							},
 							"Zone": {
-								"value": "@pipeline().parameters.Zone",
+								"value": "Staging",
 								"type": "Expression"
 							},
 							"DataSource": {
@@ -338,7 +338,7 @@
 								"type": "Expression"
 							},
 							"Zone": {
-								"value": "@pipeline().parameters.Zone",
+								"value": "Staging",
 								"type": "Expression"
 							},
 							"DataSource": {
@@ -434,7 +434,7 @@
 								"type": "Expression"
 							},
 							"Zone": {
-								"value": "@pipeline().parameters.Zone",
+								"value": "Staging",
 								"type": "Expression"
 							},
 							"DataSource": {
@@ -593,7 +593,7 @@
 								"type": "Expression"
 							},
 							"Zone": {
-								"value": "@pipeline().parameters.Zone",
+								"value": "Staging",
 								"type": "Expression"
 							},
 							"DataSource": {
@@ -686,10 +686,6 @@
 				"type": "string",
 				"defaultValue": "LAEDA"
 			},
-			"Zone": {
-				"type": "string",
-				"defaultValue": "Staging"
-			},
 			"DataSource": {
 				"type": "string",
 				"defaultValue": "SAP"
@@ -708,7 +704,7 @@
 			}
 		},
 		"folder": {
-			"name": "PL CDC Table"
+			"name": "Template"
 		},
 		"annotations": []
 	}

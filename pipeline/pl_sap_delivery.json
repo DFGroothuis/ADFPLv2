@@ -1,18 +1,17 @@
 {
-	"name": "pl_sap_batch",
+	"name": "pl_sap_delivery",
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEachTable",
+				"name": "ForEach1",
 				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@variables('table')",
+						"value": "@pipeline().parameters.table",
 						"type": "Expression"
 					},
-					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute Full Table Load",
@@ -34,13 +33,22 @@
 										"value": "@pipeline().globalParameters.gp_adls_environment",
 										"type": "Expression"
 									},
-									"DataSource": "SAP",
+									"DataSource": {
+										"value": "@pipeline().parameters.DataSource",
+										"type": "Expression"
+									},
 									"EnvRegSys": {
 										"value": "@pipeline().globalParameters.gp_adls_envregsys",
 										"type": "Expression"
 									},
-									"Domain": "BatchManagement",
-									"Object": "Batch",
+									"Domain": {
+										"value": "@pipeline().parameters.Domain",
+										"type": "Expression"
+									},
+									"Object": {
+										"value": "@pipeline().parameters.Object",
+										"type": "Expression"
+									},
 									"table": {
 										"value": "@item()",
 										"type": "Expression"
@@ -52,20 +60,32 @@
 				}
 			}
 		],
-		"variables": {
+		"parameters": {
 			"table": {
-				"type": "Array",
+				"type": "array",
 				"defaultValue": [
-					"MCHA",
-					"MCHB",
-					"MCH1",
-					"MARD"
+					"LIKP",
+					"LIPS"
 				]
+			},
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			},
+			"Domain": {
+				"type": "string",
+				"defaultValue": "SalesAndDistribution"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "Delivery"
 			}
 		},
 		"folder": {
-			"name": "PL full table"
+			"name": "PL_SAP_FULL_SD"
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2023-12-15T19:11:11Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }

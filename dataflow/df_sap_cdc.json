@@ -18,14 +18,14 @@
 						"referenceName": "ds_adls_parquet_002_df",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
-					"rejectedDataLinkedService": {
-						"referenceName": "AzureDataLakeStorage1",
-						"type": "LinkedServiceReference"
-					}
+					"name": "sink1"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
 				"parameters{",
 				"     KeyFields as string[]",
@@ -38,7 +38,8 @@
 				"     format: 'sapObject',",
 				"     fixDecimalPrecision: true,",
 				"     partitionBy('hash', 1)) ~> source1",
-				"source1 sink(allowSchemaDrift: true,",
+				"source1 derive({_GXPDF_LOADED_AT} = currentUTC()) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     preCommands: [],",

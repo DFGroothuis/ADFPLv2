@@ -12,7 +12,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pl_mara_changes",
+						"referenceName": "pl-sap-CDC_Table",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,

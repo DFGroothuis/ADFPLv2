@@ -12,7 +12,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_CDC_SAP_CDS",
+						"referenceName": "pl-sap-CDC_CDS",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,
