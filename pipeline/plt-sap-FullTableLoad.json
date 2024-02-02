@@ -88,7 +88,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"EnvStorage": {
-								"value": "@pipeline().parameters.EnvStorage",
+								"value": "@pipeline().globalParameters.gp_adls_environment",
 								"type": "Expression"
 							},
 							"Zone": {
@@ -100,7 +100,7 @@
 								"type": "Expression"
 							},
 							"EnvRegSys": {
-								"value": "@pipeline().parameters.EnvRegSys",
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
 								"type": "Expression"
 							},
 							"Domain": {
@@ -165,7 +165,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('USE DATABASE ', pipeline().globalParameters.gp_sf_database, ';\nTRUNCATE TABLE SAP_S4H.', pipeline().parameters.table, ';\nUSE SCHEMA PUBLIC;\nCOPY INTO SAP_S4H.', pipeline().parameters.table, ' \n  FROM @az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().parameters.EnvRegSys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
+								"value": "@concat('USE DATABASE ', pipeline().globalParameters.gp_sf_database, ';\nTRUNCATE TABLE SAP_S4H.', pipeline().parameters.table, ';\nUSE SCHEMA PUBLIC;\nCOPY INTO SAP_S4H.', pipeline().parameters.table, ' \n  FROM az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().globalParameters.gp_adls_envregsys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
 								"type": "Expression"
 							}
 						}
@@ -493,13 +493,7 @@
 			"Zone": {
 				"type": "string"
 			},
-			"EnvStorage": {
-				"type": "string"
-			},
 			"DataSource": {
-				"type": "string"
-			},
-			"EnvRegSys": {
 				"type": "string"
 			},
 			"Domain": {
@@ -510,6 +504,11 @@
 			},
 			"table": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"var": {
+				"type": "String"
 			}
 		},
 		"folder": {

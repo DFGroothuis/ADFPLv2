@@ -544,11 +544,6 @@
 				"type": "string"
 			}
 		},
-		"variables": {
-			"var": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "Template"
 		},

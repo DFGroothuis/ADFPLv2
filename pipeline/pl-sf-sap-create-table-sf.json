@@ -12,6 +12,7 @@
 						"value": "@pipeline().parameters.table",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute Pipeline1",
@@ -49,6 +50,9 @@
 		},
 		"variables": {
 			"lastdate": {
+				"type": "String"
+			},
+			"var": {
 				"type": "String"
 			}
 		},

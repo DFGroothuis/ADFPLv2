@@ -18,16 +18,8 @@
 					"waitOnCompletion": false,
 					"parameters": {
 						"Zone": "Staging",
-						"EnvStorage": {
-							"value": "@pipeline().globalParameters.gp_adls_environment",
-							"type": "Expression"
-						},
 						"DataSource": {
 							"value": "@pipeline().parameters.DataSource",
-							"type": "Expression"
-						},
-						"EnvRegSys": {
-							"value": "@pipeline().globalParameters.gp_adls_envregsys",
 							"type": "Expression"
 						},
 						"Domain": {
@@ -61,16 +53,8 @@
 					"waitOnCompletion": false,
 					"parameters": {
 						"Zone": "Staging",
-						"EnvStorage": {
-							"value": "@pipeline().globalParameters.gp_adls_environment",
-							"type": "Expression"
-						},
 						"DataSource": {
 							"value": "@pipeline().parameters.DataSource",
-							"type": "Expression"
-						},
-						"EnvRegSys": {
-							"value": "@pipeline().globalParameters.gp_adls_envregsys",
 							"type": "Expression"
 						},
 						"Domain": {
