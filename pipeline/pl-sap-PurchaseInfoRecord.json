@@ -96,7 +96,7 @@
 			},
 			"Object": {
 				"type": "string",
-				"defaultValue": "PurchaseOrder"
+				"defaultValue": "PurchaseInfoRecord"
 			},
 			"DataSource": {
 				"type": "string",
