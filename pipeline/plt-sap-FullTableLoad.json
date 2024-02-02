@@ -1,6 +1,7 @@
 {
-	"name": "pl-sap-FullTableLoad",
+	"name": "plt-sap-FullTableLoad",
 	"properties": {
+		"description": "Pipeline to do a full table load. Load in Snowflake, first table in truncated and then loaded with new data",
 		"activities": [
 			{
 				"name": "Copy Full Table",
