@@ -3,58 +3,89 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEachTable",
-				"type": "ForEach",
+				"name": "Execute Full Table Load_copy1",
+				"type": "ExecutePipeline",
 				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@variables('table')",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
 					},
-					"isSequential": false,
-					"activities": [
-						{
-							"name": "Execute Full Table Load",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "plt-sap-FullTableLoad",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": false,
-								"parameters": {
-									"Zone": "Staging",
-									"EnvStorage": {
-										"value": "@pipeline().globalParameters.gp_adls_environment",
-										"type": "Expression"
-									},
-									"DataSource": "SAP",
-									"EnvRegSys": {
-										"value": "@pipeline().globalParameters.gp_adls_envregsys",
-										"type": "Expression"
-									},
-									"Domain": {
-										"value": "@pipeline().parameters.Domain",
-										"type": "Expression"
-									},
-									"Object": {
-										"value": "@pipeline().parameters.Object",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@item()",
-										"type": "Expression"
-									}
-								}
-							}
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"EnvStorage": {
+							"value": "@pipeline().globalParameters.gp_adls_environment",
+							"type": "Expression"
+						},
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"EnvRegSys": {
+							"value": "@pipeline().globalParameters.gp_adls_envregsys",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EINE",
+							"type": "Expression"
 						}
-					]
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table Load_copy2",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"EnvStorage": {
+							"value": "@pipeline().globalParameters.gp_adls_environment",
+							"type": "Expression"
+						},
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"EnvRegSys": {
+							"value": "@pipeline().globalParameters.gp_adls_envregsys",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EINA",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
@@ -68,7 +99,8 @@
 				"defaultValue": "PurchaseOrder"
 			},
 			"DataSource": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "SAP"
 			}
 		},
 		"variables": {
