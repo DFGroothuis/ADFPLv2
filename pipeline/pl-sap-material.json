@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1_copy1",
+				"name": "Execute MARA",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
@@ -39,11 +39,11 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1_copy1_copy1",
+				"name": "Execute MAKT",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1_copy1",
+						"activity": "Execute MARA",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -86,11 +86,11 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1_copy1_copy1_copy1",
+				"name": "Execute MARC",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1_copy1_copy1",
+						"activity": "Execute MAKT",
 						"dependencyConditions": [
 							"Completed"
 						]
