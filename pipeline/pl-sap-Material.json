@@ -41,14 +41,7 @@
 			{
 				"name": "Execute MAKT",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute MARA",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -88,14 +81,7 @@
 			{
 				"name": "Execute MARC",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute MAKT",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -129,6 +115,38 @@
 							"type": "Expression"
 						},
 						"table": "MARC"
+					}
+				}
+			},
+			{
+				"name": "Execute IPRODUCT",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-cdc_cds",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"CDS": "IPRODUCT",
+						"KeyFields": "[\"PRODUCT\"]",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						}
 					}
 				}
 			}
