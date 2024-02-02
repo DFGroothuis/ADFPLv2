@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Full Table Load_copy1",
+				"name": "Execute Full Table EINE",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
@@ -46,7 +46,7 @@
 				}
 			},
 			{
-				"name": "Execute Full Table Load_copy2",
+				"name": "Execute Full Table EINA",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
@@ -101,15 +101,6 @@
 			"DataSource": {
 				"type": "string",
 				"defaultValue": "SAP"
-			}
-		},
-		"variables": {
-			"table": {
-				"type": "Array",
-				"defaultValue": [
-					"EINE",
-					"EINA"
-				]
 			}
 		},
 		"folder": {
