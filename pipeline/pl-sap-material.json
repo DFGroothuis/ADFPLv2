@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "pl-sap-material",
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1",
+				"name": "Execute Pipeline1_copy1",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
@@ -12,27 +12,143 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pl-sap-CDC_Table",
+						"referenceName": "plt-sap-cdc_table",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,
 					"parameters": {
 						"table_name": "MARA",
 						"ChangeDateColumn": "LAEDA",
-						"Zone": "Staging",
-						"DataSource": "SAP",
-						"Domain": "MaterialManagement",
-						"Object": "Material",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
 						"pipeline_name": {
 							"value": "@pipeline().Pipeline",
 							"type": "Expression"
 						}
 					}
 				}
+			},
+			{
+				"name": "Execute Pipeline1_copy1_copy1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1_copy1",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"EnvStorage": {
+							"value": "@pipeline().globalParameters.gp_adls_environment",
+							"type": "Expression"
+						},
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"EnvRegSys": {
+							"value": "@pipeline().globalParameters.gp_adls_envregsys",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": "MAKT"
+					}
+				}
+			},
+			{
+				"name": "Execute Pipeline1_copy1_copy1_copy1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1_copy1_copy1",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"EnvStorage": {
+							"value": "@pipeline().globalParameters.gp_adls_environment",
+							"type": "Expression"
+						},
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"EnvRegSys": {
+							"value": "@pipeline().globalParameters.gp_adls_envregsys",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": "MARC"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			},
+			"Domain": {
+				"type": "string",
+				"defaultValue": "MaterialManagement"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "Material"
+			}
+		},
 		"folder": {
-			"name": "PL CDC Table"
+			"name": "SAP/sap-MaterialManagement"
 		},
 		"annotations": []
 	}

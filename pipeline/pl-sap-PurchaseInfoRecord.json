@@ -1,5 +1,5 @@
 {
-	"name": "pl_sap_purord",
+	"name": "pl-sap-PurchaseInfoRecord",
 	"properties": {
 		"activities": [
 			{
@@ -24,7 +24,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "pl-sap-FullTableLoad",
+									"referenceName": "plt-sap-FullTableLoad",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": false,
@@ -78,7 +78,7 @@
 			}
 		},
 		"folder": {
-			"name": "SAP_Purchase"
+			"name": "SAP/sap-Purchase"
 		},
 		"annotations": []
 	}

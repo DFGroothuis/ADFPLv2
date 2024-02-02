@@ -1,5 +1,5 @@
 {
-	"name": "pl_sap_salesorder",
+	"name": "pl-sap-SalesOrder",
 	"properties": {
 		"activities": [
 			{
@@ -23,7 +23,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "pl-sap-FullTableLoad",
+									"referenceName": "plt-sap-FullTableLoad",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -88,7 +88,7 @@
 			}
 		},
 		"folder": {
-			"name": "PL_SAP_FULL_SD"
+			"name": "SAP/sap-SalesDistribution"
 		},
 		"annotations": [],
 		"lastPublishTime": "2023-12-15T19:11:11Z"

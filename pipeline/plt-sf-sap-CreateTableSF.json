@@ -1,6 +1,7 @@
 {
-	"name": "pl-sap-CreateTableSF",
+	"name": "plt-sf-sap-CreateTableSF",
 	"properties": {
+		"description": "Pipeline to create a table in Snowflake. Uses metadata from SAP table DD03M. Use of stored procedure in snowflake. Can be used for CDS and tables.",
 		"activities": [
 			{
 				"name": "Copy SAP meta to Blob",

@@ -1,5 +1,5 @@
 {
-	"name": "GetMetaDataTableSAP",
+	"name": "pl-sf-sap-create-table-sf",
 	"properties": {
 		"activities": [
 			{
@@ -23,7 +23,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "pl-sap-CreateTableSF",
+									"referenceName": "plt-sf-sap-CreateTableSF",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,

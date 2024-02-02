@@ -1,6 +1,7 @@
 {
-	"name": "pl-sap-cdc_cds",
+	"name": "plt-sap-cdc_cds",
 	"properties": {
+		"description": "Pipeline to retrieve data from an SAP CDS via ODP framework. Changes are stored in Data Lake. Then it is copied into Snowflake and data is moved from Staging to Archived.",
 		"activities": [
 			{
 				"name": "Execute DataFlow",
