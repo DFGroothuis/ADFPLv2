@@ -2,16 +2,16 @@
 	"name": "ds_adls_parquet_003_faers",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_blob_001",
+			"referenceName": "ls_adls_001",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"folderPath": "Staging/FAERS/AdverseEvents",
-				"container": "dev"
+				"fileSystem": "dev"
 			},
 			"compressionCodec": "snappy"
 		},

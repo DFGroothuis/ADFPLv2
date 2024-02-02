@@ -83,7 +83,7 @@
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -115,7 +115,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_deltext_exec",
+						"referenceName": "ds_adls_deltext",
 						"type": "DatasetReference",
 						"parameters": {
 							"pipeline_name": {
@@ -835,6 +835,11 @@
 			},
 			"ChangeTimeColumn": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"var": {
+				"type": "String"
 			}
 		},
 		"folder": {

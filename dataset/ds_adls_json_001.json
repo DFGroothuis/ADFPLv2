@@ -2,17 +2,17 @@
 	"name": "ds_adls_json_001",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_blob_001",
+			"referenceName": "ls_adls_001",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"fileName": "faers.json",
 				"folderPath": "Staging/FAERS/AdverseEvents",
-				"container": "dev"
+				"fileSystem": "dev"
 			}
 		},
 		"schema": {}

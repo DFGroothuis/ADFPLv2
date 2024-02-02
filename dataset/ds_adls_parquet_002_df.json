@@ -2,7 +2,7 @@
 	"name": "ds_adls_parquet_002_df",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_blob_001",
+			"referenceName": "ls_adls_001",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -32,7 +32,7 @@
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"fileName": {
 					"value": "@concat(dataset().CDS,'_',utcnow(), '.parquet')",
 					"type": "Expression"
@@ -41,7 +41,7 @@
 					"value": "@concat(dataset().Zone,'/',dataset().DataSource,'/',dataset().EnvRegSys,'/',dataset().Domain,'/',dataset().Object,'/',dataset().CDS)",
 					"type": "Expression"
 				},
-				"container": {
+				"fileSystem": {
 					"value": "@dataset().EnvStorage",
 					"type": "Expression"
 				}

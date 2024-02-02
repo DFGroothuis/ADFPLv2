@@ -52,6 +52,20 @@
 				}
 			}
 		],
+		"parameters": {
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			},
+			"Domain": {
+				"type": "string",
+				"defaultValue": "BatchManagement"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "Batch"
+			}
+		},
 		"variables": {
 			"table": {
 				"type": "Array",

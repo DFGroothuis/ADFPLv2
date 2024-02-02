@@ -86,7 +86,7 @@
 					},
 					"staging": {
 						"linkedService": {
-							"referenceName": "ls_blob_001",
+							"referenceName": "ls_adls_001",
 							"type": "LinkedServiceReference"
 						},
 						"folderPath": "dev/Staging/cdc"
@@ -542,6 +542,11 @@
 			},
 			"Object": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"var": {
+				"type": "String"
 			}
 		},
 		"folder": {

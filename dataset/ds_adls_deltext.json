@@ -1,8 +1,8 @@
 {
-	"name": "ds_deltext_exec",
+	"name": "ds_adls_deltext",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_blob_001",
+			"referenceName": "ls_adls_001",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -14,16 +14,13 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"fileName": {
 					"value": "@concat(dataset().pipeline_name, '.txt')",
 					"type": "Expression"
 				},
-				"folderPath": {
-					"value": "meta/pipeline-meta",
-					"type": "Expression"
-				},
-				"container": "dev"
+				"folderPath": "meta/pipeline-meta",
+				"fileSystem": "dev"
 			},
 			"columnDelimiter": ";",
 			"rowDelimiter": "\n",

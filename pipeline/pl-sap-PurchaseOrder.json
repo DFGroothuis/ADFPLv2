@@ -52,6 +52,17 @@
 				}
 			}
 		],
+		"parameters": {
+			"DataSource": {
+				"type": "string"
+			},
+			"Domain": {
+				"type": "string"
+			},
+			"Object": {
+				"type": "string"
+			}
+		},
 		"variables": {
 			"table": {
 				"type": "Array",

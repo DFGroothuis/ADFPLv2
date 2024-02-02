@@ -66,6 +66,9 @@
 			"Object": {
 				"type": "string",
 				"defaultValue": "PurchaseOrder"
+			},
+			"DataSource": {
+				"type": "string"
 			}
 		},
 		"variables": {
