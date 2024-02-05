@@ -120,7 +120,7 @@
 				]
 			},
 			{
-				"name": "Script1",
+				"name": "SF Truncate and Load data",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -165,7 +165,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('USE DATABASE ', pipeline().globalParameters.gp_sf_database, ';\nTRUNCATE TABLE SAP_S4H.', pipeline().parameters.table, ';\nUSE SCHEMA PUBLIC;\nCOPY INTO SAP_S4H.', pipeline().parameters.table, ' \n  FROM az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().globalParameters.gp_adls_envregsys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
+								"value": "@concat('USE DATABASE ', pipeline().globalParameters.gp_sf_database, ';\nTRUNCATE TABLE SAP_S4H.', pipeline().parameters.table, ';\nUSE SCHEMA PUBLIC;\nCOPY INTO SAP_S4H.', pipeline().parameters.table, ' \n  FROM @az_dev_sap/', pipeline().parameters.DataSource, '/', pipeline().globalParameters.gp_adls_envregsys, '/', pipeline().parameters.Domain, '/', pipeline().parameters.Object,'/', pipeline().parameters.table, '/\n  FILE_FORMAT = ff_parquet\n  MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE ;')",
 								"type": "Expression"
 							}
 						}
@@ -178,7 +178,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Script1",
+						"activity": "SF Truncate and Load data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -371,7 +371,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Script1",
+						"activity": "SF Truncate and Load data",
 						"dependencyConditions": [
 							"Failed"
 						]
