@@ -1,5 +1,5 @@
 {
-	"name": "pl_copy_faers",
+	"name": "pl-api-faers",
 	"properties": {
 		"activities": [
 			{
@@ -248,7 +248,7 @@
 			}
 		],
 		"folder": {
-			"name": "PL API"
+			"name": "API"
 		},
 		"annotations": []
 	}
