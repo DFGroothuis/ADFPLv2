@@ -4,7 +4,7 @@
 		"description": "Pipeline to retrieve data from an SAP CDS via ODP framework. Changes are stored in Data Lake. Then it is copied into Snowflake and data is moved from Staging to Archived.",
 		"activities": [
 			{
-				"name": "Execute DataFlow",
+				"name": "Execute CDC DataFlow",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -106,7 +106,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "Execute DataFlow",
+						"activity": "Execute CDC DataFlow",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -475,7 +475,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Execute DataFlow",
+						"activity": "Execute CDC DataFlow",
 						"dependencyConditions": [
 							"Failed"
 						]

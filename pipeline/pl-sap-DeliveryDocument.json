@@ -3,71 +3,84 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "Execute Full Table LIKP",
+				"type": "ExecutePipeline",
 				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@pipeline().parameters.table",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
 					},
-					"activities": [
-						{
-							"name": "Execute Full Table Load",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "plt-sap-FullTableLoad",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"Zone": "Staging",
-									"EnvStorage": {
-										"value": "@pipeline().globalParameters.gp_adls_environment",
-										"type": "Expression"
-									},
-									"DataSource": {
-										"value": "@pipeline().parameters.DataSource",
-										"type": "Expression"
-									},
-									"EnvRegSys": {
-										"value": "@pipeline().globalParameters.gp_adls_envregsys",
-										"type": "Expression"
-									},
-									"Domain": {
-										"value": "@pipeline().parameters.Domain",
-										"type": "Expression"
-									},
-									"Object": {
-										"value": "@pipeline().parameters.Object",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@item()",
-										"type": "Expression"
-									}
-								}
-							}
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "LIKP",
+							"type": "Expression"
 						}
-					]
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table LIPS",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Full Table LIKP",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "LIPS",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
 		"parameters": {
-			"table": {
-				"type": "array",
-				"defaultValue": [
-					"LIKP",
-					"LIPS"
-				]
-			},
 			"DataSource": {
 				"type": "string",
 				"defaultValue": "SAP"

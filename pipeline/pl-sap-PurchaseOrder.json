@@ -3,52 +3,248 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEachTable",
-				"type": "ForEach",
+				"name": "Execute Full Table EKKO",
+				"type": "ExecutePipeline",
 				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@variables('table')",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
 					},
-					"isSequential": false,
-					"activities": [
-						{
-							"name": "Execute Full Table Load",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "plt-sap-FullTableLoad",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"Zone": "Staging",
-									"EnvStorage": {
-										"value": "@pipeline().globalParameters.gp_adls_environment",
-										"type": "Expression"
-									},
-									"DataSource": "SAP",
-									"EnvRegSys": {
-										"value": "@pipeline().globalParameters.gp_adls_envregsys",
-										"type": "Expression"
-									},
-									"Domain": "PurchaseOrderDomain",
-									"Object": "PurchaseOrder",
-									"table": {
-										"value": "@item()",
-										"type": "Expression"
-									}
-								}
-							}
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EKKO",
+							"type": "Expression"
 						}
-					]
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table EKPO",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Full Table EKKO",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EKPO",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table EKET",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Full Table EKPO",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EKET",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table EKES",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Full Table EKET",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EKES",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table EKBE",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Full Table EKES",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EKBE",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table EKKN",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Full Table EKBE",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EKKN",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
@@ -61,19 +257,6 @@
 			},
 			"Object": {
 				"type": "string"
-			}
-		},
-		"variables": {
-			"table": {
-				"type": "Array",
-				"defaultValue": [
-					"EKKO",
-					"EKPO",
-					"EKET",
-					"EKBE",
-					"EKES",
-					"EKKN"
-				]
 			}
 		},
 		"folder": {

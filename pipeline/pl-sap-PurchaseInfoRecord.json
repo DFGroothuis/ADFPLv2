@@ -40,7 +40,14 @@
 			{
 				"name": "Execute Full Table EINA",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Execute Full Table EINE",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
 				"policy": {
 					"secureInput": false
 				},

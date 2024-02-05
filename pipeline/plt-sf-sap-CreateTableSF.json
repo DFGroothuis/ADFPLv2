@@ -167,7 +167,7 @@
 				]
 			},
 			{
-				"name": "Script1",
+				"name": "SF Create Table",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -253,7 +253,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Script1",
+						"activity": "SF Create Table",
 						"dependencyConditions": [
 							"Failed"
 						]

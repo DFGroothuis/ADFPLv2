@@ -127,7 +127,7 @@
 				]
 			},
 			{
-				"name": "Call Procedure Snowflake",
+				"name": "SF Script Copy Data",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -185,7 +185,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Call Procedure Snowflake",
+						"activity": "SF Script Copy Data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -378,7 +378,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Call Procedure Snowflake",
+						"activity": "SF Script Copy Data",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -528,7 +528,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Call Procedure Snowflake",
+						"activity": "SF Script Copy Data",
 						"dependencyConditions": [
 							"Failed"
 						]
