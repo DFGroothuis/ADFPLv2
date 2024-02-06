@@ -15,7 +15,7 @@
 					"isSequential": false,
 					"activities": [
 						{
-							"name": "Execute Pipeline1",
+							"name": "Retrieve SAP metadata - Create Table SF",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"policy": {

@@ -40,14 +40,7 @@
 			{
 				"name": "Execute Full Table EKPO",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table EKKO",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -82,14 +75,7 @@
 			{
 				"name": "Execute Full Table EKET",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table EKPO",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -124,14 +110,7 @@
 			{
 				"name": "Execute Full Table EKES",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table EKET",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -166,14 +145,7 @@
 			{
 				"name": "Execute Full Table EKBE",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table EKES",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -208,14 +180,7 @@
 			{
 				"name": "Execute Full Table EKKN",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table EKBE",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},

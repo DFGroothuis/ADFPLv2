@@ -40,14 +40,7 @@
 			{
 				"name": "Execute Full Table MCHA",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table MCHB",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -82,14 +75,7 @@
 			{
 				"name": "Execute Full Table MCH1",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table MCHA",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
@@ -124,14 +110,7 @@
 			{
 				"name": "Execute Full Table MARD",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table MCH1",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},

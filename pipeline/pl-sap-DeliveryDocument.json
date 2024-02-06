@@ -40,14 +40,7 @@
 			{
 				"name": "Execute Full Table LIPS",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Full Table LIKP",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureInput": false
 				},
