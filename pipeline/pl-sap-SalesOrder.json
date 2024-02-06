@@ -283,6 +283,20 @@
 				}
 			}
 		],
+		"parameters": {
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			},
+			"Domain": {
+				"type": "string",
+				"defaultValue": "SalesAndDistribution"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "SalesOrder"
+			}
+		},
 		"folder": {
 			"name": "SAP/sap-SalesDistribution"
 		},
