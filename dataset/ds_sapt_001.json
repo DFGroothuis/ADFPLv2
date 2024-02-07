@@ -1,8 +1,8 @@
 {
-	"name": "ds_sap_table",
+	"name": "ds_sapt_001",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_sap_table",
+			"referenceName": "ls_sapt_001",
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"server_name": {

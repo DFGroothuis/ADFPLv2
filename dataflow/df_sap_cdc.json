@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_sap_odp",
+						"referenceName": "ds_sodp_001",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -42,6 +42,7 @@
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
+				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: []) ~> sink1"
 			]
