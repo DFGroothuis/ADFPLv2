@@ -1,5 +1,5 @@
 {
-	"name": "ls_s",
+	"name": "ls_sodp_001",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"parameters": {
