@@ -1,6 +1,5 @@
 {
 	"name": "ls_sodp_001",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"parameters": {
 			"subscriber": {
@@ -30,13 +29,21 @@
 			"sncMode": false,
 			"userName": "@{linkedService().user_name}",
 			"subscriberName": "@{linkedService().subscriber}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_akv_001",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "pw-sap"
+			},
 			"server": "@{linkedService().server_name}",
-			"systemNumber": "@{linkedService().system_number}",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhNWFjNjllNi0xZTNhLTRiMzAtOGRiYy03MzQxZDAyMGY0NzUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"systemNumber": "@{linkedService().system_number}"
 		},
 		"connectVia": {
 			"referenceName": "IRLocal",
 			"type": "IntegrationRuntimeReference"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
