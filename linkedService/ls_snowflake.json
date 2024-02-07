@@ -3,20 +3,16 @@
 	"properties": {
 		"parameters": {
 			"database": {
-				"type": "string",
-				"defaultValue": "D3010_DEV_BRONZE_RAW"
+				"type": "string"
 			},
 			"warehouse": {
-				"type": "string",
-				"defaultValue": "INGEST_DEV_WH"
+				"type": "string"
 			},
 			"role": {
-				"type": "string",
-				"defaultValue": "INGEST_DEV"
+				"type": "string"
 			},
 			"account_name": {
-				"type": "string",
-				"defaultValue": "bb34365.west-europe.azure"
+				"type": "string"
 			}
 		},
 		"annotations": [],
