@@ -1,5 +1,5 @@
 {
-	"name": "ls_sap_odp",
+	"name": "ls_s",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"parameters": {
