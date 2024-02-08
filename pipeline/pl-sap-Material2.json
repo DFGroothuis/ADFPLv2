@@ -1,0 +1,133 @@
+{
+    "name": "pl-sap-Material2",
+    "properties": {
+        "activities": [
+            {
+                "name": "Execute MARA",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-cdc_table",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true,
+                    "parameters": {
+                        "table_name": "MARA",
+                        "ChangeDateColumn": "LAEDA",
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "pipeline_name": {
+                            "value": "@pipeline().Pipeline",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Execute MAKT",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "EnvStorage": {
+                            "value": "@pipeline().globalParameters.gp_adls_environment",
+                            "type": "Expression"
+                        },
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "EnvRegSys": {
+                            "value": "@pipeline().globalParameters.gp_adls_envregsys",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": "MAKT"
+                    }
+                }
+            },
+            {
+                "name": "Execute IPRODUCT",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-cdc_cds",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true,
+                    "parameters": {
+                        "CDS": "IPRODUCT",
+                        "KeyFields": "[\"IPRODUCT\"]",
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "DataSource": {
+                "type": "string",
+                "defaultValue": "SAP"
+            },
+            "Domain": {
+                "type": "string",
+                "defaultValue": "MaterialManagement"
+            },
+            "Object": {
+                "type": "string",
+                "defaultValue": "Material2"
+            }
+        },
+        "folder": {
+            "name": "SAP/sap-MaterialManagement"
+        },
+        "annotations": []
+    }
+}
