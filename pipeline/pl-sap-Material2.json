@@ -19,6 +19,7 @@
                     "parameters": {
                         "table_name": "MARA",
                         "ChangeDateColumn": "LAEDA",
+                        "ChangeTimeColumn": "LAST_CHANGED_TIME",
                         "DataSource": {
                             "value": "@pipeline().parameters.DataSource",
                             "type": "Expression"
