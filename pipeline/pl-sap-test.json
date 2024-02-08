@@ -1,5 +1,5 @@
 {
-	"name": "pl-sap-DeliveryDocument",
+	"name": "pl-sap-test",
 	"properties": {
 		"activities": [
 			{
@@ -90,8 +90,7 @@
 		"folder": {
 			"name": "SAP/sap-SalesDistribution"
 		},
-		"annotations": [],
-		"lastPublishTime": "2023-12-15T19:11:11Z"
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
