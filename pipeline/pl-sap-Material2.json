@@ -95,7 +95,7 @@
                     "waitOnCompletion": true,
                     "parameters": {
                         "CDS": "IPRODUCT",
-                        "KeyFields": "[\"IPRODUCT\"]",
+                        "KeyFields": "[\"PRODUCT\"]",
                         "DataSource": {
                             "value": "@pipeline().parameters.DataSource",
                             "type": "Expression"
