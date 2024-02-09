@@ -10,7 +10,32 @@
 				"frequency": "Hour",
 				"interval": 1,
 				"startTime": "2024-02-09T09:00:00",
-				"timeZone": "W. Europe Standard Time"
+				"timeZone": "W. Europe Standard Time",
+				"schedule": {
+					"minutes": [
+						0,
+						15,
+						30,
+						45
+					],
+					"hours": [
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16
+					],
+					"weekDays": [
+						"monday",
+						"tuesday",
+						"wednesday",
+						"thursday",
+						"friday"
+					]
+				}
 			}
 		}
 	}
