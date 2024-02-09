@@ -590,7 +590,7 @@
 												}
 											],
 											"rfcTableOptions": {
-												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
+												"value": "@concat(pipeline().parameters.ChangeDateTimeColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMddHHmmss.fffffff'), '''')",
 												"type": "Expression"
 											},
 											"customRfcReadTableFunctionModule": "",
@@ -838,7 +838,7 @@
 												}
 											],
 											"rfcTableOptions": {
-												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
+												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), ''' AND ', pipeline().parameters.ChangeTimeColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'HHmmss'), '''')",
 												"type": "Expression"
 											},
 											"customRfcReadTableFunctionModule": "",
