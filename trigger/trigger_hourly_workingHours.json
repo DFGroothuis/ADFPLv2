@@ -1,0 +1,17 @@
+{
+	"name": "trigger_hourly_workingHours",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2024-02-09T09:00:00",
+				"timeZone": "W. Europe Standard Time"
+			}
+		}
+	}
+}
