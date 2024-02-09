@@ -1,0 +1,195 @@
+{
+	"name": "pl-sap-MaintenanceOrder-Explore",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Full Table EQUI",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-adls2-ExploreZone",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EQUI",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table IFLOT",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-adls2-ExploreZone",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "IFLOT",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table AFIH",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-adls2-ExploreZone",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "AFIH",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table AFVC",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-adls2-ExploreZone",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "AFVC",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table AUFK",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-adls2-ExploreZone",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "AUFK",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Domain": {
+				"type": "string",
+				"defaultValue": "PlantMaintenance"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "MaintenanceOrder"
+			},
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			}
+		},
+		"folder": {
+			"name": "SAP/sap-PlantMaintenance"
+		},
+		"annotations": []
+	}
+}

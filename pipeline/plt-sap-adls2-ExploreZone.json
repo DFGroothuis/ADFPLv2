@@ -1,0 +1,141 @@
+{
+	"name": "plt-sap-adls2-ExploreZone",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Full Table Explore",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SapTableSource",
+						"additionalColumns": [
+							{
+								"name": "_GXPDF_LOADED_AT",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"rfcTableOptions": "",
+						"customRfcReadTableFunctionModule": "",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sapt_001",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							},
+							"server_name": {
+								"value": "@pipeline().globalParameters.gp_sap_servername",
+								"type": "Expression"
+							},
+							"system_number": {
+								"value": "@pipeline().globalParameters.gp_sap_systemnumber",
+								"type": "Expression"
+							},
+							"client_id": {
+								"value": "@pipeline().globalParameters.gp_sap_clientid",
+								"type": "Expression"
+							},
+							"language": {
+								"value": "@pipeline().globalParameters.gp_sap_language",
+								"type": "Expression"
+							},
+							"user_name": {
+								"value": "@pipeline().globalParameters.gp_sap_username",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_parquet_001_table",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": {
+								"value": "Explore",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"DataSource": {
+				"type": "string"
+			},
+			"Domain": {
+				"type": "string"
+			},
+			"table": {
+				"type": "string"
+			},
+			"Object": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Template"
+		},
+		"annotations": []
+	}
+}

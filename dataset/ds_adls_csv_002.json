@@ -1,0 +1,32 @@
+{
+	"name": "ds_adls_csv_002",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_001",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"table_filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().table_filename",
+					"type": "Expression"
+				},
+				"folderPath": "meta/sap-meta",
+				"fileSystem": "dev"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

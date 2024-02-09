@@ -1,0 +1,64 @@
+{
+	"name": "pl-sf-sap-create-table-sf",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachTable",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.table",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Retrieve SAP metadata - Create Table SF",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "plt-sf-sap-CreateTableSF",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"table": {
+										"value": "@item()",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"table": {
+				"type": "array",
+				"defaultValue": [
+					"IPRODUCT"
+				]
+			}
+		},
+		"variables": {
+			"lastdate": {
+				"type": "String"
+			},
+			"var": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "SAP/MetaData"
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"name": "ds_adls_csv_001",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_001",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pipeline": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().pipeline, '.txt')",
+					"type": "Expression"
+				},
+				"folderPath": "meta/pipeline-meta",
+				"fileSystem": "dev"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

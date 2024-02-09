@@ -1,0 +1,17 @@
+{
+	"name": "trigger_quarterly",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2024-02-09T08:58:00",
+				"timeZone": "W. Europe Standard Time"
+			}
+		}
+	}
+}

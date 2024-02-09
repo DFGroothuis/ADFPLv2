@@ -41,6 +41,10 @@
 			"gp_sf_role": {
 				"type": "string",
 				"value": "INGEST_DEV"
+			},
+			"gp_sf_accountname": {
+				"type": "string",
+				"value": "bb34365.west-europe.azure"
 			}
 		},
 		"globalConfigurations": {

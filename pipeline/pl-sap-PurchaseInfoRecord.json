@@ -1,0 +1,95 @@
+{
+	"name": "pl-sap-PurchaseInfoRecord",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Full Table EINE",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EINE",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Full Table EINA",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "EINA",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Domain": {
+				"type": "string",
+				"defaultValue": "Purchase"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "PurchaseInfoRecord"
+			},
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			}
+		},
+		"folder": {
+			"name": "SAP/sap-Purchase"
+		},
+		"annotations": []
+	}
+}
