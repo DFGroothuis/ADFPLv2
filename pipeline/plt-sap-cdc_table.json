@@ -43,7 +43,14 @@
 			{
 				"name": "Store Trigger Date",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "If Condition1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -124,7 +131,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "Switch Type Of Retrieving Data",
+						"activity": "If Condition1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -493,7 +500,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Switch Type Of Retrieving Data",
+						"activity": "If Condition1",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -545,8 +552,8 @@
 				}
 			},
 			{
-				"name": "Switch Type Of Retrieving Data",
-				"type": "Switch",
+				"name": "If Condition1",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "LookupLastTriggerDate",
@@ -557,380 +564,248 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"on": {
-						"value": "@pipeline().parameters.ChangeCaptureMethod",
+					"expression": {
+						"value": "@empty(pipeline().parameters.ChangeTimeColumn)",
 						"type": "Expression"
 					},
-					"cases": [
+					"ifFalseActivities": [
 						{
-							"value": "DateTime",
-							"activities": [
-								{
-									"name": "Copy Changes Table DateTime column",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SapTableSource",
-											"additionalColumns": [
-												{
-													"name": "_gxpdf_loaded_at",
-													"value": {
-														"value": "@utcNow()",
-														"type": "Expression"
-													}
-												}
-											],
-											"rfcTableOptions": {
-												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
-												"type": "Expression"
-											},
-											"customRfcReadTableFunctionModule": "",
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "ParquetSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "ParquetWriteSettings"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
+							"name": "Copy Changes Table DateTime",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SapTableSource",
+									"additionalColumns": [
 										{
-											"referenceName": "ds_sapt_001",
-											"type": "DatasetReference",
-											"parameters": {
-												"table_name": {
-													"value": "@pipeline().parameters.table_name",
-													"type": "Expression"
-												},
-												"server_name": {
-													"value": "@pipeline().globalParameters.gp_sap_servername",
-													"type": "Expression"
-												},
-												"system_number": {
-													"value": "@pipeline().globalParameters.gp_sap_systemnumber",
-													"type": "Expression"
-												},
-												"client_id": {
-													"value": "@pipeline().globalParameters.gp_sap_clientid",
-													"type": "Expression"
-												},
-												"language": {
-													"value": "@pipeline().globalParameters.gp_sap_language",
-													"type": "Expression"
-												},
-												"user_name": {
-													"value": "@pipeline().globalParameters.gp_sap_username",
-													"type": "Expression"
-												}
+											"name": "_gxpdf_loaded_at",
+											"value": {
+												"value": "@utcNow()",
+												"type": "Expression"
 											}
 										}
 									],
-									"outputs": [
-										{
-											"referenceName": "ds_adls_parquet_001_table",
-											"type": "DatasetReference",
-											"parameters": {
-												"EnvStorage": {
-													"value": "@pipeline().globalParameters.gp_adls_environment",
-													"type": "Expression"
-												},
-												"Zone": {
-													"value": "Staging",
-													"type": "Expression"
-												},
-												"DataSource": {
-													"value": "@pipeline().parameters.DataSource",
-													"type": "Expression"
-												},
-												"EnvRegSys": {
-													"value": "@pipeline().globalParameters.gp_adls_envregsys",
-													"type": "Expression"
-												},
-												"Domain": {
-													"value": "@pipeline().parameters.Domain",
-													"type": "Expression"
-												},
-												"Object": {
-													"value": "@pipeline().parameters.Object",
-													"type": "Expression"
-												},
-												"Table": {
-													"value": "@pipeline().parameters.table_name",
-													"type": "Expression"
-												}
-											}
+									"rfcTableOptions": {
+										"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
+										"type": "Expression"
+									},
+									"customRfcReadTableFunctionModule": "",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_sapt_001",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": {
+											"value": "@pipeline().parameters.table_name",
+											"type": "Expression"
+										},
+										"server_name": {
+											"value": "@pipeline().globalParameters.gp_sap_servername",
+											"type": "Expression"
+										},
+										"system_number": {
+											"value": "@pipeline().globalParameters.gp_sap_systemnumber",
+											"type": "Expression"
+										},
+										"client_id": {
+											"value": "@pipeline().globalParameters.gp_sap_clientid",
+											"type": "Expression"
+										},
+										"language": {
+											"value": "@pipeline().globalParameters.gp_sap_language",
+											"type": "Expression"
+										},
+										"user_name": {
+											"value": "@pipeline().globalParameters.gp_sap_username",
+											"type": "Expression"
 										}
-									]
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_adls_parquet_001_table",
+									"type": "DatasetReference",
+									"parameters": {
+										"EnvStorage": {
+											"value": "@pipeline().globalParameters.gp_adls_environment",
+											"type": "Expression"
+										},
+										"Zone": {
+											"value": "Staging",
+											"type": "Expression"
+										},
+										"DataSource": {
+											"value": "@pipeline().parameters.DataSource",
+											"type": "Expression"
+										},
+										"EnvRegSys": {
+											"value": "@pipeline().globalParameters.gp_adls_envregsys",
+											"type": "Expression"
+										},
+										"Domain": {
+											"value": "@pipeline().parameters.Domain",
+											"type": "Expression"
+										},
+										"Object": {
+											"value": "@pipeline().parameters.Object",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.table_name",
+											"type": "Expression"
+										}
+									}
 								}
 							]
-						},
+						}
+					],
+					"ifTrueActivities": [
 						{
-							"value": "Date",
-							"activities": [
-								{
-									"name": "Copy Changes Table Date Column",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SapTableSource",
-											"additionalColumns": [
-												{
-													"name": "_gxpdf_loaded_at",
-													"value": {
-														"value": "@utcNow()",
-														"type": "Expression"
-													}
-												}
-											],
-											"rfcTableOptions": {
-												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
-												"type": "Expression"
-											},
-											"customRfcReadTableFunctionModule": "",
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "ParquetSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "ParquetWriteSettings"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
+							"name": "Copy Changes Table Date",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SapTableSource",
+									"additionalColumns": [
 										{
-											"referenceName": "ds_sapt_001",
-											"type": "DatasetReference",
-											"parameters": {
-												"table_name": {
-													"value": "@pipeline().parameters.table_name",
-													"type": "Expression"
-												},
-												"server_name": {
-													"value": "@pipeline().globalParameters.gp_sap_servername",
-													"type": "Expression"
-												},
-												"system_number": {
-													"value": "@pipeline().globalParameters.gp_sap_systemnumber",
-													"type": "Expression"
-												},
-												"client_id": {
-													"value": "@pipeline().globalParameters.gp_sap_clientid",
-													"type": "Expression"
-												},
-												"language": {
-													"value": "@pipeline().globalParameters.gp_sap_language",
-													"type": "Expression"
-												},
-												"user_name": {
-													"value": "@pipeline().globalParameters.gp_sap_username",
-													"type": "Expression"
-												}
+											"name": "_gxpdf_loaded_at",
+											"value": {
+												"value": "@utcNow()",
+												"type": "Expression"
 											}
 										}
 									],
-									"outputs": [
-										{
-											"referenceName": "ds_adls_parquet_001_table",
-											"type": "DatasetReference",
-											"parameters": {
-												"EnvStorage": {
-													"value": "@pipeline().globalParameters.gp_adls_environment",
-													"type": "Expression"
-												},
-												"Zone": {
-													"value": "Staging",
-													"type": "Expression"
-												},
-												"DataSource": {
-													"value": "@pipeline().parameters.DataSource",
-													"type": "Expression"
-												},
-												"EnvRegSys": {
-													"value": "@pipeline().globalParameters.gp_adls_envregsys",
-													"type": "Expression"
-												},
-												"Domain": {
-													"value": "@pipeline().parameters.Domain",
-													"type": "Expression"
-												},
-												"Object": {
-													"value": "@pipeline().parameters.Object",
-													"type": "Expression"
-												},
-												"Table": {
-													"value": "@pipeline().parameters.table_name",
-													"type": "Expression"
-												}
-											}
-										}
-									]
+									"rfcTableOptions": {
+										"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
+										"type": "Expression"
+									},
+									"customRfcReadTableFunctionModule": "",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
 								}
-							]
-						},
-						{
-							"value": "DateAndTime",
-							"activities": [
+							},
+							"inputs": [
 								{
-									"name": "Copy Changes Table Date and Time Columns",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SapTableSource",
-											"additionalColumns": [
-												{
-													"name": "_gxpdf_loaded_at",
-													"value": {
-														"value": "@utcNow()",
-														"type": "Expression"
-													}
-												}
-											],
-											"rfcTableOptions": {
-												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
-												"type": "Expression"
-											},
-											"customRfcReadTableFunctionModule": "",
-											"partitionOption": "None"
+									"referenceName": "ds_sapt_001",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": {
+											"value": "@pipeline().parameters.table_name",
+											"type": "Expression"
 										},
-										"sink": {
-											"type": "ParquetSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "ParquetWriteSettings"
-											}
+										"server_name": {
+											"value": "@pipeline().globalParameters.gp_sap_servername",
+											"type": "Expression"
 										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
+										"system_number": {
+											"value": "@pipeline().globalParameters.gp_sap_systemnumber",
+											"type": "Expression"
+										},
+										"client_id": {
+											"value": "@pipeline().globalParameters.gp_sap_clientid",
+											"type": "Expression"
+										},
+										"language": {
+											"value": "@pipeline().globalParameters.gp_sap_language",
+											"type": "Expression"
+										},
+										"user_name": {
+											"value": "@pipeline().globalParameters.gp_sap_username",
+											"type": "Expression"
 										}
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_sapt_001",
-											"type": "DatasetReference",
-											"parameters": {
-												"table_name": {
-													"value": "@pipeline().parameters.table_name",
-													"type": "Expression"
-												},
-												"server_name": {
-													"value": "@pipeline().globalParameters.gp_sap_servername",
-													"type": "Expression"
-												},
-												"system_number": {
-													"value": "@pipeline().globalParameters.gp_sap_systemnumber",
-													"type": "Expression"
-												},
-												"client_id": {
-													"value": "@pipeline().globalParameters.gp_sap_clientid",
-													"type": "Expression"
-												},
-												"language": {
-													"value": "@pipeline().globalParameters.gp_sap_language",
-													"type": "Expression"
-												},
-												"user_name": {
-													"value": "@pipeline().globalParameters.gp_sap_username",
-													"type": "Expression"
-												}
-											}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_adls_parquet_001_table",
+									"type": "DatasetReference",
+									"parameters": {
+										"EnvStorage": {
+											"value": "@pipeline().globalParameters.gp_adls_environment",
+											"type": "Expression"
+										},
+										"Zone": {
+											"value": "Staging",
+											"type": "Expression"
+										},
+										"DataSource": {
+											"value": "@pipeline().parameters.DataSource",
+											"type": "Expression"
+										},
+										"EnvRegSys": {
+											"value": "@pipeline().globalParameters.gp_adls_envregsys",
+											"type": "Expression"
+										},
+										"Domain": {
+											"value": "@pipeline().parameters.Domain",
+											"type": "Expression"
+										},
+										"Object": {
+											"value": "@pipeline().parameters.Object",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.table_name",
+											"type": "Expression"
 										}
-									],
-									"outputs": [
-										{
-											"referenceName": "ds_adls_parquet_001_table",
-											"type": "DatasetReference",
-											"parameters": {
-												"EnvStorage": {
-													"value": "@pipeline().globalParameters.gp_adls_environment",
-													"type": "Expression"
-												},
-												"Zone": {
-													"value": "Staging",
-													"type": "Expression"
-												},
-												"DataSource": {
-													"value": "@pipeline().parameters.DataSource",
-													"type": "Expression"
-												},
-												"EnvRegSys": {
-													"value": "@pipeline().globalParameters.gp_adls_envregsys",
-													"type": "Expression"
-												},
-												"Domain": {
-													"value": "@pipeline().parameters.Domain",
-													"type": "Expression"
-												},
-												"Object": {
-													"value": "@pipeline().parameters.Object",
-													"type": "Expression"
-												},
-												"Table": {
-													"value": "@pipeline().parameters.table_name",
-													"type": "Expression"
-												}
-											}
-										}
-									]
+									}
 								}
 							]
 						}
@@ -943,12 +818,6 @@
 				"type": "string"
 			},
 			"ChangeDateColumn": {
-				"type": "string"
-			},
-			"ChangeTimeColumn": {
-				"type": "string"
-			},
-			"ChangeDateTimeColumn": {
 				"type": "string"
 			},
 			"DataSource": {
@@ -964,7 +833,7 @@
 			"pipeline_name": {
 				"type": "string"
 			},
-			"ChangeCaptureMethod": {
+			"ChangeTimeColumn": {
 				"type": "string"
 			}
 		},
