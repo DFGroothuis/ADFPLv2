@@ -1,0 +1,49 @@
+{
+	"name": "ls_sodp_001",
+	"properties": {
+		"parameters": {
+			"subscriber": {
+				"type": "string"
+			},
+			"server_name": {
+				"type": "string"
+			},
+			"system_number": {
+				"type": "string"
+			},
+			"client_id": {
+				"type": "string"
+			},
+			"language": {
+				"type": "string"
+			},
+			"user_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SapOdp",
+		"typeProperties": {
+			"clientId": "@{linkedService().client_id}",
+			"language": "@{linkedService().language}",
+			"sncMode": false,
+			"userName": "@{linkedService().user_name}",
+			"subscriberName": "@{linkedService().subscriber}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_akv_001",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "pw-sap"
+			},
+			"server": "@{linkedService().server_name}",
+			"systemNumber": "@{linkedService().system_number}"
+		},
+		"connectVia": {
+			"referenceName": "IRLocal",
+			"type": "IntegrationRuntimeReference"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

@@ -1,0 +1,34 @@
+{
+	"name": "ls_snowflake",
+	"properties": {
+		"parameters": {
+			"database": {
+				"type": "string"
+			},
+			"warehouse": {
+				"type": "string"
+			},
+			"role": {
+				"type": "string"
+			},
+			"account_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Snowflake",
+		"typeProperties": {
+			"authenticationType": "Basic",
+			"connectionString": "jdbc:snowflake://@{linkedService().account_name}.snowflakecomputing.com/?user=CREUGEBRINK&db=@{linkedService().database}&warehouse=@{linkedService().warehouse}&role=@{linkedService().role}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_akv_001",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "pw-snowflake"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}

@@ -1,0 +1,200 @@
+{
+    "name": "pl-sap-MaintenanceOrder",
+    "properties": {
+        "activities": [
+            {
+                "name": "Execute Full Table EQUI",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": false,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": {
+                            "value": "EQUI",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Execute Full Table IFLOT",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": false,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": {
+                            "value": "IFLOT",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            },
+          {
+                "name": "Execute Full Table AFIH",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": false,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": {
+                            "value": "AFIH",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            },
+          {
+                "name": "Execute Full Table AFVC",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": false,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": {
+                            "value": "AFVC",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            },
+          {
+                "name": "Execute Full Table AUFK",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": false,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": {
+                            "value": "AUFK",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            }         
+        ],
+        "parameters": {
+            "Domain": {
+                "type": "string",
+                "defaultValue": "PlantMaintenance"
+            },
+            "Object": {
+                "type": "string",
+                "defaultValue": "MaintenanceOrder"
+            },
+            "DataSource": {
+                "type": "string",
+                "defaultValue": "SAP"
+            }
+        },
+        "folder": {
+            "name": "SAP/sap-PlantMaintenance"
+        },
+        "annotations": []
+    }
+}

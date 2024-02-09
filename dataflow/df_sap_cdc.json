@@ -1,12 +1,12 @@
 {
-	"name": "MaterialCDS",
+	"name": "df_sap_cdc",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "SapOdpResource1",
+						"referenceName": "ds_sodp_001",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -15,33 +15,36 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Parquet1",
+						"referenceName": "ds_adls_parquet_002_df",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
-					"rejectedDataLinkedService": {
-						"referenceName": "AzureDataLakeStorageLocal",
-						"type": "LinkedServiceReference"
-					}
+					"name": "sink1"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
+				"parameters{",
+				"     KeyFields as string[]",
+				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     staged: true,",
 				"     readMode: 'fullAndIncrementalLoad',",
-				"     keys: ['PRODUCT'],",
+				"     keys: ($KeyFields),",
 				"     format: 'sapObject',",
-				"     fixDecimalPrecision: true) ~> source1",
-				"source1 sink(allowSchemaDrift: true,",
+				"     fixDecimalPrecision: true,",
+				"     partitionBy('hash', 1)) ~> source1",
+				"source1 derive({_GXPDF_LOADED_AT} = currentUTC()) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     umask: 0022,",
 				"     preCommands: [],",
-				"     postCommands: [],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     postCommands: []) ~> sink1"
 			]
 		}
 	}

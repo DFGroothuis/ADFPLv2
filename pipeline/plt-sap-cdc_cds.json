@@ -1,0 +1,552 @@
+{
+	"name": "plt-sap-cdc_cds",
+	"properties": {
+		"description": "Pipeline to retrieve data from an SAP CDS via ODP framework. Changes are stored in Data Lake. Then it is copied into Snowflake and data is moved from Staging to Archived.",
+		"activities": [
+			{
+				"name": "Execute CDC DataFlow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_sap_cdc",
+						"type": "DataFlowReference",
+						"parameters": {
+							"KeyFields": {
+								"value": "@pipeline().parameters.KeyFields",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"source1": {
+								"CDS": {
+									"value": "@pipeline().parameters.CDS",
+									"type": "Expression"
+								},
+								"system_number": {
+									"value": "@pipeline().globalParameters.gp_sap_systemnumber",
+									"type": "Expression"
+								},
+								"client_id": {
+									"value": "@pipeline().globalParameters.gp_sap_clientid",
+									"type": "Expression"
+								},
+								"server_name": {
+									"value": "@pipeline().globalParameters.gp_sap_servername",
+									"type": "Expression"
+								},
+								"language": {
+									"value": "@pipeline().globalParameters.gp_sap_language",
+									"type": "Expression"
+								},
+								"user_name": {
+									"value": "@pipeline().globalParameters.gp_sap_username",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"EnvStorage": {
+									"value": "@pipeline().globalParameters.gp_adls_environment",
+									"type": "Expression"
+								},
+								"Zone": {
+									"value": "Staging",
+									"type": "Expression"
+								},
+								"DataSource": {
+									"value": "@pipeline().parameters.DataSource",
+									"type": "Expression"
+								},
+								"EnvRegSys": {
+									"value": "@pipeline().globalParameters.gp_adls_envregsys",
+									"type": "Expression"
+								},
+								"Domain": {
+									"value": "@pipeline().parameters.Domain",
+									"type": "Expression"
+								},
+								"Object": {
+									"value": "@pipeline().parameters.Object",
+									"type": "Expression"
+								},
+								"CDS": {
+									"value": "@pipeline().parameters.CDS",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adls_001",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "dev/Staging/cdc"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"continuationSettings": {
+						"customizedCheckpointKey": "9e64901c-bb64-4acb-90c7-8227ae9d46e9"
+					}
+				}
+			},
+			{
+				"name": "Call Procedure Snowflake",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute CDC DataFlow",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_snowflake",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"database": {
+							"value": "@pipeline().globalParameters.gp_sf_database",
+							"type": "Expression"
+						},
+						"warehouse": {
+							"value": "@pipeline().globalParameters.gp_sf_wh_ingest",
+							"type": "Expression"
+						},
+						"role": {
+							"value": "@pipeline().globalParameters.gp_sf_role",
+							"type": "Expression"
+						},
+						"account_name": {
+							"value": "@pipeline().globalParameters.gp_sf_accountname",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database,'.PUBLIC.COPY_DATA_FROM_STAGE(''', pipeline().globalParameters.gp_sf_database, ''' ,''SAP_S4H'',''', pipeline().parameters.CDS, ''', ''SAP/DEVNL200/MaterialManagement/Material/'');')",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Copy parquet Staging To Archive",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Call Procedure Snowflake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						},
+						"deleteFilesAfterCompletion": true
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_adls_parquet_001_table",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": {
+								"value": "Staging",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.CDS",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_parquet_001_table",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Archive",
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.CDS",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Delete Copied Parquet files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy parquet Staging To Archive",
+						"dependencyConditions": [
+							"Succeeded",
+							"Skipped"
+						]
+					},
+					{
+						"activity": "Copy parquet Staging To Failed",
+						"dependencyConditions": [
+							"Succeeded",
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_adls_parquet_001_table",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": {
+								"value": "Staging",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.CDS",
+								"type": "Expression"
+							}
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*parquet",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Copy parquet Staging To Failed",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Call Procedure Snowflake",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						},
+						"deleteFilesAfterCompletion": true
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_adls_parquet_001_table",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": {
+								"value": "Staging",
+								"type": "Expression"
+							},
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.CDS",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_parquet_001_table",
+						"type": "DatasetReference",
+						"parameters": {
+							"EnvStorage": {
+								"value": "@pipeline().globalParameters.gp_adls_environment",
+								"type": "Expression"
+							},
+							"Zone": "Failed",
+							"DataSource": {
+								"value": "@pipeline().parameters.DataSource",
+								"type": "Expression"
+							},
+							"EnvRegSys": {
+								"value": "@pipeline().globalParameters.gp_adls_envregsys",
+								"type": "Expression"
+							},
+							"Domain": {
+								"value": "@pipeline().parameters.Domain",
+								"type": "Expression"
+							},
+							"Object": {
+								"value": "@pipeline().parameters.Object",
+								"type": "Expression"
+							},
+							"Table": {
+								"value": "@pipeline().parameters.CDS",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Web Failed SAP",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Execute CDC DataFlow",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://logic-app-adf.azurewebsites.net:443/api/worflow-email-adf/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=0vAOQ7H9qERnaCMUYRAFdHnCw1vqv1UkGHRn1H08RWc",
+					"body": {
+						"value": "{\n    \"message\" : \"Failed to copy data from SAP @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"cas.reugebrink@bs.nttdata.com\"\n   }",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web Failed SF",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Call Procedure Snowflake",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://logic-app-adf.azurewebsites.net:443/api/worflow-email-adf/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=0vAOQ7H9qERnaCMUYRAFdHnCw1vqv1UkGHRn1H08RWc",
+					"body": {
+						"value": "{\n    \"message\" : \"Failed to copy data into Snowflake @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"cas.reugebrink@bs.nttdata.com\"\n   }",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"CDS": {
+				"type": "string"
+			},
+			"KeyFields": {
+				"type": "array"
+			},
+			"DataSource": {
+				"type": "string"
+			},
+			"Domain": {
+				"type": "string"
+			},
+			"Object": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Template"
+		},
+		"annotations": []
+	}
+}
