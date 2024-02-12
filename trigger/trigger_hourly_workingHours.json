@@ -2,7 +2,7 @@
 	"name": "trigger_hourly_workingHours",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
