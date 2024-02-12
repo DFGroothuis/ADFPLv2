@@ -34,7 +34,8 @@
 						"pipeline_name": {
 							"value": "@pipeline().Pipeline",
 							"type": "Expression"
-						}
+						},
+						"ChangeCaptureMethod": "Date"
 					}
 				}
 			},
