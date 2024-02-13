@@ -8,7 +8,7 @@
 			},
 			"gp_sf_database": {
 				"type": "string",
-				"value": "D3010_DEV_BRONZE_RAW"
+				"value": "D1010_PROD_BRONZE_RAW"
 			},
 			"gp_sap_servername": {
 				"type": "string",
