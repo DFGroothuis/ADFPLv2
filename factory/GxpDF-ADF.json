@@ -36,11 +36,11 @@
 			},
 			"gp_sf_wh_ingest": {
 				"type": "string",
-				"value": "INGEST_DEV_WH"
+				"value": "INGEST_PROD_WH"
 			},
 			"gp_sf_role": {
 				"type": "string",
-				"value": "INGEST_DEV"
+				"value": "INGEST_PROD"
 			},
 			"gp_sf_accountname": {
 				"type": "string",
