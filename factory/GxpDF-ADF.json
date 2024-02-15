@@ -40,7 +40,7 @@
 			},
 			"gp_sf_role": {
 				"type": "string",
-				"value": "INGEST_PROD"
+				"value": "ACCOUNTADMIN"
 			},
 			"gp_sf_accountname": {
 				"type": "string",
