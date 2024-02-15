@@ -23,7 +23,7 @@
 							"type": "Expression"
 						},
 						"customRfcReadTableFunctionModule": "",
-						"rfcTableFields": "FIELDNAME, POSITION, DATATYPE, LENG, DECIMALS, KEYFLAG",
+						"rfcTableFields": "",
 						"partitionOption": "None"
 					},
 					"sink": {
