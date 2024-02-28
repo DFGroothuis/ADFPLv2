@@ -43,7 +43,14 @@
 			{
 				"name": "Store Trigger Date",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Switch Type Of Retrieving Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -165,7 +172,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database,'.PUBLIC.COPY_DATA_FROM_STAGE(''', pipeline().globalParameters.gp_sf_database, ''' ,''SAP_S4H'',''', pipeline().parameters.table_name, ''', ''SAP/DEVNL200/MaterialManagement/Material/'');')",
+								"value": "@concat('CALL ', pipeline().globalParameters.gp_sf_database,'.PUBLIC.COPY_DATA_FROM_STAGE(''', pipeline().globalParameters.gp_sf_database, ''' ,''SAP_S4H'',''', pipeline().parameters.table_name, ''', ''SAP/DEVNL200/', pipeline().parameters.Domain, '/', pipeline().parameters.Object, '/'');')",
 								"type": "Expression"
 							}
 						}
@@ -590,7 +597,7 @@
 												}
 											],
 											"rfcTableOptions": {
-												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
+												"value": "@concat(pipeline().parameters.ChangeDateTimeColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMddHHmmss.fffffff'), '''')",
 												"type": "Expression"
 											},
 											"customRfcReadTableFunctionModule": "",
@@ -838,7 +845,7 @@
 												}
 											],
 											"rfcTableOptions": {
-												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), '''')",
+												"value": "@concat(pipeline().parameters.ChangeDateColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'yyyyMMdd'), ''' AND ', pipeline().parameters.ChangeTimeColumn, ' GE ''', formatDateTime(activity('LookupLastTriggerDate').output.firstRow.Prop_0, 'HHmmss'), '''')",
 												"type": "Expression"
 											},
 											"customRfcReadTableFunctionModule": "",

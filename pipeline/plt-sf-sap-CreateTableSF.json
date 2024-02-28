@@ -23,7 +23,7 @@
 							"type": "Expression"
 						},
 						"customRfcReadTableFunctionModule": "",
-						"rfcTableFields": "FIELDNAME, POSITION, DATATYPE, LENG, DECIMALS, KEYFLAG",
+						"rfcTableFields": "",
 						"partitionOption": "None"
 					},
 					"sink": {
@@ -43,6 +43,18 @@
 						"mappings": [
 							{
 								"source": {
+									"name": "TABNAME",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "TABNAME",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "FIELDNAME",
 									"type": "String",
 									"physicalType": "C"
@@ -55,14 +67,338 @@
 							},
 							{
 								"source": {
+									"name": "FLDSTAT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "FLDSTAT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ROLLNAME",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "ROLLNAME",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ROLLSTAT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "ROLLSTAT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DOMNAME",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DOMNAME",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DOMSTAT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DOMSTAT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TEXTSTAT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "TEXTSTAT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DDLANGUAGE",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DDLANGUAGE",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "POSITION",
-									"type": "Number",
+									"type": "String",
 									"physicalType": "N"
 								},
 								"sink": {
 									"name": "POSITION",
-									"type": "Number",
-									"physicalType": "Number"
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "KEYFLAG",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "KEYFLAG",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MANDATORY",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "MANDATORY",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CHECKTABLE",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "CHECKTABLE",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ADMINFIELD",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "ADMINFIELD",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "INTTYPE",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "INTTYPE",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "INTLEN",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "INTLEN",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "REFTABLE",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "REFTABLE",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PRECFIELD",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "PRECFIELD",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "REFFIELD",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "REFFIELD",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CONROUT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "CONROUT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ROUTPUTLEN",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "ROUTPUTLEN",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MEMORYID",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "MEMORYID",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LOGFLAG",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "LOGFLAG",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "HEADLEN",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "HEADLEN",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SCRLEN1",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "SCRLEN1",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SCRLEN2",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "SCRLEN2",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SCRLEN3",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "SCRLEN3",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DTELGLOBAL",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DTELGLOBAL",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DTELMASTER",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DTELMASTER",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RESERVEDTE",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "RESERVEDTE",
+									"type": "String",
+									"physicalType": "String"
 								}
 							},
 							{
@@ -91,6 +427,18 @@
 							},
 							{
 								"source": {
+									"name": "OUTPUTLEN",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "OUTPUTLEN",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "DECIMALS",
 									"type": "String",
 									"physicalType": "N"
@@ -103,12 +451,204 @@
 							},
 							{
 								"source": {
-									"name": "KEYFLAG",
+									"name": "LOWERCASE",
 									"type": "String",
 									"physicalType": "C"
 								},
 								"sink": {
-									"name": "KEYFLAG",
+									"name": "LOWERCASE",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SIGNFLAG",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "SIGNFLAG",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LANGFLAG",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "LANGFLAG",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "VALEXI",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "VALEXI",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ENTITYTAB",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "ENTITYTAB",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CONVEXIT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "CONVEXIT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MASK",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "MASK",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MASKLEN",
+									"type": "String",
+									"physicalType": "N"
+								},
+								"sink": {
+									"name": "MASKLEN",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ACTFLAG",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "ACTFLAG",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DOMMASTER",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DOMMASTER",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RESERVEDOM",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "RESERVEDOM",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DOMGLOBAL",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DOMGLOBAL",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DDTEXT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "DDTEXT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "REPTEXT",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "REPTEXT",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SCRTEXT_S",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "SCRTEXT_S",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SCRTEXT_M",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "SCRTEXT_M",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SCRTEXT_L",
+									"type": "String",
+									"physicalType": "C"
+								},
+								"sink": {
+									"name": "SCRTEXT_L",
 									"type": "String",
 									"physicalType": "String"
 								}
@@ -218,62 +758,6 @@
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
-				"name": "Web Failed SAP",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Copy SAP meta to Blob",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"method": "POST",
-					"url": "https://logic-app-adf.azurewebsites.net:443/api/worflow-email-adf/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=0vAOQ7H9qERnaCMUYRAFdHnCw1vqv1UkGHRn1H08RWc",
-					"body": {
-						"value": "{\n    \"message\" : \"Failed to copy data from SAP @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"cas.reugebrink@bs.nttdata.com\"\n   }",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "Web Failed SF Table",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "SF Create Table",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"method": "POST",
-					"url": "https://logic-app-adf.azurewebsites.net:443/api/worflow-email-adf/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=0vAOQ7H9qERnaCMUYRAFdHnCw1vqv1UkGHRn1H08RWc",
-					"body": {
-						"value": "{\n    \"message\" : \"Failed to create table in snowflake SAP @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"cas.reugebrink@bs.nttdata.com\"\n   }",
-						"type": "Expression"
-					}
 				}
 			}
 		],

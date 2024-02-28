@@ -1,46 +1,9 @@
 {
-	"name": "pl-sap-Material",
+	"name": "pl-sap-Batch_full",
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute MARA",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"policy": {
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "plt-sap-cdc_table",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"table_name": "MARA",
-						"ChangeDateColumn": "LAEDA",
-						"DataSource": {
-							"value": "@pipeline().parameters.DataSource",
-							"type": "Expression"
-						},
-						"Domain": {
-							"value": "@pipeline().parameters.Domain",
-							"type": "Expression"
-						},
-						"Object": {
-							"value": "@pipeline().parameters.Object",
-							"type": "Expression"
-						},
-						"pipeline_name": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						},
-						"ChangeCaptureMethod": "Date"
-					}
-				}
-			},
-			{
-				"name": "Execute MAKT",
+				"name": "Execute MCHA",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
@@ -55,16 +18,8 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Zone": "Staging",
-						"EnvStorage": {
-							"value": "@pipeline().globalParameters.gp_adls_environment",
-							"type": "Expression"
-						},
 						"DataSource": {
 							"value": "@pipeline().parameters.DataSource",
-							"type": "Expression"
-						},
-						"EnvRegSys": {
-							"value": "@pipeline().globalParameters.gp_adls_envregsys",
 							"type": "Expression"
 						},
 						"Domain": {
@@ -75,12 +30,12 @@
 							"value": "@pipeline().parameters.Object",
 							"type": "Expression"
 						},
-						"table": "MAKT"
+						"table": "MCHA"
 					}
 				}
 			},
 			{
-				"name": "Execute MARC",
+				"name": "Execute MCH1",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
@@ -95,16 +50,8 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Zone": "Staging",
-						"EnvStorage": {
-							"value": "@pipeline().globalParameters.gp_adls_environment",
-							"type": "Expression"
-						},
 						"DataSource": {
 							"value": "@pipeline().parameters.DataSource",
-							"type": "Expression"
-						},
-						"EnvRegSys": {
-							"value": "@pipeline().globalParameters.gp_adls_envregsys",
 							"type": "Expression"
 						},
 						"Domain": {
@@ -115,12 +62,12 @@
 							"value": "@pipeline().parameters.Object",
 							"type": "Expression"
 						},
-						"table": "MARC"
+						"table": "MCH1"
 					}
 				}
 			},
 			{
-				"name": "Execute IPRODUCT",
+				"name": "Execute MCHB",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"policy": {
@@ -129,13 +76,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "plt-sap-cdc_cds",
+						"referenceName": "plt-sap-FullTableLoad",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"CDS": "IPRODUCT",
-						"KeyFields": "[\"PRODUCT\"]",
+						"Zone": "Staging",
 						"DataSource": {
 							"value": "@pipeline().parameters.DataSource",
 							"type": "Expression"
@@ -147,7 +93,40 @@
 						"Object": {
 							"value": "@pipeline().parameters.Object",
 							"type": "Expression"
-						}
+						},
+						"table": "MCHB"
+					}
+				}
+			},
+			{
+				"name": "Execute MARD_copy3",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": "MARD"
 					}
 				}
 			}
@@ -159,15 +138,15 @@
 			},
 			"Domain": {
 				"type": "string",
-				"defaultValue": "MaterialManagement"
+				"defaultValue": "BatchManagement"
 			},
 			"Object": {
 				"type": "string",
-				"defaultValue": "Material"
+				"defaultValue": "Batch"
 			}
 		},
 		"folder": {
-			"name": "SAP/sap-MaterialManagement"
+			"name": "SAP/sap-BatchManagement"
 		},
 		"annotations": []
 	}

@@ -1,9 +1,9 @@
 {
-    "name": "pl-sap-Batch",
+    "name": "pl-sap-Customer",
     "properties": {
         "activities": [
             {
-                "name": "Execute MCHA",
+                "name": "Execute I_CUSTOMER_CDS",
                 "type": "ExecutePipeline",
                 "dependsOn": [],
                 "policy": {
@@ -12,14 +12,13 @@
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "plt-sap-cdc_table",
+                        "referenceName": "plt-sap-cdc_cds",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true,
                     "parameters": {
-                        "table_name": "MCHA",
-                        "ChangeDateTimeColumn": "LASTCHANGE_DATETIME",
-                        "ChangeCaptureMethod": "DateTime",
+                        "CDS": "I_CUSTOMER_CDS",
+                        "KeyFields": "[\"CUSTOMER\"]",
                         "DataSource": {
                             "value": "@pipeline().parameters.DataSource",
                             "type": "Expression"
@@ -31,90 +30,12 @@
                         "Object": {
                             "value": "@pipeline().parameters.Object",
                             "type": "Expression"
-                        },
-                        "pipeline_name": {
-                            "value": "@pipeline().Pipeline",
-                            "type": "Expression"
                         }
                     }
                 }
             },
             {
-                "name": "Execute MCHB",
-                "type": "ExecutePipeline",
-                "dependsOn": [],
-                "policy": {
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "plt-sap-cdc_table",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true,
-                    "parameters": {
-                        "table_name": "MCHB",
-                        "ChangeDateColumn": "LAEDA",
-                        "ChangeCaptureMethod": "Date",
-                        "DataSource": {
-                            "value": "@pipeline().parameters.DataSource",
-                            "type": "Expression"
-                        },
-                        "Domain": {
-                            "value": "@pipeline().parameters.Domain",
-                            "type": "Expression"
-                        },
-                        "Object": {
-                            "value": "@pipeline().parameters.Object",
-                            "type": "Expression"
-                        },
-                        "pipeline_name": {
-                            "value": "@pipeline().Pipeline",
-                            "type": "Expression"
-                        }
-                    }
-                }
-            },
-            {
-                "name": "Execute MCH1",
-                "type": "ExecutePipeline",
-                "dependsOn": [],
-                "policy": {
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "plt-sap-cdc_table",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true,
-                    "parameters": {
-                        "table_name": "MCH1",
-                        "ChangeDateTimeColumn": "LASTCHANGE_DATETIME",
-                        "ChangeCaptureMethod": "DateTime",
-                        "DataSource": {
-                            "value": "@pipeline().parameters.DataSource",
-                            "type": "Expression"
-                        },
-                        "Domain": {
-                            "value": "@pipeline().parameters.Domain",
-                            "type": "Expression"
-                        },
-                        "Object": {
-                            "value": "@pipeline().parameters.Object",
-                            "type": "Expression"
-                        },
-                        "pipeline_name": {
-                            "value": "@pipeline().Pipeline",
-                            "type": "Expression"
-                        }
-                    }
-                }
-            },
-            {
-                "name": "Execute MARD",
+                "name": "Execute ADRC",
                 "type": "ExecutePipeline",
                 "dependsOn": [],
                 "policy": {
@@ -149,7 +70,87 @@
                             "value": "@pipeline().parameters.Object",
                             "type": "Expression"
                         },
-                        "table": "MARD"
+                        "table": "ADRC"
+                    }
+                }
+            },
+            {
+                "name": "Execute HRRP_NODE",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "EnvStorage": {
+                            "value": "@pipeline().globalParameters.gp_adls_environment",
+                            "type": "Expression"
+                        },
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "EnvRegSys": {
+                            "value": "@pipeline().globalParameters.gp_adls_envregsys",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": "HRRP_NODE"
+                    }
+                }
+            },
+            {
+                "name": "Execute TKUKT",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "plt-sap-FullTableLoad",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true,
+                    "parameters": {
+                        "Zone": "Staging",
+                        "EnvStorage": {
+                            "value": "@pipeline().globalParameters.gp_adls_environment",
+                            "type": "Expression"
+                        },
+                        "DataSource": {
+                            "value": "@pipeline().parameters.DataSource",
+                            "type": "Expression"
+                        },
+                        "EnvRegSys": {
+                            "value": "@pipeline().globalParameters.gp_adls_envregsys",
+                            "type": "Expression"
+                        },
+                        "Domain": {
+                            "value": "@pipeline().parameters.Domain",
+                            "type": "Expression"
+                        },
+                        "Object": {
+                            "value": "@pipeline().parameters.Object",
+                            "type": "Expression"
+                        },
+                        "table": "TKUKT"
                     }
                 }
             }
@@ -161,15 +162,15 @@
             },
             "Domain": {
                 "type": "string",
-                "defaultValue": "BatchManagement"
+                "defaultValue": "MasterData"
             },
             "Object": {
                 "type": "string",
-                "defaultValue": "Batch"
+                "defaultValue": "Customer"
             }
         },
         "folder": {
-            "name": "SAP/sap-BatchManagement"
+            "name": "SAP/sap-MasterData"
         },
         "annotations": []
     }
