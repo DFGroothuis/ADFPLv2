@@ -1,0 +1,153 @@
+{
+	"name": "pl-sap-Batch_full",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute MCHA",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": "MCHA"
+					}
+				}
+			},
+			{
+				"name": "Execute MCH1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": "MCH1"
+					}
+				}
+			},
+			{
+				"name": "Execute MCHB",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": "MCHB"
+					}
+				}
+			},
+			{
+				"name": "Execute MARD_copy3",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "plt-sap-FullTableLoad",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Zone": "Staging",
+						"DataSource": {
+							"value": "@pipeline().parameters.DataSource",
+							"type": "Expression"
+						},
+						"Domain": {
+							"value": "@pipeline().parameters.Domain",
+							"type": "Expression"
+						},
+						"Object": {
+							"value": "@pipeline().parameters.Object",
+							"type": "Expression"
+						},
+						"table": "MARD"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"DataSource": {
+				"type": "string",
+				"defaultValue": "SAP"
+			},
+			"Domain": {
+				"type": "string",
+				"defaultValue": "BatchManagement"
+			},
+			"Object": {
+				"type": "string",
+				"defaultValue": "Batch"
+			}
+		},
+		"folder": {
+			"name": "SAP/sap-BatchManagement"
+		},
+		"annotations": []
+	}
+}
