@@ -3,19 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "pl-sap-Material2",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"DataSource": "SAP",
-					"Domain": "MaterialManagement",
-					"Object": "Material"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
