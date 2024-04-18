@@ -2,20 +2,8 @@
 	"name": "trigger_hourly_workingHours",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "pl-sap-Material2",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"DataSource": "SAP",
-					"Domain": "MaterialManagement",
-					"Object": "Material"
-				}
-			}
-		],
+		"runtimeState": "Stopped",
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
