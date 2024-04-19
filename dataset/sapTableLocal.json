@@ -1,0 +1,61 @@
+{
+	"name": "sapTableLocal",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sapt_001",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"server_name": {
+					"value": "@dataset().server_name",
+					"type": "Expression"
+				},
+				"system_number": {
+					"value": "@dataset().system_number",
+					"type": "Expression"
+				},
+				"client_id": {
+					"value": "@dataset().client_id",
+					"type": "Expression"
+				},
+				"language": {
+					"value": "@dataset().language",
+					"type": "Expression"
+				},
+				"user_name": {
+					"value": "@dataset().user_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"table_name": {
+				"type": "string"
+			},
+			"server_name": {
+				"type": "string"
+			},
+			"system_number": {
+				"type": "string"
+			},
+			"client_id": {
+				"type": "string"
+			},
+			"language": {
+				"type": "string"
+			},
+			"user_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SapTableResource",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().table_name",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
