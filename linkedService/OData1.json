@@ -1,0 +1,19 @@
+{
+	"name": "OData1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Danny Lokaal",
+		"annotations": [],
+		"type": "OData",
+		"typeProperties": {
+			"url": "bfeslsd.solco.global.nttdata.com",
+			"authenticationType": "Basic",
+			"userName": "NL22511",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlNzYwNWRiOS03ZTQyLTQxZGYtODQ5Yi0xNzFhYmQ0ZGI3NWMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime2",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
