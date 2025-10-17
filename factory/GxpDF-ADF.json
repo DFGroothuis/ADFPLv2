@@ -4,7 +4,7 @@
 		"globalParameters": {
 			"gp_adls_environment": {
 				"type": "string",
-				"value": "dev"
+				"value": "QUAL"
 			},
 			"gp_sf_database": {
 				"type": "string",
