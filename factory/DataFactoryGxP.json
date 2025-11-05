@@ -1,0 +1,9 @@
+{
+	"name": "DataFactoryGxP",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1e64e1f9-2a74-4299-ac66-2278bc9a66ea",
+		"tenantId": "46c4de19-0ffc-4c54-aa86-ee7274afa9d7"
+	}
+}
